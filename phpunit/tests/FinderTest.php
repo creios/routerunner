@@ -21,7 +21,7 @@ class FinderTest extends \PHPUnit_Framework_TestCase
         $routes = Finder::getRoutes();
         $this->assertEquals(2, count($routes));
 
-        $routesToSet = [new Route("GET", "/", "index->get")];
+        $routesToSet = array(new Route("GET", "/", "index->get"));
         Finder::setRoutes($routesToSet);
         $this->assertEquals($routesToSet, Finder::getRoutes());
 
