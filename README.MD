@@ -1,5 +1,8 @@
 # Routerunner
 
+
+[![Build Status](https://travis-ci.org/timtegeler/routerunner.svg?branch=master)](https://travis-ci.org/timtegeler/routerunner)
+
 ```php
 use TimTegeler\Routerunner\Routerunner;
 Router::setCallableNameSpace("Controller");
