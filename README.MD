@@ -25,7 +25,7 @@ POST   /login           Index->post
 use TimTegeler\Routerunner\Router;
 Router::setCallableNameSpace("Controller");
 Router::parse("path/to/config");
-Router::execute($_SERVER[‘REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+Router::execute($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 ```
 
 ## Composer
