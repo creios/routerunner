@@ -9,7 +9,7 @@ class FinderTest extends \PHPUnit_Framework_TestCase
         $route = new Route("GET", "/", "foo->bar");
         $this->assertEmpty(Finder::matchesRoute($route, "GET", "/"));
         $route = new Route("POST", "/subpath/[numeric]/[string]", "foo->bar");
-        $this->assertEquals(["123", "tim"], Finder::matchesRoute($route, "POST", "/subpath/123/tim"));
+        $this->assertEquals(array("123", "tim"), Finder::matchesRoute($route, "POST", "/subpath/123/tim"));
     }
 
     public function testAddSetGetReset()
