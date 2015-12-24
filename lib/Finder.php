@@ -14,7 +14,7 @@ class Finder
     /**
      * @var array
      */
-    private static $routes = [];
+    private static $routes = array();
 
     /**
      * @param $httpMethod
@@ -81,7 +81,7 @@ class Finder
      */
     public static function resetRoutes()
     {
-        self::$routes = [];
+        self::$routes = array();
     }
 
 }

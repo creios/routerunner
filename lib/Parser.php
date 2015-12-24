@@ -60,7 +60,7 @@ class Parser
      */
     public static function parse($filename)
     {
-        $routes = [];
+        $routes = array();
         if (file_exists($filename)) {
             if (($file = @fopen($filename, "r")) !== FALSE) {
                 while (($route = fgets($file)) !== FALSE) {
