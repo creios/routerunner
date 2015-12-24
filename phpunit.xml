@@ -1,0 +1,26 @@
+<phpunit bootstrap="vendor/autoload.php">
+    <php>
+        <includePath>.</includePath>
+        <ini name="date.timezone" value="Europe/Berlin"/>
+    </php>
+    <logging>
+        <log type="coverage-html" target="phpunit/report"/>
+    </logging>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">lib</directory>
+            <exclude>
+                <directory suffix=".php">vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <testsuites>
+        <testsuite name="tests">
+            <file>phpunit/tests/PatternTest.php</file>
+            <file>phpunit/tests/RouteTest.php</file>
+            <file>phpunit/tests/FinderTest.php</file>
+            <file>phpunit/tests/ParserTest.php</file>
+            <file>phpunit/tests/RouterTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
