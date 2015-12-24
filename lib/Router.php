@@ -7,7 +7,7 @@ use TimTegeler\Routerunner\Exception\RouterException;
  * Class Router
  * @package TimTegeler\Routerunner
  */
-class Routerunner
+class Router
 {
 
     /**
