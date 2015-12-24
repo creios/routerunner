@@ -35,6 +35,9 @@ class Pattern
      */
     public static function build($input)
     {
-        return '/^' . str_replace(['/', self::STRING, self::NUMERIC], ['\/', self::STRING_REGEXP, self::NUMERIC_REGEXP], $input) . '$/';
+        $search = array('/', self::STRING, self::NUMERIC);
+        $replace = array('\/', self::STRING_REGEXP, self::NUMERIC_REGEXP);
+        $regularExpression = str_replace($search, $replace, $input);
+        return sprintf('/^%s$/', $regularExpression);
     }
 }
