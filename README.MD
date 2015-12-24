@@ -2,11 +2,11 @@
 
 ```php
 use TimTegeler\Routerunner\Routerunner;
-Routerunner::setCallableNameSpace("Controller");
-Routerunner::route("GET", "/", "Index->get");
-Routerunner::route("GET", "/user/[numeric]", "User->get");
-Routerunner::route("POST", "/login", "Index->post");
-Routerunner::execute($_SERVER[‘REQUEST_METHOD’], $_SERVER['REQUEST_URI’]);
+Router::setCallableNameSpace("Controller");
+Router::route("GET", "/", "Index->get");
+Router::route("GET", "/user/[numeric]", "User->get");
+Router::route("POST", "/login", "Index->post");
+Router::execute($_SERVER[‘REQUEST_METHOD’], $_SERVER['REQUEST_URI’]);
 ```
 
 ```
@@ -16,8 +16,8 @@ POST   /login           Index->post
 ```
 
 ```php
-use TimTegeler\Router\Router;
-Routerunner::setCallableNameSpace("Controller");
-Routerunner::route("GET", "/", "Index->get");
-Routerunner::execute($_SERVER[‘REQUEST_METHOD’], $_SERVER['REQUEST_URI’]);
+use TimTegeler\Routerunner\Router;
+Router::setCallableNameSpace("Controller");
+Router::route("GET", "/", "Index->get");
+Router::execute($_SERVER[‘REQUEST_METHOD’], $_SERVER['REQUEST_URI’]);
 ```
