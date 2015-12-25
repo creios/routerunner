@@ -31,6 +31,12 @@ Router::execute($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 ## Composer
 ```
 {
+    "repositories": [
+        {
+        "url": "https://github.com/timtegeler/routerunner.git",
+        "type": "git"
+        }
+    ],
     "require": {
         "timtegeler/routerunner": "dev-master"
     }
