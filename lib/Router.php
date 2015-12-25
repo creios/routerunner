@@ -14,6 +14,8 @@ class Router
      *
      */
     const SEPERATOR_OF_CLASS_AND_METHOD = "->";
+    const FALLBACK_HTTP_METHOD = "GET";
+    const FALLBACK_URI = "/";
     /**
      * @var string
      */
@@ -50,7 +52,11 @@ class Router
      */
     public static function execute($httpMethod, $uri)
     {
-        $route = Finder::findRoute($httpMethod, $uri);
+        try{
+            $route = Finder::findRoute($httpMethod, $uri);
+        }catch (RouterException $e){
+            $route = Finder::findRoute(self::FALLBACK_HTTP_METHOD, self::FALLBACK_URI);
+        }
         $callable = self::generateCallable($route);
         if(is_callable($callable)){
             return call_user_func_array($callable, $route->getParameter());
