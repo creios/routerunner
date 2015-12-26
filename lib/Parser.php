@@ -11,21 +11,9 @@ use TimTegeler\Routerunner\Exception\ParseException;
 class Parser
 {
 
-    /**
-     *
-     */
-    const HTTP_METHOD = '(GET|POST)';
-    /**
-     *
-     */
+    const HTTP_METHOD = '(GET|POST|\*)';
     const URI = '((\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*)';
-    /**
-     *
-     */
     const _CALLABLE = '([a-zA-Z0-9]*->[a-zA-Z0-9]*)';
-    /**
-     *
-     */
     const ROUTE_FORMAT = '^%s[ \t]*%s[ \t]*%s^';
 
     /**

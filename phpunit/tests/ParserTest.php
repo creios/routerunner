@@ -6,6 +6,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateRoute()
     {
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("*      /                           index->get"));
         $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /                           index->get"));
         $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /                           index->post"));
         $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath                    index->get"));
@@ -50,7 +51,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         /** @var Route $route */
         $route = $routes[0];
         $this->assertEquals("GET", $route->getHttpMethod());
-        $this->assertEquals("/", $route->getPattern());
+        $this->assertEquals("/", $route->getUri());
         $this->assertEquals("index->get", $route->getCallable());
     }
 

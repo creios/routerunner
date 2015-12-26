@@ -16,7 +16,7 @@ class Route
     /**
      * @var string
      */
-    private $pattern;
+    private $uri;
     /**
      * @var string
      */
@@ -29,13 +29,13 @@ class Route
     /**
      * Route constructor.
      * @param $httpMethod
-     * @param $pattern
+     * @param $uri
      * @param $callable
      */
-    public function __construct($httpMethod, $pattern, $callable)
+    public function __construct($httpMethod, $uri, $callable)
     {
         $this->httpMethod = $httpMethod;
-        $this->pattern = $pattern;
+        $this->uri = $uri;
         $this->callable = $callable;
     }
 
@@ -50,9 +50,9 @@ class Route
     /**
      * @return mixed
      */
-    public function getPattern()
+    public function getUri()
     {
-        return $this->pattern;
+        return $this->uri;
     }
 
     /**

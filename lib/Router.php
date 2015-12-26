@@ -1,6 +1,7 @@
 <?php
 
 namespace TimTegeler\Routerunner;
+
 use TimTegeler\Routerunner\Exception\RouterException;
 
 /**
@@ -10,9 +11,6 @@ use TimTegeler\Routerunner\Exception\RouterException;
 class Router
 {
 
-    /**
-     *
-     */
     const SEPERATOR_OF_CLASS_AND_METHOD = "->";
     const FALLBACK_HTTP_METHOD = "GET";
     const FALLBACK_URI = "/";
@@ -33,14 +31,14 @@ class Router
 
     /**
      * @param $httpMethod
-     * @param $pattern
+     * @param $uri
      * @param $callback
      * @throws Exception\ParseException
      */
-    public static function route($httpMethod, $pattern, $callback)
+    public static function route($httpMethod, $uri, $callback)
     {
         $routeFormat = "%s %s %s";
-        $route = sprintf($routeFormat, $httpMethod, $pattern, $callback);
+        $route = sprintf($routeFormat, $httpMethod, $uri, $callback);
         Finder::addRoute(Parser::createRoute($route));
     }
 
@@ -52,15 +50,15 @@ class Router
      */
     public static function execute($httpMethod, $uri)
     {
-        try{
+        try {
             $route = Finder::findRoute($httpMethod, $uri);
-        }catch (RouterException $e){
+        } catch (RouterException $e) {
             $route = Finder::findRoute(self::FALLBACK_HTTP_METHOD, self::FALLBACK_URI);
         }
         $callable = self::generateCallable($route);
-        if(is_callable($callable)){
+        if (is_callable($callable)) {
             return call_user_func_array($callable, $route->getParameter());
-        }else{
+        } else {
             throw new RouterException("Route is not callable");
         }
     }
@@ -69,14 +67,16 @@ class Router
      * @param Route $route
      * @return array
      */
-    private static function generateCallable(Route $route){
-        return explode(self::SEPERATOR_OF_CLASS_AND_METHOD, self::$callableNameSpace."\\".$route->getCallable());
+    private static function generateCallable(Route $route)
+    {
+        return explode(self::SEPERATOR_OF_CLASS_AND_METHOD, self::$callableNameSpace . "\\" . $route->getCallable());
     }
 
     /**
      * @param $callableNameSpace
      */
-    public static function setCallableNameSpace($callableNameSpace){
+    public static function setCallableNameSpace($callableNameSpace)
+    {
         self::$callableNameSpace = $callableNameSpace;
     }
 

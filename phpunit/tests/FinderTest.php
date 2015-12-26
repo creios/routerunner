@@ -6,6 +6,9 @@ class FinderTest extends \PHPUnit_Framework_TestCase
 
     public function testMatchesRoute()
     {
+        $route = new Route("*", "/", "foo->bar");
+        $this->assertEmpty(Finder::matchesRoute($route, "GET", "/"));
+        $this->assertEmpty(Finder::matchesRoute($route, "POST", "/"));
         $route = new Route("GET", "/", "foo->bar");
         $this->assertEmpty(Finder::matchesRoute($route, "GET", "/"));
         $route = new Route("POST", "/subpath/[numeric]/[string]", "foo->bar");
@@ -39,17 +42,17 @@ class FinderTest extends \PHPUnit_Framework_TestCase
 
         $route = Finder::findRoute("GET", "/");
         $this->assertEquals("GET", $route->getHttpMethod());
-        $this->assertEquals("/", $route->getPattern());
+        $this->assertEquals("/", $route->getUri());
         $this->assertEquals("index->get", $route->getCallable());
 
         $route = Finder::findRoute("POST", "/subpath/123/tim");
         $this->assertEquals("POST", $route->getHttpMethod());
-        $this->assertEquals("/subpath/[numeric]/[string]", $route->getPattern());
+        $this->assertEquals("/subpath/[numeric]/[string]", $route->getUri());
         $this->assertEquals("index->post", $route->getCallable());
 
         $route = Finder::findRoute("GET", "/tim/123/subpath");
         $this->assertEquals("GET", $route->getHttpMethod());
-        $this->assertEquals("/[string]/[numeric]/subpath", $route->getPattern());
+        $this->assertEquals("/[string]/[numeric]/subpath", $route->getUri());
         $this->assertEquals("index->get", $route->getCallable());
     }
 
