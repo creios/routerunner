@@ -16,6 +16,7 @@
     </filter>
     <testsuites>
         <testsuite name="tests">
+            <file>phpunit/tests/CacheTest.php</file>
             <file>phpunit/tests/PatternTest.php</file>
             <file>phpunit/tests/RouteTest.php</file>
             <file>phpunit/tests/FinderTest.php</file>
