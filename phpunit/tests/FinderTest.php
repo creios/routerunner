@@ -7,8 +7,8 @@ class FinderTest extends \PHPUnit_Framework_TestCase
     public function testMatchesRoute()
     {
         $route = new Route("*", "/", "foo->bar");
-        $this->assertEmpty(Finder::matchesRoute($route, "GET", "/"));
-        $this->assertEmpty(Finder::matchesRoute($route, "POST", "/"));
+        $this->assertEquals(array(), Finder::matchesRoute($route, "GET", "/"));
+        $this->assertEquals(array(), Finder::matchesRoute($route, "POST", "/"));
         $route = new Route("GET", "/", "foo->bar");
         $this->assertEmpty(Finder::matchesRoute($route, "GET", "/"));
         $route = new Route("POST", "/subpath/[numeric]/[string]", "foo->bar");

@@ -42,7 +42,8 @@ class Finder
      */
     public static function matchesRoute(Route $route, $httpMethod, $uri)
     {
-        if ($route->getHttpMethod() === $httpMethod) {
+        $httpMethodPattern = Pattern::buildHttpMethod($route->getHttpMethod());
+        if(preg_match($httpMethodPattern, $httpMethod, $params2) === 1){
             $pattern = Pattern::buildUri($route->getUri());
             if (preg_match($pattern, $uri, $params) === 1) {
                 array_shift($params);
