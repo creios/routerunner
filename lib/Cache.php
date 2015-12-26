@@ -2,10 +2,60 @@
 
 namespace TimTegeler\Routerunner;
 
+/**
+ * Class Cache
+ * @package TimTegeler\Routerunner
+ */
 class Cache
 {
 
+    /**
+     * @var
+     */
     public static $file;
+
+    /**
+     * @return bool
+     */
+    public static function useable()
+    {
+        return file_exists(self::$file) && is_readable(self::$file) && is_writeable(self::$file);
+    }
+
+    /**
+     * @return int
+     */
+    public static function filled()
+    {
+        clearstatcache(True, self::$file);
+        return filesize(self::$file) > 0;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function read()
+    {
+        $cache = file_get_contents(self::$file);
+        return unserialize($cache);
+    }
+
+    /**
+     * @param $cache
+     */
+    public static function write($cache)
+    {
+        $cache = serialize($cache);
+        file_put_contents(self::$file, $cache);
+    }
+
+    /**
+     *
+     */
+    public static function clear()
+    {
+        file_put_contents(self::$file, NULL);
+    }
 
     /**
      * @param string $file
@@ -15,41 +65,4 @@ class Cache
         self::$file = $file;
     }
 
-    public static function exist()
-    {
-        return file_exists(self::$file);
-    }
-
-    public static function stuffed()
-    {
-        return (filesize(self::$file) > 0);
-    }
-
-    public static function writeable()
-    {
-        return self::exist() && is_writeable(self::$file);
-    }
-
-    public static function readable()
-    {
-        return self::exist() && is_readable(self::$file);
-    }
-
-    public static function load()
-    {
-        $cache = file_get_contents(self::$file);
-        $routes = unserialize($cache);
-        return $routes;
-    }
-
-    public static function save($routes)
-    {
-        $cache = serialize($routes);
-        file_put_contents(self::$file, $cache);
-    }
-
-    public static function clear()
-    {
-        file_put_contents(self::$file, NULL);
-    }
 }

@@ -15,6 +15,18 @@ class Parser
     const URI = '((\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*)';
     const _CALLABLE = '([a-zA-Z0-9]*->[a-zA-Z0-9]*)';
     const ROUTE_FORMAT = '^%s[ \t]*%s[ \t]*%s^';
+    /**
+     * @var bool
+     */
+    private static $caching = true;
+
+    /**
+     * @param boolean $caching
+     */
+    public static function setCaching($caching)
+    {
+        self::$caching = $caching;
+    }
 
     /**
      * @return string
@@ -47,6 +59,26 @@ class Parser
      * @throws ParseException
      */
     public static function parse($filename)
+    {
+        if (self::$caching && Cache::useable()) {
+            if (Cache::filled()) {
+                $routes = Cache::read();
+            } else {
+                $routes = self::parseRoutes($filename);
+                Cache::write($routes);
+            }
+        } else {
+            $routes = self::parseRoutes($filename);
+        }
+        return $routes;
+    }
+
+    /**
+     * @param $filename
+     * @return array
+     * @throws ParseException
+     */
+    private static function parseRoutes($filename)
     {
         $routes = array();
         if (file_exists($filename)) {

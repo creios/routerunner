@@ -80,4 +80,14 @@ class Router
         self::$callableNameSpace = $callableNameSpace;
     }
 
+    public static function activateCaching()
+    {
+        Parser::setCaching(True);
+    }
+
+    public static function deactivateCaching()
+    {
+        Parser::setCaching(False);
+    }
+
 }
