@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/timtegeler/routerunner.svg?branch=master)](https://travis-ci.org/timtegeler/routerunner)
 
-**Routerunner** is a router for PHP 5.3+ based on [pseudo regular expressions](#pseudo-regular-expressions)
+**Routerunner** is a router for PHP 5.3+ based on pseudo regular expressions
 
-* Simple pseudo regular expression for routing 
+* Simple [pseudo regular expression](#pseudo-regular-expression) for routing 
 * Defining routes in a separate [routesfile](#routesfile) without overhead from php
 * [Cachig](#caching) routesfile to reduce the parsing time 
 
