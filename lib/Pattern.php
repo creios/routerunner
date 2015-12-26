@@ -9,10 +9,10 @@ namespace TimTegeler\Routerunner;
 class Pattern
 {
 
-    const HTTP_METHOD_SEARCH = array("*");
-    const HTTP_METHOD_REPLACE = array("GET|POST");
-    const URI_SEARCH = array('/', "[string]", "[numeric]");
-    const URI_REPLACE = array('\/', '(\w+)', '(\d+)');
+    private static $httpMethodSearch = array("*");
+    private static $httpMethodReplace = array("GET|POST");
+    private static $uriSearch = array('/', "[string]", "[numeric]");
+    private static $uriReplace = array('\/', '(\w+)', '(\d+)');
 
     /**
      * @param $input
@@ -21,13 +21,13 @@ class Pattern
     public static function buildUri($input)
     {
 
-        $regularExpression = str_replace(self::URI_SEARCH, self::URI_REPLACE, $input);
+        $regularExpression = str_replace(self::$uriSearch, self::$uriReplace, $input);
         return sprintf('/^%s$/', $regularExpression);
     }
 
     public static function buildHttpMethod($input)
     {
-        $regularExpression = str_replace(self::HTTP_METHOD_SEARCH, self::HTTP_METHOD_REPLACE, $input);
+        $regularExpression = str_replace(self::$httpMethodSearch, self::$httpMethodReplace, $input);
         return sprintf('/^%s$/', $regularExpression);
     }
 }
