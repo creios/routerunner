@@ -9,9 +9,21 @@ namespace TimTegeler\Routerunner;
 class Pattern
 {
 
+    /**
+     * @var array
+     */
     private static $httpMethodSearch = array("*");
+    /**
+     * @var array
+     */
     private static $httpMethodReplace = array("GET|POST");
+    /**
+     * @var array
+     */
     private static $uriSearch = array('/', "[string]", "[numeric]");
+    /**
+     * @var array
+     */
     private static $uriReplace = array('\/', '(\w+)', '(\d+)');
 
     /**
@@ -25,6 +37,10 @@ class Pattern
         return sprintf('/^%s$/', $regularExpression);
     }
 
+    /**
+     * @param $input
+     * @return string
+     */
     public static function buildHttpMethod($input)
     {
         $regularExpression = str_replace(self::$httpMethodSearch, self::$httpMethodReplace, $input);
