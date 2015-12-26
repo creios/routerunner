@@ -5,7 +5,7 @@
 **Routerunner** is a router for PHP 5.3+ based upon pseudo regular expressions
 
 * Simple pseudo regular expression for routing 
-* Defining routes in a separete [routesfile](#Routesfile) without overhead from php
+* Defining routes in a separete [routesfile](#routesfile) without overhead from php
 * Caching routesfile for reduce the parsing time 
 
 ```php
