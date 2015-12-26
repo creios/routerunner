@@ -56,28 +56,28 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("index->get", $route->getCallable());
     }
 
-    public function testCachingPerformance()
-    {
-        Parser::setCaching(false);
-        $starttime = microtime();
-        Parser::parse(__DIR__ . "/../assets/routes");
-        $endtime = microtime();
-        $parsingTimeWithoutCaching = $endtime - $starttime;
-
-        Parser::setCaching(true);
-        $starttime = microtime();
-        Parser::parse(__DIR__ . "/../assets/routes");
-        $endtime = microtime();
-        $parsingTimeWithCacheWrite = $endtime - $starttime;
-        $this->assertGreaterThan($parsingTimeWithoutCaching, $parsingTimeWithCacheWrite);
-
-        $starttime = microtime();
-        Parser::parse(__DIR__ . "/../assets/routes");
-        $endtime = microtime();
-        $parsingTimeWithCacheRead = $endtime - $starttime;
-        $this->assertLessThan($parsingTimeWithCacheWrite, $parsingTimeWithCacheRead);
-        Cache::clear();
-    }
+//    public function testCachingPerformance()
+//    {
+//        Parser::setCaching(false);
+//        $starttime = microtime();
+//        Parser::parse(__DIR__ . "/../assets/routes");
+//        $endtime = microtime();
+//        $parsingTimeWithoutCaching = $endtime - $starttime;
+//
+//        Parser::setCaching(true);
+//        $starttime = microtime();
+//        Parser::parse(__DIR__ . "/../assets/routes");
+//        $endtime = microtime();
+//        $parsingTimeWithCacheWrite = $endtime - $starttime;
+//        $this->assertGreaterThan($parsingTimeWithoutCaching, $parsingTimeWithCacheWrite);
+//
+//        $starttime = microtime();
+//        Parser::parse(__DIR__ . "/../assets/routes");
+//        $endtime = microtime();
+//        $parsingTimeWithCacheRead = $endtime - $starttime;
+//        $this->assertLessThan($parsingTimeWithCacheWrite, $parsingTimeWithCacheRead);
+//        Cache::clear();
+//    }
 
     public function testParseException()
     {
