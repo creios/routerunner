@@ -81,18 +81,19 @@ class Parser
     private static function parseRoutes($filename)
     {
         $routes = array();
-        if (file_exists($filename)) {
-            if (($file = @fopen($filename, "r")) !== FALSE) {
-                while (($route = fgets($file)) !== FALSE) {
-                    $routes[] = self::createRoute($route);
-                }
-            } else {
-                throw new ParseException("Error while reading config.");
+
+        if (!file_exists($filename)) throw new ParseException(sprintf("File (%s) doesn't exist.", $filename));
+        if (!is_readable($filename)) throw new ParseException(sprintf("File (%s) isn't readable.", $filename));
+
+        if (($file = @fopen($filename, "r")) !== FALSE) {
+            while (($route = fgets($file)) !== FALSE) {
+                $routes[] = self::createRoute($route);
             }
-            fclose($file);
         } else {
-            throw new ParseException("Config does not exists");
+            throw new ParseException(sprintf("Error while reading file (%s).", $filename));
         }
+        fclose($file);
+
         return $routes;
     }
 }

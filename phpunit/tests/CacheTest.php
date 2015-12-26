@@ -10,7 +10,8 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(Cache::useable());
         Cache::clear();
         Cache::setFile("notExistingFile");
-        $this->assertFalse(Cache::useable());
+        $this->setExpectedException("TimTegeler\\Routerunner\\Exception\\CacheException");
+        Cache::useable();
     }
 
     public function testSave()

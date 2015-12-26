@@ -2,6 +2,8 @@
 
 namespace TimTegeler\Routerunner;
 
+use TimTegeler\Routerunner\Exception\CacheException;
+
 /**
  * Class Cache
  * @package TimTegeler\Routerunner
@@ -16,10 +18,44 @@ class Cache
 
     /**
      * @return bool
+     * @throws CacheException
+     */
+    public static function exist()
+    {
+        if (file_exists(self::$file)) return true;
+        throw new CacheException(sprintf("File (%s) doesn't exist.", self::$file));
+    }
+
+    /**
+     * @return bool
+     * @throws CacheException
+     */
+    public static function readable()
+    {
+        if (is_readable(self::$file)) return true;
+        throw new CacheException(sprintf("File (%s) isn't readable.", self::$file));
+    }
+
+    /**
+     * @return bool
+     * @throws CacheException
+     */
+    public static function writeable()
+    {
+        if (is_writeable(self::$file)) return true;
+        throw new CacheException(sprintf("File (%s) isn't writeable.", self::$file));
+    }
+
+    /**
+     * @return bool
+     * @throws CacheException
      */
     public static function useable()
     {
-        return file_exists(self::$file) && is_readable(self::$file) && is_writeable(self::$file);
+        self::exist();
+        self::readable();
+        self::writeable();
+        return true;
     }
 
     /**
