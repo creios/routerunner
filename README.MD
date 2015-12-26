@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/timtegeler/routerunner.svg?branch=master)](https://travis-ci.org/timtegeler/routerunner)
 
-**Routerunner** is a router for PHP 5.3+ based upon pseudo regular expressions
+**Routerunner** is a router for PHP 5.3+ based on [pseudo regular expressions](#pseudo-regular-expressions)
 
 * Simple pseudo regular expression for routing 
-* Defining routes in a separete [routesfile](#routesfile) without overhead from php
-* Caching routesfile for reduce the parsing time 
+* Defining routes in a separate [routesfile](#routesfile) without overhead from php
+* [Cachig](#caching) routesfile to reduce the parsing time 
 
 ```php
 <?php
@@ -23,6 +23,28 @@ Router::route("POST", "/login", "Index->post");
 // Trigger exceution 
 Router::execute($_SERVER[‘REQUEST_METHOD’], $_SERVER['REQUEST_URI’]);
 ```
+
+### Pseudo regular expression
+
+Routerunner uses a pseudo regular expressions to describe the [HTTP-method](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) and [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier). 
+
+#### HTTP-method
+```
+*       // Match GET and POST  
+GET     // Match GET
+POST    // Match POST
+```
+
+#### URI
+```
+[numeric]  // Match all numeric values like 1, 1.1, 2, 143, ... 
+[string]   // Match all strings like alice, bob, eve, ...
+
+// examples
+/user/[numeric] // Match /user/1, /user/2, /user/3, ...
+/user/[string]  // Match /user/alice, /user/bob, /user/eve, ...
+```
+
 
 ### Routesfile
 
@@ -57,7 +79,7 @@ Router::setCacheFile("path/to/cache");
 You can use [composer](https://getcomposer.org/) to download Routerunner. At the moment Routerunner ist not availabel 
 over [packagist](https://packagist.org/), but the first stable release will be published there. 
 
-```
+```json
 {
     "repositories": [
         {
