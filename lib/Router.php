@@ -80,6 +80,13 @@ class Router
         self::$callableNameSpace = $callableNameSpace;
     }
 
+    /**
+     * @param $filename
+     */
+    public static function setCacheFile($filename){
+        Cache::setFile($filename);
+    }
+
     public static function activateCaching()
     {
         Parser::setCaching(True);
