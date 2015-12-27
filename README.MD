@@ -96,9 +96,15 @@ over [packagist](https://packagist.org/), but the first stable release will be p
 ## Apache .htaccess
 
 If you are using Apache as your Webserver you need to rewrite all request to i.e. the index.php where 
-the Router is excecuted.
+the router is excecuted.  
 
 ```
 RewriteEngine On
 RewriteRule ^(.*)$ index.php [NC,L]
+```
+
+In some cases you need to activate the module mod_rewrite.
+
+```sh
+a2enmod rewrite
 ```
