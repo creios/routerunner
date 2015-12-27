@@ -12,7 +12,7 @@ class Parser
 {
 
     const HTTP_METHOD = '(GET|POST|\*)';
-    const URI = '((\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*)';
+    const URI = '((\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
     const _CALLABLE = '([a-zA-Z0-9]*->[a-zA-Z0-9]*)';
     const ROUTE_FORMAT = '^%s[ \t]*%s[ \t]*%s^';
     /**
@@ -47,7 +47,7 @@ class Parser
         if (preg_match($regularExpression, $route, $parts) === 1) {
             array_shift($parts);
             //TODO BETTER REGEXP FOR URI
-            return new Route($parts[0], $parts[1], $parts[3]);
+            return new Route($parts[0], $parts[1], $parts[4]);
         } else {
             throw new ParseException("Line doesn't matches Pattern");
         }

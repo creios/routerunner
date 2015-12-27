@@ -6,27 +6,29 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateRoute()
     {
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("*      /                           index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /                           index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /                           index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath                    index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath                    index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/subpath            index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/subpath            index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[string]                   index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[string]                   index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[string]/[numeric]         index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[string]/[numeric]         index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[numeric]/[string]         index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[numeric]/[string]         index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[string]/[numeric]/subpath index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[string]/[numeric]/subpath index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[numeric]/[string]/subpath index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[numeric]/[string]/subpath index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/[string]/[numeric] index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[string]/[numeric] index->post"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/[numeric]/[string] index->get"));
-        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[numeric]/[string] index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("*      /                                     index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /                                     index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /                                     index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath#anchor                       index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath#anchor                       index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/subpath                      index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/subpath                      index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[string]                             index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[string]                             index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[string]/[numeric]                   index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[string]/[numeric]                   index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[numeric]/[string]                   index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[numeric]/[string]                   index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[string]/[numeric]/subpath           index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[string]/[numeric]/subpath           index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /[numeric]/[string]/subpath           index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /[numeric]/[string]/subpath           index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/[string]/[numeric]           index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[string]/[numeric]           index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/[numeric]/[string]           index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[numeric]/[string]           index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/[numeric]/[string]#anchor    index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[numeric]/[string]#anchor    index->post"));
     }
 
     public function testCreateRouteExpetion()
