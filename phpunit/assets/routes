@@ -18,3 +18,4 @@ GET    /subpath/[string]/[numeric]          index->get
 POST   /subpath/[string]/[numeric]          index->post
 GET    /subpath/[numeric]/[string]#anchor   index->get
 POST   /subpath/[numeric]/[string]#anchor   index->post
+POST   /subpath/[numeric]/[string]#anchor2   index->post

@@ -61,13 +61,31 @@ class Parser
     public static function parse($filename)
     {
         if (self::$caching && Cache::useable()) {
+            // caching is enabled and the cache is useable
             if (Cache::filled()) {
-                $routes = Cache::read();
+                // cache is filled
+                // reading routes from cache
+                list($cacheTimestamp, $routes) = Cache::read();
+                // getting timestamp from file
+                $routesTimestamp = self::getTimestamp($filename, TRUE);
+
+                if (self::needRecache($cacheTimestamp, $routesTimestamp)) {
+                    // routes need recache
+                    echo "recache";
+                    // writing routes to cache
+                    Cache::write(array($routesTimestamp, $routes));
+                }
             } else {
+                // cache is not filled
+                $routesTimestamp = self::getTimestamp($filename, TRUE);
+                // arsing routes
                 $routes = self::parseRoutes($filename);
-                Cache::write($routes);
+                // writing routes to cache
+                Cache::write(array($routesTimestamp, $routes));
             }
         } else {
+            // caching is disabled or cache is not useable
+            // parsing routes
             $routes = self::parseRoutes($filename);
         }
         return $routes;
@@ -82,8 +100,7 @@ class Parser
     {
         $routes = array();
 
-        if (!file_exists($filename)) throw new ParseException(sprintf("File (%s) doesn't exist.", $filename));
-        if (!is_readable($filename)) throw new ParseException(sprintf("File (%s) isn't readable.", $filename));
+        self::fileUseable($filename);
 
         if (($file = @fopen($filename, "r")) !== FALSE) {
             while (($route = fgets($file)) !== FALSE) {
@@ -95,5 +112,24 @@ class Parser
         fclose($file);
 
         return $routes;
+    }
+
+    private static function fileUseable($filename, $clearCache = FALSE)
+    {
+        if ($clearCache) clearstatcache(True, $filename);
+        if (!file_exists($filename)) throw new ParseException(sprintf("File (%s) doesn't exist.", $filename));
+        if (!is_readable($filename)) throw new ParseException(sprintf("File (%s) isn't readable.", $filename));
+        return true;
+    }
+
+    private static function getTimestamp($filename, $clearCache = FALSE)
+    {
+        self::fileUseable($filename, $clearCache);
+        return filemtime($filename);
+    }
+
+    private static function needRecache($cacheTimestamp, $routesTimestamp)
+    {
+        return $cacheTimestamp !== $routesTimestamp;
     }
 }
