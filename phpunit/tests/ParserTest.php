@@ -29,6 +29,14 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[numeric]/[string]           index->post"));
         $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/[numeric]/[string]#anchor    index->get"));
         $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[numeric]/[string]#anchor    index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath#anchor                       index->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath#anchor                       index->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/subpath                      c_controller->get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/subpath                      c_controller->post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/[numeric]                    c_controller->_get"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[numeric]                    c_controller->_post"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET    /subpath/[numeric]                    c_controller->_get1"));
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST   /subpath/[numeric]                    c_controller->_post1"));
     }
 
     public function testCreateRouteExpetion()
@@ -45,6 +53,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("GET /(string) index->get"));
         $this->setExpectedException("TimTegeler\\Routerunner\\Exception\\ParseException");
         $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST /(string)/(numeric) index->post"));
+        $this->setExpectedException("TimTegeler\\Routerunner\\Exception\\ParseException");
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST /[string]/[numeric] _index->post"));
+        $this->setExpectedException("TimTegeler\\Routerunner\\Exception\\ParseException");
+        $this->assertInstanceOf("TimTegeler\\Routerunner\\Route", Parser::createRoute("POST /[string]/[numeric] _index->post9"));
     }
 
     public function testParse()

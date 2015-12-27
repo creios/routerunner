@@ -13,7 +13,7 @@ class Parser
 
     const HTTP_METHOD = '(GET|POST|\*)';
     const URI = '((\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
-    const _CALLABLE = '([a-zA-Z0-9]*->[a-zA-Z0-9]*)';
+    const _CALLABLE = '([a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
     const ROUTE_FORMAT = '^%s[ \t]*%s[ \t]*%s^';
     /**
      * @var bool
