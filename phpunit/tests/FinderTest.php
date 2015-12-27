@@ -50,6 +50,11 @@ class FinderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("/subpath/[numeric]/[string]", $route->getUri());
         $this->assertEquals("index->post", $route->getCallable());
 
+        $route = Finder::findRoute("POST", "/subpath/123.34/tim");
+        $this->assertEquals("POST", $route->getHttpMethod());
+        $this->assertEquals("/subpath/[numeric]/[string]", $route->getUri());
+        $this->assertEquals("index->post", $route->getCallable());
+
         $route = Finder::findRoute("GET", "/tim/123/subpath");
         $this->assertEquals("GET", $route->getHttpMethod());
         $this->assertEquals("/[string]/[numeric]/subpath", $route->getUri());

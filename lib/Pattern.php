@@ -24,7 +24,7 @@ class Pattern
     /**
      * @var array
      */
-    private static $uriReplace = array('\/', '(\w+)', '\d+(\.\d+)?');
+    private static $uriReplace = array('\/', '(\w+)', '(\d+|\d+\.\d+)');
 
     /**
      * @param $input
@@ -32,7 +32,6 @@ class Pattern
      */
     public static function buildUri($input)
     {
-
         $regularExpression = str_replace(self::$uriSearch, self::$uriReplace, $input);
         return sprintf('/^%s$/', $regularExpression);
     }
