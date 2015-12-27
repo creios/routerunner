@@ -24,7 +24,7 @@ class Pattern
     /**
      * @var array
      */
-    private static $uriReplace = array('\/', '(\w+)', '(\d+)');
+    private static $uriReplace = array('\/', '(\w+)', '\d+(\.\d+)?');
 
     /**
      * @param $input
