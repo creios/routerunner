@@ -20,7 +20,7 @@ Router::route("GET", "/", "Index->get");
 Router::route("GET", "/user/[numeric]", "User->get");
 Router::route("POST", "/login", "Index->post");
 
-// Trigger exceution 
+// Trigger execution 
 Router::execute($_SERVER[‘REQUEST_METHOD’], $_SERVER['REQUEST_URI’]);
 ```
 

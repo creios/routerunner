@@ -96,4 +96,5 @@ class Parser
 
         return $routes;
     }
+
 }
