@@ -68,10 +68,8 @@ class Parser
                 list($cacheTimestamp, $routes) = Cache::read();
                 // getting timestamp from file
                 $routesTimestamp = self::getTimestamp($filename, TRUE);
-
                 if (self::needRecache($cacheTimestamp, $routesTimestamp)) {
                     // routes need recache
-                    echo "recache";
                     // writing routes to cache
                     Cache::write(array($routesTimestamp, $routes));
                 }
