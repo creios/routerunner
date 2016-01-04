@@ -72,25 +72,31 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
 //    public function testCachingPerformance()
 //    {
+//
 //        Parser::setCaching(false);
 //        $starttime = microtime();
 //        Parser::parse(__DIR__ . "/../assets/routes");
 //        $endtime = microtime();
 //        $parsingTimeWithoutCaching = $endtime - $starttime;
+//        echo $parsingTimeWithoutCaching." ";
 //
 //        Parser::setCaching(true);
+//        Cache::setFile(__DIR__ . "/../assets/cache");
+//        Cache::clear();
 //        $starttime = microtime();
 //        Parser::parse(__DIR__ . "/../assets/routes");
 //        $endtime = microtime();
 //        $parsingTimeWithCacheWrite = $endtime - $starttime;
 //        $this->assertGreaterThan($parsingTimeWithoutCaching, $parsingTimeWithCacheWrite);
+//        echo $parsingTimeWithCacheWrite." ";
 //
 //        $starttime = microtime();
 //        Parser::parse(__DIR__ . "/../assets/routes");
 //        $endtime = microtime();
 //        $parsingTimeWithCacheRead = $endtime - $starttime;
 //        $this->assertLessThan($parsingTimeWithCacheWrite, $parsingTimeWithCacheRead);
-//        Cache::clear();
+//        echo $parsingTimeWithCacheRead."\r\n";
+//        //Cache::clear();
 //    }
 
     public function testParseException()
