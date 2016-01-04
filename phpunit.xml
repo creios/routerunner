@@ -5,6 +5,8 @@
     </php>
     <logging>
         <log type="coverage-html" target="phpunit/report"/>
+        <log type="coverage-clover" target="phpunit/logs/clover.xml"/>
+        <log type="json" target="phpunit/logs/coveralls-upload.json"/>
     </logging>
     <filter>
         <whitelist>

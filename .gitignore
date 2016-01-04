@@ -1,4 +1,5 @@
 .idea/
 vendor/
 phpunit/report
+phpunit/logs
 docker-compose.yml

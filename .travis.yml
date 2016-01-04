@@ -9,9 +9,5 @@ php:
 before_install:
    - composer require phpunit/phpunit:4.8.* satooshi/php-coveralls:1.0.*
    - composer install --dev
-#install:
-#  - composer install --no-dev
-script:
-  - ./vendor/bin/phpunit --coverage-clover ./tests/logs/clover.xml
 after_script:
   - php vendor/bin/coveralls -v
