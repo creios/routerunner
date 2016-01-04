@@ -96,10 +96,12 @@ over [packagist](https://packagist.org/), but the first stable release will be p
 ## Apache .htaccess
 
 If you are using Apache as your Webserver you need to rewrite all request to i.e. the index.php where 
-the router is excecuted.  
+the router is excecuted. For accessing assets like CSS-, JS-, and imagefiles the rewrite excepts all existing files and directories.  
 
 ```
 RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [NC,L]
 ```
 
