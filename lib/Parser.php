@@ -10,7 +10,7 @@ use TimTegeler\Routerunner\Exception\ParseException;
  */
 class Parser
 {
-    const SEPERATOR_OF_CLASS_AND_METHOD = "->";
+    const SEPARATOR_OF_CLASS_AND_METHOD = "->";
     const HTTP_METHOD = '(?<httpMethod>GET|POST|\*)';
     const URI = '(?<url>(\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
     const _CALLABLE = '(?<callable>[a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
@@ -114,7 +114,7 @@ class Parser
 
     private static function generateCallback($callable)
     {
-        return explode(self::SEPERATOR_OF_CLASS_AND_METHOD, $callable);
+        return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $callable);
     }
 
     private static function fileUseable($filename, $clearCache = FALSE)
