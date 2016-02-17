@@ -18,7 +18,7 @@ class Parser
     /**
      * @var bool
      */
-    private static $caching = True;
+    private static $caching = False;
 
     /**
      * @param boolean $caching
