@@ -32,26 +32,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         Router::execute("GET", "/");
     }
 
-    public function testGuardTrue()
+    public function testMiddlewareTrue()
     {
         Router::setCallableNameSpace("TimTegeler\\Routerunner\\Mock");
         Router::route("GET", "/[numeric]/[string]", "Index->get");
         Router::route("POST", "/[numeric]/[string]", "Index->post");
-        $loginGuard = new LoginTrue();
-        $loginGuard->setCallback(new Callback("index","login"));
-        Router::registerGuard($loginGuard);
+        $loginMiddleware = new LoginTrue();
+        $loginMiddleware->setCallback(new Callback("index","login"));
+        Router::registerMiddleware($loginMiddleware);
         $this->assertEquals("index->get", Router::execute("GET", "/123/tim"));
         $this->assertEquals("index->post", Router::execute("POST", "/123/tim"));
     }
 
-    public function testGuardLoginFalse()
+    public function testMiddlewareLoginFalse()
     {
         Router::setCallableNameSpace("TimTegeler\\Routerunner\\Mock");
         Router::route("GET", "/[numeric]/[string]", "Index->get");
         Router::route("POST", "/[numeric]/[string]", "Index->post");
-        $loginGuard = new LoginFalse();
-        $loginGuard->setCallback(new Callback("index","login"));
-        Router::registerGuard($loginGuard);
+        $loginMiddleware = new LoginFalse();
+        $loginMiddleware->setCallback(new Callback("index","login"));
+        Router::registerMiddleware($loginMiddleware);
         $this->assertEquals("index->login", Router::execute("GET", "/123/tim"));
         $this->assertEquals("index->login", Router::execute("POST", "/123/tim"));
     }

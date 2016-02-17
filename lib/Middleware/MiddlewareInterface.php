@@ -1,8 +1,8 @@
 <?php
 
-namespace TimTegeler\Routerunner\Guard;
+namespace TimTegeler\Routerunner\Middleware;
 
-interface GuardInterface
+interface MiddlewareInterface
 {
 
     /**

@@ -5,7 +5,7 @@ namespace TimTegeler\Routerunner;
 use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Exception\RouterException;
-use TimTegeler\Routerunner\Guard\Guard;
+use TimTegeler\Routerunner\Middleware\Middleware;
 
 /**
  * Class Router
@@ -27,7 +27,7 @@ class Router
     /**
      * @var array
      */
-    private static $guards = array();
+    private static $middlewares = array();
     /**
      * @var string
      */
@@ -74,10 +74,10 @@ class Router
 
         $controller = self::constructController(self::$callableNameSpace . "\\" . $callback->getController());
 
-        foreach (self::$guards as $guard) {
-            /** @var Guard $guard */
-            if ($guard->process($controller) == false) {
-                $callable = $guard->getCallback();
+        foreach (self::$middlewares as $middleware) {
+            /** @var Middleware $middleware */
+            if ($middleware->process($controller) == false) {
+                $callable = $middleware->getCallback();
                 $method = $callable->getMethod();
                 $controller = self::constructController(self::$callableNameSpace . "\\" . $callable->getController());
                 break;
@@ -138,11 +138,11 @@ class Router
     }
 
     /**
-     * @param Guard $guard
+     * @param Middleware $middleware
      */
-    public static function registerGuard(Guard $guard)
+    public static function registerMiddleware(Middleware $middleware)
     {
-        self::$guards[] = $guard;
+        self::$middlewares[] = $middleware;
     }
 
     /**

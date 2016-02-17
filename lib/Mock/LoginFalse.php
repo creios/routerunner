@@ -2,9 +2,9 @@
 
 namespace TimTegeler\Routerunner\Mock;
 
-use TimTegeler\Routerunner\Guard\Guard;
+use TimTegeler\Routerunner\Middleware\Middleware;
 
-class LoginFalse extends Guard
+class LoginFalse extends Middleware
 {
     public function process($controller)
     {

@@ -1,12 +1,12 @@
 <?php
 
-namespace TimTegeler\Routerunner\Guard;
+namespace TimTegeler\Routerunner\Middleware;
 
 /**
- * Class Guard
- * @package TimTegeler\Routerunner\Guard
+ * Class Middleware
+ * @package TimTegeler\Routerunner\Middleware
  */
-abstract class Guard implements GuardInterface
+abstract class Middleware implements MiddlewareInterface
 {
 
     /**
