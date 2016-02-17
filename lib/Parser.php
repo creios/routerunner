@@ -112,11 +112,21 @@ class Parser
         return $routes;
     }
 
+    /**
+     * @param $callable
+     * @return array
+     */
     private static function generateCallback($callable)
     {
         return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $callable);
     }
 
+    /**
+     * @param $filename
+     * @param bool $clearCache
+     * @return bool
+     * @throws ParseException
+     */
     private static function fileUseable($filename, $clearCache = FALSE)
     {
         if ($clearCache) clearstatcache(True, $filename);
@@ -125,12 +135,23 @@ class Parser
         return true;
     }
 
+    /**
+     * @param $filename
+     * @param bool $clearCache
+     * @return int
+     * @throws ParseException
+     */
     private static function getTimestamp($filename, $clearCache = FALSE)
     {
         self::fileUseable($filename, $clearCache);
         return filemtime($filename);
     }
 
+    /**
+     * @param $cacheTimestamp
+     * @param $routesTimestamp
+     * @return bool
+     */
     private static function needRecache($cacheTimestamp, $routesTimestamp)
     {
         return $cacheTimestamp !== $routesTimestamp;
