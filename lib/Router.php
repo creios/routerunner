@@ -3,6 +3,7 @@
 namespace TimTegeler\Routerunner;
 
 use ReflectionClass;
+use ReflectionMethod;
 use TimTegeler\Routerunner\Exception\RouterException;
 
 /**
@@ -61,8 +62,22 @@ class Router
         list($class, $method) = self::generateCallable($route);
 
         if (class_exists($class)) {
+
+            $refMethod = new ReflectionMethod($class, '__construct');
+            $params = $refMethod->getParameters();
+
+            $re_args = array();
+
+            foreach ($params as $key => $param) {
+                if ($param->isPassedByReference()) {
+                    $re_args[$key] = &self::$controllerDependencies[$key];
+                } else {
+                    $re_args[$key] = self::$controllerDependencies[$key];
+                }
+            }
+
             $refClass = new ReflectionClass($class);
-            $controller = $refClass->newInstanceArgs(self::$controllerDependencies);
+            $controller = $refClass->newInstanceArgs($re_args);
 
             if ($refClass->hasMethod($method)) {
                 if (is_array($route->getParameter())) {
