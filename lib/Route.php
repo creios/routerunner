@@ -30,9 +30,9 @@ class Route
      * Route constructor.
      * @param $httpMethod
      * @param $uri
-     * @param Callback $callback
+     * @param \TimTegeler\Routerunner\Callback $callback
      */
-    public function __construct($httpMethod, $uri, Callback $callback)
+    public function __construct($httpMethod, $uri, $callback)
     {
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;
@@ -56,7 +56,7 @@ class Route
     }
 
     /**
-     * @return Callback
+     * @return \TimTegeler\Routerunner\Callback
      */
     public function getCallback()
     {
