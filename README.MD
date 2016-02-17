@@ -22,7 +22,7 @@ Router::route("GET", "/user/[numeric]", "User->get");
 Router::route("POST", "/login", "Index->post");
 
 // Trigger execution 
-Router::execute($_SERVER[‘REQUEST_METHOD’], $_SERVER['REQUEST_URI’]);
+Router::execute($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 ```
 
 ### Pseudo regular expression
