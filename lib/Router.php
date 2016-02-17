@@ -20,9 +20,27 @@ class Router
      * @var string
      */
     private static $callableNameSpace = "\\";
+    /**
+     * @var array
+     */
     private static $controllerDependencies = array();
-    /** @var AuthorizerInterface */
+    /**
+     * @var AuthorizerInterface
+     */
     private static $authorizer;
+    /**
+     * @var string
+     */
+    private static $loginHttpMethod;
+    /**
+     * @var string
+     */
+    private static $loginUri;
+    /**
+     * @var object
+     */
+    private static $controller;
+
 
     /**
      * @param $filename
@@ -55,16 +73,64 @@ class Router
      */
     public static function execute($httpMethod, $uri)
     {
+        /** @var Route $route */
+        /** @var String $method */
+        list($route, $controller, $method) = self::getRouteAndControllerInstanceAndMethodName($httpMethod, $uri);
+
+        try {
+            self::authorize($controller);
+        } catch (\Exception $e) {
+            list($route, $controller, $method) = self::getRouteAndControllerInstanceAndMethodName(self::$loginHttpMethod, self::$loginUri);
+        }
+
+        self::$controller = $controller;
+
+        if (method_exists($controller, $method)) {
+            if (is_array($route->getParameter())) {
+                return $controller->$method($route->getParameter());
+            } else {
+                return $controller->$method();
+            }
+        }
+
+    }
+
+    /**
+     * @param $httpMethod
+     * @param $uri
+     * @return array
+     */
+    private static function getRouteAndControllerInstanceAndMethodName($httpMethod, $uri)
+    {
+        $route = self::findRoute($httpMethod, $uri);
+        list($class, $method) = self::generateCallable($route);
+        $controller = self::constructController($class);
+        return array($route, $controller, $method);
+    }
+
+    /**
+     * @param $httpMethod
+     * @param $uri
+     * @return Route
+     * @throws RouterException
+     */
+    private static function findRoute($httpMethod, $uri)
+    {
         try {
             $route = Finder::findRoute($httpMethod, $uri);
         } catch (RouterException $e) {
             $route = Finder::findRoute(self::FALLBACK_HTTP_METHOD, self::FALLBACK_URI);
         }
+        return $route;
+    }
 
-        list($class, $method) = self::generateCallable($route);
-
+    /**
+     * @param $class
+     * @return object
+     */
+    private static function constructController($class)
+    {
         if (class_exists($class)) {
-
             $refMethod = new ReflectionMethod($class, '__construct');
             $params = $refMethod->getParameters();
 
@@ -80,22 +146,9 @@ class Router
 
             $refClass = new ReflectionClass($class);
             $controller = $refClass->newInstanceArgs($re_args);
-
-            try {
-                self::authorize($controller);
-            } catch (\Exception $e) {
-                //TODO
-            }
-
-            if ($refClass->hasMethod($method)) {
-                if (is_array($route->getParameter())) {
-                    return $controller->$method($route->getParameter());
-                } else {
-                    return $controller->$method();
-                }
-            }
+            return $controller;
         }
-        throw new RouterException("Route is not callable");
+
     }
 
     /**
@@ -139,6 +192,16 @@ class Router
     public static function setAuthorizer(AuthorizerInterface $authorizer)
     {
         self::$authorizer = $authorizer;
+    }
+
+    /**
+     * @param string $loginHttpMethod
+     * @param string $loginUri
+     */
+    public static function setLoginFallback($loginHttpMethod, $loginUri)
+    {
+        self::$loginHttpMethod = $loginHttpMethod;
+        self::$loginUri = $loginUri;
     }
 
 
