@@ -11,7 +11,7 @@
 
 ```php
 <?php
-use TimTegeler\Routerunner\Routerunner;
+use TimTegeler\Routerunner\Router;
 
 // Setting root namespace for controller 
 Router::setCallableNameSpace("Controller");
