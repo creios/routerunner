@@ -25,6 +25,9 @@ class Router
      * @var array
      */
     private static $controllerDependencies = array();
+    /**
+     * @var array
+     */
     private static $guards = array();
     /**
      * @var string
@@ -146,6 +149,9 @@ class Router
     }
 
 
+    /**
+     * @param Guard $guard
+     */
     public static function registerGuard(Guard $guard){
         self::$guards[] = $guard;
     }

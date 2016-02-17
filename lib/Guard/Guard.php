@@ -2,9 +2,16 @@
 
 namespace TimTegeler\Routerunner\Guard;
 
+/**
+ * Class Guard
+ * @package TimTegeler\Routerunner\Guard
+ */
 abstract class Guard implements GuardInterface
 {
 
+    /**
+     * @var string
+     */
     protected $callable;
 
     /**
@@ -16,11 +23,17 @@ abstract class Guard implements GuardInterface
         return true;
     }
 
+    /**
+     * @param $callable
+     */
     public function setCallable($callable)
     {
         $this->callable = $callable;
     }
 
+    /**
+     * @return mixed
+     */
     public function getCallable()
     {
         return $this->callable;
