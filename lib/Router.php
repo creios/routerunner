@@ -2,6 +2,7 @@
 
 namespace TimTegeler\Routerunner;
 
+use ReflectionClass;
 use TimTegeler\Routerunner\Exception\RouterException;
 
 /**
@@ -18,6 +19,7 @@ class Router
      * @var string
      */
     private static $callableNameSpace = "\\";
+    private static $controllerDependencies = array();
 
     /**
      * @param $filename
@@ -55,12 +57,22 @@ class Router
         } catch (RouterException $e) {
             $route = Finder::findRoute(self::FALLBACK_HTTP_METHOD, self::FALLBACK_URI);
         }
-        $callable = self::generateCallable($route);
-        if (is_callable($callable)) {
-            return call_user_func_array($callable, $route->getParameter());
-        } else {
-            throw new RouterException("Route is not callable");
+
+        list($class, $method) = self::generateCallable($route);
+
+        if (class_exists($class)) {
+            $refClass = new ReflectionClass($class);
+            $controller = $refClass->newInstanceArgs(self::$controllerDependencies);
+
+            if ($refClass->hasMethod($method)) {
+                if (is_array($route->getParameter())) {
+                    return $controller->$method($route->getParameter());
+                } else {
+                    return $controller->$method();
+                }
+            }
         }
+        throw new RouterException("Route is not callable");
     }
 
     /**
@@ -81,9 +93,18 @@ class Router
     }
 
     /**
+     * @param array $controllerDependencies
+     */
+    public static function setControllerDependencies(array $controllerDependencies)
+    {
+        self::$controllerDependencies = $controllerDependencies;
+    }
+
+    /**
      * @param $filename
      */
-    public static function setCacheFile($filename){
+    public static function setCacheFile($filename)
+    {
         Cache::setFile($filename);
     }
 
