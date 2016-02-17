@@ -1,14 +1,16 @@
 <?php
 
+namespace TimTegeler\Routerunner;
+
 /**
  * Interface AuthorizerInterface
  */
-interface AuthorizerInterface{
-
+interface AuthorizerInterface
+{
 
     /**
      * @param $controller
-     * @return mixed
+     * @return bool
      */
     public function verify($controller);
 
