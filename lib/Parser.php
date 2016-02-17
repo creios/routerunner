@@ -11,9 +11,9 @@ use TimTegeler\Routerunner\Exception\ParseException;
 class Parser
 {
     const SEPERATOR_OF_CLASS_AND_METHOD = "->";
-    const HTTP_METHOD = '(GET|POST|\*)';
-    const URI = '((\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
-    const _CALLABLE = '([a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
+    const HTTP_METHOD = '(?<httpMethod>GET|POST|\*)';
+    const URI = '(?<url>(\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
+    const _CALLABLE = '(?<callable>[a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
     const ROUTE_FORMAT = '^%s[ \t]*%s[ \t]*%s^';
     /**
      * @var bool
@@ -46,9 +46,8 @@ class Parser
         $regularExpression = self::getRegularExpression();
         if (preg_match($regularExpression, $route, $parts) === 1) {
             array_shift($parts);
-            //TODO BETTER REGEXP FOR URI
-            list($controller, $method) = self::generateCallback($parts[4]);
-            return new Route($parts[0], $parts[1], new Callback($controller, $method));
+            list($controller, $method) = self::generateCallback($parts['callable']);
+            return new Route($parts['httpMethod'], $parts['url'], new Callback($controller, $method));
         } else {
             throw new ParseException("Line doesn't matches Pattern");
         }
