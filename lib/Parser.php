@@ -10,7 +10,7 @@ use TimTegeler\Routerunner\Exception\ParseException;
  */
 class Parser
 {
-
+    const SEPERATOR_OF_CLASS_AND_METHOD = "->";
     const HTTP_METHOD = '(GET|POST|\*)';
     const URI = '((\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
     const _CALLABLE = '([a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
@@ -47,7 +47,8 @@ class Parser
         if (preg_match($regularExpression, $route, $parts) === 1) {
             array_shift($parts);
             //TODO BETTER REGEXP FOR URI
-            return new Route($parts[0], $parts[1], $parts[4]);
+            list($controller, $method) = self::generateCallback($parts[4]);
+            return new Route($parts[0], $parts[1], new Callback($controller, $method));
         } else {
             throw new ParseException("Line doesn't matches Pattern");
         }
@@ -110,6 +111,11 @@ class Parser
         fclose($file);
 
         return $routes;
+    }
+
+    private static function generateCallback($callable)
+    {
+        return explode(self::SEPERATOR_OF_CLASS_AND_METHOD, $callable);
     }
 
     private static function fileUseable($filename, $clearCache = FALSE)

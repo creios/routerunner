@@ -19,9 +19,9 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         Cache::setFile(__DIR__ . "/../assets/cache");
         $this->assertTrue(Cache::useable());
         $routes = array();
-        $routes[] = new Route("*", "/", "foo->bar");
-        $routes[] = new Route("GET", "/", "foo->bar");
-        $routes[] = new Route("POST", "/subpath/[numeric]/[string]", "foo->bar");
+        $routes[] = new Route("*", "/", new Callback("foo", "bar"));
+        $routes[] = new Route("GET", "/", new Callback("foo", "bar"));
+        $routes[] = new Route("POST", "/subpath/[numeric]/[string]", new Callback("foo", "bar"));
         Cache::write($routes);
         $this->assertEquals($routes, Cache::read());
         Cache::clear();

@@ -18,9 +18,9 @@ class Route
      */
     private $uri;
     /**
-     * @var string
+     * @var Callback
      */
-    private $callable;
+    private $callback;
     /**
      * @var string
      */
@@ -30,17 +30,17 @@ class Route
      * Route constructor.
      * @param $httpMethod
      * @param $uri
-     * @param $callable
+     * @param Callback $callback
      */
-    public function __construct($httpMethod, $uri, $callable)
+    public function __construct($httpMethod, $uri, Callback $callback)
     {
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;
-        $this->callable = $callable;
+        $this->callback = $callback;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getHttpMethod()
     {
@@ -48,7 +48,7 @@ class Route
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getUri()
     {
@@ -56,15 +56,15 @@ class Route
     }
 
     /**
-     * @return mixed
+     * @return Callback
      */
-    public function getCallable()
+    public function getCallback()
     {
-        return $this->callable;
+        return $this->callback;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getParameter()
     {

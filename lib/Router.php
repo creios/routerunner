@@ -70,20 +70,20 @@ class Router
     public static function execute($httpMethod, $uri)
     {
         $route = self::findRoute($httpMethod, $uri);
-        list($class, $method) = self::generateCallable($route);
-        $controller = self::constructController($class);
+        $callback = $route->getCallback();
+        $method = $callback->getMethod();
 
-        foreach(self::$guards as $guard){
+        $controller = self::constructController(self::$callableNameSpace . "\\" . $callback->getController());
+
+        foreach (self::$guards as $guard) {
             /** @var Guard $guard */
-            if($guard->process($controller) == false){
-                $callable = $guard->getCallable();
-                $route = new Route($httpMethod, $uri, $callable);
-                list($class, $method) = self::generateCallable($route);
-                $controller = self::constructController($class);
+            if ($guard->process($controller) == false) {
+                $callable = $guard->getCallback();
+                $method = $callable->getMethod();
+                $controller = self::constructController(self::$callableNameSpace . "\\" . $callable->getController());
                 break;
             }
         }
-
 
         if (method_exists($controller, $method)) {
             if (is_array($route->getParameter())) {
@@ -136,23 +136,13 @@ class Router
             $controller = $refClass->newInstanceArgs($re_args);
             return $controller;
         }
-
     }
-
-    /**
-     * @param Route $route
-     * @return array
-     */
-    private static function generateCallable(Route $route)
-    {
-        return explode(self::SEPERATOR_OF_CLASS_AND_METHOD, self::$callableNameSpace . "\\" . $route->getCallable());
-    }
-
 
     /**
      * @param Guard $guard
      */
-    public static function registerGuard(Guard $guard){
+    public static function registerGuard(Guard $guard)
+    {
         self::$guards[] = $guard;
     }
 
@@ -181,7 +171,6 @@ class Router
         self::$loginHttpMethod = $loginHttpMethod;
         self::$loginUri = $loginUri;
     }
-
 
     /**
      * @param $filename

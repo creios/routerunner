@@ -26,7 +26,7 @@ abstract class Guard implements GuardInterface
     /**
      * @param $callable
      */
-    public function setCallable($callable)
+    public function setCallback($callable)
     {
         $this->callable = $callable;
     }
@@ -34,7 +34,7 @@ abstract class Guard implements GuardInterface
     /**
      * @return mixed
      */
-    public function getCallable()
+    public function getCallback()
     {
         return $this->callable;
     }

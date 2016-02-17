@@ -38,7 +38,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         Router::route("GET", "/[numeric]/[string]", "Index->get");
         Router::route("POST", "/[numeric]/[string]", "Index->post");
         $loginGuard = new LoginTrue();
-        $loginGuard->setCallable("index->login");
+        $loginGuard->setCallback(new Callback("index","login"));
         Router::registerGuard($loginGuard);
         $this->assertEquals("index->get", Router::execute("GET", "/123/tim"));
         $this->assertEquals("index->post", Router::execute("POST", "/123/tim"));
@@ -50,7 +50,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         Router::route("GET", "/[numeric]/[string]", "Index->get");
         Router::route("POST", "/[numeric]/[string]", "Index->post");
         $loginGuard = new LoginFalse();
-        $loginGuard->setCallable("index->login");
+        $loginGuard->setCallback(new Callback("index","login"));
         Router::registerGuard($loginGuard);
         $this->assertEquals("index->login", Router::execute("GET", "/123/tim"));
         $this->assertEquals("index->login", Router::execute("POST", "/123/tim"));

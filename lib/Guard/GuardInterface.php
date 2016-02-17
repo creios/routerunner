@@ -11,8 +11,8 @@ interface GuardInterface
      */
     public function process($controller);
 
-    public function setCallable($callable);
+    public function setCallback($callable);
 
-    public function getCallable();
+    public function getCallback();
 
 }
