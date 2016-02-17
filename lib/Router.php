@@ -6,6 +6,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
+use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
 
 /**
  * Class Router
@@ -28,6 +29,10 @@ class Router
      * @var array
      */
     private static $middlewares = array();
+    /**
+     * @var PostProcessorInterface
+     */
+    private static $postProcessor;
     /**
      * @var string
      */
@@ -86,13 +91,20 @@ class Router
 
         if (method_exists($controller, $method)) {
             if (is_array($route->getParameter())) {
-                return $controller->$method($route->getParameter());
+                $return = $controller->$method($route->getParameter());
             } else {
-                return $controller->$method();
+                $return = $controller->$method();
             }
+
+            if (self::$postProcessor != null) {
+                return self::$postProcessor->process($controller);
+            }else{
+                return $return;
+            }
+        } else {
+            throw new RouterException("Route is not callable");
         }
 
-        throw new RouterException("Route is not callable");
     }
 
     /**
@@ -114,6 +126,7 @@ class Router
     /**
      * @param $class
      * @return object
+     * @throws RouterException
      */
     private static function constructController($class)
     {
@@ -134,6 +147,8 @@ class Router
             $refClass = new ReflectionClass($class);
             $controller = $refClass->newInstanceArgs($re_args);
             return $controller;
+        } else {
+            throw new RouterException("Route is not callable");
         }
     }
 
@@ -143,6 +158,14 @@ class Router
     public static function registerMiddleware(Middleware $middleware)
     {
         self::$middlewares[] = $middleware;
+    }
+
+    /**
+     * @param PostProcessorInterface $postProcessor
+     */
+    public static function setPostProcessor($postProcessor)
+    {
+        self::$postProcessor = $postProcessor;
     }
 
     /**
