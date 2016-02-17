@@ -14,7 +14,6 @@ use TimTegeler\Routerunner\Guard\Guard;
 class Router
 {
 
-    const SEPERATOR_OF_CLASS_AND_METHOD = "->";
     const FALLBACK_HTTP_METHOD = "GET";
     const FALLBACK_URI = "/";
     /**
