@@ -5,6 +5,7 @@ namespace TimTegeler\Routerunner;
 use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Exception\RouterException;
+use TimTegeler\Routerunner\Guard\Guard;
 
 /**
  * Class Router
@@ -24,10 +25,7 @@ class Router
      * @var array
      */
     private static $controllerDependencies = array();
-    /**
-     * @var AuthorizerInterface
-     */
-    private static $authorizer;
+    private static $guards = array();
     /**
      * @var string
      */
@@ -36,11 +34,6 @@ class Router
      * @var string
      */
     private static $loginUri;
-    /**
-     * @var object
-     */
-    private static $controller;
-
 
     /**
      * @param $filename
@@ -73,17 +66,21 @@ class Router
      */
     public static function execute($httpMethod, $uri)
     {
-        /** @var Route $route */
-        /** @var String $method */
-        list($route, $controller, $method) = self::getRouteAndControllerInstanceAndMethodName($httpMethod, $uri);
+        $route = self::findRoute($httpMethod, $uri);
+        list($class, $method) = self::generateCallable($route);
+        $controller = self::constructController($class);
 
-        try {
-            self::authorize($controller);
-        } catch (\Exception $e) {
-            list($route, $controller, $method) = self::getRouteAndControllerInstanceAndMethodName(self::$loginHttpMethod, self::$loginUri);
+        foreach(self::$guards as $guard){
+            /** @var Guard $guard */
+            if($guard->process($controller) == false){
+                $callable = $guard->getCallable();
+                $route = new Route($httpMethod, $uri, $callable);
+                list($class, $method) = self::generateCallable($route);
+                $controller = self::constructController($class);
+                break;
+            }
         }
 
-        self::$controller = $controller;
 
         if (method_exists($controller, $method)) {
             if (is_array($route->getParameter())) {
@@ -93,19 +90,7 @@ class Router
             }
         }
 
-    }
-
-    /**
-     * @param $httpMethod
-     * @param $uri
-     * @return array
-     */
-    private static function getRouteAndControllerInstanceAndMethodName($httpMethod, $uri)
-    {
-        $route = self::findRoute($httpMethod, $uri);
-        list($class, $method) = self::generateCallable($route);
-        $controller = self::constructController($class);
-        return array($route, $controller, $method);
+        throw new RouterException("Route is not callable");
     }
 
     /**
@@ -160,14 +145,9 @@ class Router
         return explode(self::SEPERATOR_OF_CLASS_AND_METHOD, self::$callableNameSpace . "\\" . $route->getCallable());
     }
 
-    /**
-     * @param $controller
-     */
-    private static function authorize($controller)
-    {
-        if (self::$authorizer != null) {
-            self::$authorizer->verify($controller);
-        }
+
+    public static function registerGuard(Guard $guard){
+        self::$guards[] = $guard;
     }
 
     /**
@@ -184,14 +164,6 @@ class Router
     public static function setControllerDependencies(array $controllerDependencies)
     {
         self::$controllerDependencies = $controllerDependencies;
-    }
-
-    /**
-     * @param AuthorizerInterface $authorizer
-     */
-    public static function setAuthorizer(AuthorizerInterface $authorizer)
-    {
-        self::$authorizer = $authorizer;
     }
 
     /**

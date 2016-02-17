@@ -19,4 +19,8 @@ class Index
         return "index->post";
     }
 
+    public static function login(){
+        return "index->login";
+    }
+
 }
