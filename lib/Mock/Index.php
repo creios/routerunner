@@ -5,7 +5,7 @@ namespace TimTegeler\Routerunner\Mock;
 class Index
 {
 
-    public static function __construct(){
+    public function __construct(){
 
     }
 

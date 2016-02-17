@@ -21,6 +21,8 @@ class Router
      */
     private static $callableNameSpace = "\\";
     private static $controllerDependencies = array();
+    /** @var AuthorizerInterface */
+    private static $authorizer;
 
     /**
      * @param $filename
@@ -79,6 +81,12 @@ class Router
             $refClass = new ReflectionClass($class);
             $controller = $refClass->newInstanceArgs($re_args);
 
+            try {
+                self::authorize($controller);
+            } catch (\Exception $e) {
+                //TODO
+            }
+
             if ($refClass->hasMethod($method)) {
                 if (is_array($route->getParameter())) {
                     return $controller->$method($route->getParameter());
@@ -100,6 +108,16 @@ class Router
     }
 
     /**
+     * @param $controller
+     */
+    private static function authorize($controller)
+    {
+        if (self::$authorizer != null) {
+            self::$authorizer->verify($controller);
+        }
+    }
+
+    /**
      * @param $callableNameSpace
      */
     public static function setCallableNameSpace($callableNameSpace)
@@ -114,6 +132,15 @@ class Router
     {
         self::$controllerDependencies = $controllerDependencies;
     }
+
+    /**
+     * @param AuthorizerInterface $authorizer
+     */
+    public static function setAuthorizer(AuthorizerInterface $authorizer)
+    {
+        self::$authorizer = $authorizer;
+    }
+
 
     /**
      * @param $filename
