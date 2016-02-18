@@ -13,7 +13,7 @@ class Parser
     const SEPARATOR_OF_CLASS_AND_METHOD = "->";
     const HTTP_METHOD = '(?<httpMethod>GET|POST|\*)';
     const URI = '(?<url>(\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
-    const _CALLABLE = '(?<callable>[a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
+    const _CALLABLE = '(?<callable>([a-zA-Z]*\\\\)*[a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
     const ROUTE_FORMAT = '^%s[ \t]*%s[ \t]*%s^';
     /**
      * @var bool
@@ -33,7 +33,7 @@ class Parser
      */
     private static function getRegularExpression()
     {
-        return $routeRegularExpression = sprintf(self::ROUTE_FORMAT, self::HTTP_METHOD, self::URI, self::_CALLABLE);
+        return sprintf(self::ROUTE_FORMAT, self::HTTP_METHOD, self::URI, self::_CALLABLE);
     }
 
     /**
