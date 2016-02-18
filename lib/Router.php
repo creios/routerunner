@@ -33,14 +33,6 @@ class Router
      * @var PostProcessorInterface
      */
     private static $postProcessor;
-    /**
-     * @var string
-     */
-    private static $loginHttpMethod;
-    /**
-     * @var string
-     */
-    private static $loginUri;
 
     /**
      * @param $filename
@@ -182,16 +174,6 @@ class Router
     public static function setControllerDependencies(array $controllerDependencies)
     {
         self::$controllerDependencies = $controllerDependencies;
-    }
-
-    /**
-     * @param string $loginHttpMethod
-     * @param string $loginUri
-     */
-    public static function setLoginFallback($loginHttpMethod, $loginUri)
-    {
-        self::$loginHttpMethod = $loginHttpMethod;
-        self::$loginUri = $loginUri;
     }
 
     /**
