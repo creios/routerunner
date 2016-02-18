@@ -25,8 +25,22 @@ class Callback
      */
     public function __construct($controller, $method)
     {
-        $this->controller = $controller;
+        $this->setController($controller);
         $this->method = $method;
+    }
+
+    /**
+     * @param $haystack
+     * @param $needle
+     * @return string
+     */
+    private static function removeLeadingString($haystack, $needle)
+    {
+        if (mb_substr($haystack, 0, mb_strlen($needle)) == $needle) {
+            return mb_substr($haystack, mb_strlen($needle));
+        }
+
+        return $haystack;
     }
 
     /**
@@ -42,7 +56,7 @@ class Callback
      */
     public function setController($controller)
     {
-        $this->controller = $controller;
+        $this->controller = self::removeLeadingString($controller, Router::getCallableNameSpace()."\\");
     }
 
     /**

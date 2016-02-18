@@ -177,6 +177,16 @@ class Router
     }
 
     /**
+     * @return string
+     */
+    public static function getCallableNameSpace()
+    {
+        return self::$callableNameSpace;
+    }
+
+
+
+    /**
      * @param $filename
      */
     public static function setCacheFile($filename)
