@@ -61,6 +61,7 @@ POST   /login           Index->post
 You need to let Routerunner parse your routefile, but furthermore you can define routes in php.
 
 ```php
+<?php
 // Parsing the configfile
 $routerunner->parse("path/to/routesfile");
 $routerunner->route("GET", "/faq", "Index->faq");
