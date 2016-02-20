@@ -15,46 +15,39 @@ use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
 class Router
 {
 
-    const FALLBACK_HTTP_METHOD = "GET";
-    const FALLBACK_URI = "/";
     /**
      * @var string
      */
-    private static $callableNameSpace = "\\";
+    const FALLBACK_HTTP_METHOD = "GET";
+    /**
+     * @var string
+     */
+    const FALLBACK_URI = "/";
+
     /**
      * @var array
      */
-    private static $controllerDependencies = array();
+    private $controllerDependencies = array();
     /**
      * @var array
      */
-    private static $middlewares = array();
+    private $middlewares = array();
     /**
      * @var PostProcessorInterface
      */
-    private static $postProcessor;
+    private $postProcessor;
 
     /**
-     * @param $filename
-     * @throws Exception\ParseException
+     * @var Finder
      */
-    public static function parse($filename)
-    {
-        $routes = Parser::parse($filename);
-        Finder::setRoutes($routes);
-    }
+    private $finder;
 
     /**
-     * @param $httpMethod
-     * @param $uri
-     * @param $callback
-     * @throws Exception\ParseException
+     * Router constructor.
      */
-    public static function route($httpMethod, $uri, $callback)
+    public function __construct()
     {
-        $routeFormat = "%s %s %s";
-        $route = sprintf($routeFormat, $httpMethod, $uri, $callback);
-        Finder::addRoute(Parser::createRoute($route));
+        $this->finder = new Finder();
     }
 
     /**
@@ -63,20 +56,20 @@ class Router
      * @return mixed
      * @throws RouterException
      */
-    public static function execute($httpMethod, $uri)
+    public function execute($httpMethod, $uri)
     {
         $route = self::findRoute($httpMethod, $uri);
         $callback = $route->getCallback();
         $method = $callback->getMethod();
 
-        $controller = self::constructController(self::$callableNameSpace . "\\" . $callback->getController());
+        $controller = self::constructController($callback->getController());
 
-        foreach (self::$middlewares as $middleware) {
+        foreach ($this->middlewares as $middleware) {
             /** @var Middleware $middleware */
             if ($middleware->process($controller) == false) {
                 $callable = $middleware->getCallback();
                 $method = $callable->getMethod();
-                $controller = self::constructController(self::$callableNameSpace . "\\" . $callable->getController());
+                $controller = self::constructController($callable->getController());
                 break;
             }
         }
@@ -88,9 +81,9 @@ class Router
                 $return = $controller->$method();
             }
 
-            if (self::$postProcessor != null) {
-                return self::$postProcessor->process($controller);
-            }else{
+            if ($this->postProcessor != null) {
+                return $this->postProcessor->process($controller);
+            } else {
                 return $return;
             }
         } else {
@@ -105,12 +98,12 @@ class Router
      * @return Route
      * @throws RouterException
      */
-    private static function findRoute($httpMethod, $uri)
+    private function findRoute($httpMethod, $uri)
     {
         try {
-            $route = Finder::findRoute($httpMethod, $uri);
+            $route = $this->finder->findRoute($httpMethod, $uri);
         } catch (RouterException $e) {
-            $route = Finder::findRoute(self::FALLBACK_HTTP_METHOD, self::FALLBACK_URI);
+            $route = $this->finder->findRoute(self::FALLBACK_HTTP_METHOD, self::FALLBACK_URI);
         }
         return $route;
     }
@@ -120,7 +113,7 @@ class Router
      * @return object
      * @throws RouterException
      */
-    private static function constructController($class)
+    private function constructController($class)
     {
         if (class_exists($class)) {
             $refMethod = new ReflectionMethod($class, '__construct');
@@ -130,9 +123,9 @@ class Router
 
             foreach ($params as $key => $param) {
                 if ($param->isPassedByReference()) {
-                    $re_args[$key] = &self::$controllerDependencies[$key];
+                    $re_args[$key] = &$this->controllerDependencies[$key];
                 } else {
-                    $re_args[$key] = self::$controllerDependencies[$key];
+                    $re_args[$key] = $this->controllerDependencies[$key];
                 }
             }
 
@@ -140,6 +133,7 @@ class Router
             $controller = $refClass->newInstanceArgs($re_args);
             return $controller;
         } else {
+            echo $class;
             throw new RouterException("Route is not callable");
         }
     }
@@ -147,61 +141,57 @@ class Router
     /**
      * @param Middleware $middleware
      */
-    public static function registerMiddleware(Middleware $middleware)
+    public function registerMiddleware(Middleware $middleware)
     {
-        self::$middlewares[] = $middleware;
+        $this->middlewares[] = $middleware;
     }
 
     /**
      * @param PostProcessorInterface $postProcessor
      */
-    public static function setPostProcessor($postProcessor)
+    public function setPostProcessor($postProcessor)
     {
-        self::$postProcessor = $postProcessor;
+        $this->postProcessor = $postProcessor;
     }
 
     /**
-     * @param $callableNameSpace
+     * @return array
      */
-    public static function setCallableNameSpace($callableNameSpace)
+    public function getControllerDependencies()
     {
-        self::$callableNameSpace = $callableNameSpace;
+        return $this->controllerDependencies;
     }
 
     /**
      * @param array $controllerDependencies
      */
-    public static function setControllerDependencies(array $controllerDependencies)
+    public function setControllerDependencies($controllerDependencies)
     {
-        self::$controllerDependencies = $controllerDependencies;
+        $this->controllerDependencies = $controllerDependencies;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public static function getCallableNameSpace()
+    public function getMiddlewares()
     {
-        return self::$callableNameSpace;
+        return $this->middlewares;
     }
-
-
 
     /**
-     * @param $filename
+     * @param array $middlewares
      */
-    public static function setCacheFile($filename)
+    public function setMiddlewares($middlewares)
     {
-        Cache::setFile($filename);
+        $this->middlewares = $middlewares;
     }
 
-    public static function activateCaching()
+    /**
+     * @return Finder
+     */
+    public function getFinder()
     {
-        Parser::setCaching(True);
-    }
-
-    public static function deactivateCaching()
-    {
-        Parser::setCaching(False);
+        return $this->finder;
     }
 
 }

@@ -2,6 +2,10 @@
 
 namespace TimTegeler\Routerunner\Middleware;
 
+/**
+ * Interface MiddlewareInterface
+ * @package TimTegeler\Routerunner\Middleware
+ */
 interface MiddlewareInterface
 {
 
@@ -11,8 +15,14 @@ interface MiddlewareInterface
      */
     public function process($controller);
 
+    /**
+     * @param Callback $callable
+     */
     public function setCallback($callable);
 
+    /**
+     * @return Callback
+     */
     public function getCallback();
 
 }

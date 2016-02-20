@@ -6,59 +6,57 @@ class FinderTest extends \PHPUnit_Framework_TestCase
 
     public function testMatchesRoute()
     {
+        $finder = new Finder();
         $route = new Route("*", "/", new Callback("foo","bar"));
-        $this->assertEquals(array(), Finder::matchesRoute($route, "GET", "/"));
-        $this->assertEquals(array(), Finder::matchesRoute($route, "POST", "/"));
+        $this->assertEquals(array(), $finder->matchesRoute($route, "GET", "/"));
+        $this->assertEquals(array(), $finder->matchesRoute($route, "POST", "/"));
         $route = new Route("GET", "/", new Callback("foo","bar"));
-        $this->assertEmpty(Finder::matchesRoute($route, "GET", "/"));
+        $this->assertEmpty($finder->matchesRoute($route, "GET", "/"));
         $route = new Route("POST", "/subpath/[numeric]/[string]", new Callback("foo","bar"));
-        $this->assertEquals(array("123", "tim"), Finder::matchesRoute($route, "POST", "/subpath/123/tim"));
+        $this->assertEquals(array("123", "tim"), $finder->matchesRoute($route, "POST", "/subpath/123/tim"));
     }
 
     public function testAddSetGetReset()
     {
-        Finder::resetRoutes();
-        Finder::addRoute(new Route("GET", "/", new Callback("index","get")));
-        Finder::addRoute(new Route("POST", "/", new Callback("start","post")));
-
-        $routes = Finder::getRoutes();
-        $this->assertEquals(2, count($routes));
+        $finder = new Finder();
+        $finder->addRoute(new Route("GET", "/", new Callback("index","get")));
+        $finder->addRoute(new Route("POST", "/", new Callback("start","post")));
+        $this->assertEquals(2, count($finder->getRoutes()));
 
         $routesToSet = array(new Route("GET", "/", new Callback("index","get")));
-        Finder::setRoutes($routesToSet);
-        $this->assertEquals($routesToSet, Finder::getRoutes());
+        $finder->setRoutes($routesToSet);
+        $this->assertEquals($routesToSet, $finder->getRoutes());
 
-        Finder::resetRoutes();
-        $routes = Finder::getRoutes();
-        $this->assertEquals(0, count($routes));
+        $finder->addRoutes(array(new Route("POST", "/", new Callback("start","post"))));
+        $this->assertEquals(2, count($finder->getRoutes()));
     }
 
     public function testFind()
     {
-        Finder::resetRoutes();
-        Finder::addRoute(new Route("GET", "/", new Callback("index","get")));
-        Finder::addRoute(new Route("POST", "/subpath/[numeric]/[string]", new Callback("index","post")));
-        Finder::addRoute(new Route("GET", "/[string]/[numeric]/subpath", new Callback("index","get")));
+        $finder = new Finder();
+        $finder->addRoute(new Route("GET", "/", new Callback("index","get")));
+        $finder->addRoute(new Route("POST", "/subpath/[numeric]/[string]", new Callback("index","post")));
+        $finder->addRoute(new Route("GET", "/[string]/[numeric]/subpath", new Callback("index","get")));
 
-        $route = Finder::findRoute("GET", "/");
+        $route = $finder->findRoute("GET", "/");
         $this->assertEquals("GET", $route->getHttpMethod());
         $this->assertEquals("/", $route->getUri());
         $this->assertEquals("index", $route->getCallback()->getController());
         $this->assertEquals("get", $route->getCallback()->getMethod());
 
-        $route = Finder::findRoute("POST", "/subpath/123/tim");
+        $route = $finder->findRoute("POST", "/subpath/123/tim");
         $this->assertEquals("POST", $route->getHttpMethod());
         $this->assertEquals("/subpath/[numeric]/[string]", $route->getUri());
         $this->assertEquals("index", $route->getCallback()->getController());
         $this->assertEquals("post", $route->getCallback()->getMethod());
 
-        $route = Finder::findRoute("POST", "/subpath/123.34/tim");
+        $route = $finder->findRoute("POST", "/subpath/123.34/tim");
         $this->assertEquals("POST", $route->getHttpMethod());
         $this->assertEquals("/subpath/[numeric]/[string]", $route->getUri());
         $this->assertEquals("index", $route->getCallback()->getController());
         $this->assertEquals("post", $route->getCallback()->getMethod());
 
-        $route = Finder::findRoute("GET", "/tim/123/subpath");
+        $route = $finder->findRoute("GET", "/tim/123/subpath");
         $this->assertEquals("GET", $route->getHttpMethod());
         $this->assertEquals("/[string]/[numeric]/subpath", $route->getUri());
         $this->assertEquals("index", $route->getCallback()->getController());
@@ -67,10 +65,10 @@ class FinderTest extends \PHPUnit_Framework_TestCase
 
     public function testFindException()
     {
-        Finder::resetRoutes();
-        Finder::addRoute(new Route("GET", "/", new Callback("index","get")));
+        $finder = new Finder();
+        $finder->addRoute(new Route("GET", "/", new Callback("index","get")));
         $this->setExpectedException("TimTegeler\\Routerunner\\Exception\\RouterException");
-        Finder::findRoute("PUT", "/");
+        $finder->findRoute("PUT", "/");
     }
 
 }

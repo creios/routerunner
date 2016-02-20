@@ -24,7 +24,7 @@ abstract class Middleware implements MiddlewareInterface
     }
 
     /**
-     * @param $callable
+     * @param Callback $callable
      */
     public function setCallback($callable)
     {
@@ -32,7 +32,7 @@ abstract class Middleware implements MiddlewareInterface
     }
 
     /**
-     * @return mixed
+     * @return Callback
      */
     public function getCallback()
     {

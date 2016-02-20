@@ -14,43 +14,13 @@ class Cache
     /**
      * @var
      */
-    public static $file;
+    public $file;
 
     /**
      * @return bool
      * @throws CacheException
      */
-    public static function exist()
-    {
-        if (file_exists(self::$file)) return true;
-        throw new CacheException(sprintf("File (%s) doesn't exist.", self::$file));
-    }
-
-    /**
-     * @return bool
-     * @throws CacheException
-     */
-    public static function readable()
-    {
-        if (is_readable(self::$file)) return true;
-        throw new CacheException(sprintf("File (%s) isn't readable.", self::$file));
-    }
-
-    /**
-     * @return bool
-     * @throws CacheException
-     */
-    public static function writeable()
-    {
-        if (is_writeable(self::$file)) return true;
-        throw new CacheException(sprintf("File (%s) isn't writeable.", self::$file));
-    }
-
-    /**
-     * @return bool
-     * @throws CacheException
-     */
-    public static function useable()
+    public function useable()
     {
         self::exist();
         self::readable();
@@ -59,46 +29,76 @@ class Cache
     }
 
     /**
+     * @return bool
+     * @throws CacheException
+     */
+    public function exist()
+    {
+        if (file_exists($this->file)) return true;
+        throw new CacheException(sprintf("File (%s) doesn't exist.", $this->file));
+    }
+
+    /**
+     * @return bool
+     * @throws CacheException
+     */
+    public function readable()
+    {
+        if (is_readable($this->file)) return true;
+        throw new CacheException(sprintf("File (%s) isn't readable.", $this->file));
+    }
+
+    /**
+     * @return bool
+     * @throws CacheException
+     */
+    public function writeable()
+    {
+        if (is_writeable($this->file)) return true;
+        throw new CacheException(sprintf("File (%s) isn't writeable.", $this->file));
+    }
+
+    /**
      * @return int
      */
-    public static function filled()
+    public function filled()
     {
-        clearstatcache(True, self::$file);
-        return filesize(self::$file) > 0;
+        clearstatcache(True, $this->file);
+        return filesize($this->file) > 0;
     }
 
     /**
      * @return mixed
      */
-    public static function read()
+    public function read()
     {
-        $cache = file_get_contents(self::$file);
+        $cache = file_get_contents($this->file);
         return unserialize($cache);
     }
 
     /**
      * @param $cache
      */
-    public static function write($cache)
+    public function write($cache)
     {
         $cache = serialize($cache);
-        file_put_contents(self::$file, $cache);
+        file_put_contents($this->file, $cache);
     }
 
     /**
-     *
+     * @return int
      */
-    public static function clear()
+    public function clear()
     {
-        file_put_contents(self::$file, NULL);
+        return file_put_contents($this->file, NULL);
     }
 
     /**
      * @param string $file
      */
-    public static function setFile($file)
+    public function setFile($file)
     {
-        self::$file = $file;
+        $this->file = $file;
     }
 
 }

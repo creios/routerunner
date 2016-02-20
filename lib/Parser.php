@@ -10,47 +10,46 @@ use TimTegeler\Routerunner\Exception\ParseException;
  */
 class Parser
 {
+
+    /**
+     * @var string
+     */
     const SEPARATOR_OF_CLASS_AND_METHOD = "->";
+    /**
+     * @var string
+     */
     const HTTP_METHOD = '(?<httpMethod>GET|POST|\*)';
+    /**
+     * @var string
+     */
     const URI = '(?<url>(\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
+    /**
+     * @var string
+     */
     const _CALLABLE = '(?<callable>([a-zA-Z]*\\\\)*[a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
+    /**
+     * @var string
+     */
     const ROUTE_FORMAT = '^%s[ \t]*%s[ \t]*%s^';
     /**
      * @var bool
      */
-    private static $caching = False;
+    private $caching = False;
+    /**
+     * @var string
+     */
+    private $callableNameSpace = "";
+    /**
+     * @var Cache
+     */
+    private $cache;
 
     /**
-     * @param boolean $caching
+     * Parser constructor.
      */
-    public static function setCaching($caching)
+    public function __construct()
     {
-        self::$caching = $caching;
-    }
-
-    /**
-     * @return string
-     */
-    private static function getRegularExpression()
-    {
-        return sprintf(self::ROUTE_FORMAT, self::HTTP_METHOD, self::URI, self::_CALLABLE);
-    }
-
-    /**
-     * @param $route
-     * @return Route
-     * @throws ParseException
-     */
-    public static function createRoute($route)
-    {
-        $regularExpression = self::getRegularExpression();
-        if (preg_match($regularExpression, $route, $parts) === 1) {
-            array_shift($parts);
-            list($controller, $method) = self::generateCallback($parts['callable']);
-            return new Route($parts['httpMethod'], $parts['url'], new Callback($controller, $method));
-        } else {
-            throw new ParseException("Line doesn't matches Pattern");
-        }
+        $this->cache = new Cache();
     }
 
     /**
@@ -58,43 +57,79 @@ class Parser
      * @return array
      * @throws ParseException
      */
-    public static function parse($filename)
+    public function parse($filename)
     {
-        if (self::$caching && Cache::useable()) {
+        if ($this->caching && $this->cache->useable()) {
             // caching is enabled and the cache is useable
-            if (Cache::filled()) {
+            if ($this->cache->filled()) {
                 // cache is filled
                 // reading routes from cache
-                list($cacheTimestamp, $routes) = Cache::read();
+                list($cacheTimestamp, $routes) = $this->cache->read();
                 // getting timestamp from file
                 $routesTimestamp = self::getTimestamp($filename, TRUE);
                 if (self::needRecache($cacheTimestamp, $routesTimestamp)) {
                     // routes need recache
                     // writing routes to cache
-                    Cache::write(array($routesTimestamp, $routes));
+                    $this->cache->write(array($routesTimestamp, $routes));
                 }
             } else {
                 // cache is not filled
                 $routesTimestamp = self::getTimestamp($filename, TRUE);
                 // arsing routes
-                $routes = self::parseRoutes($filename);
+                $routes = $this->parseRoutes($filename);
                 // writing routes to cache
-                Cache::write(array($routesTimestamp, $routes));
+                $this->cache->write(array($routesTimestamp, $routes));
             }
         } else {
             // caching is disabled or cache is not useable
             // parsing routes
-            $routes = self::parseRoutes($filename);
+            $routes = $this->parseRoutes($filename);
         }
         return $routes;
     }
 
     /**
      * @param $filename
+     * @param bool $clearCache
+     * @return int
+     * @throws ParseException
+     */
+    private static function getTimestamp($filename, $clearCache = FALSE)
+    {
+        self::fileUseable($filename, $clearCache);
+        return filemtime($filename);
+    }
+
+    /**
+     * @param $filename
+     * @param bool $clearCache
+     * @return bool
+     * @throws ParseException
+     */
+    private static function fileUseable($filename, $clearCache = FALSE)
+    {
+        if ($clearCache) clearstatcache(True, $filename);
+        if (!file_exists($filename)) throw new ParseException(sprintf("File (%s) doesn't exist.", $filename));
+        if (!is_readable($filename)) throw new ParseException(sprintf("File (%s) isn't readable.", $filename));
+        return true;
+    }
+
+    /**
+     * @param $cacheTimestamp
+     * @param $routesTimestamp
+     * @return bool
+     */
+    private function needRecache($cacheTimestamp, $routesTimestamp)
+    {
+        return $cacheTimestamp !== $routesTimestamp;
+    }
+
+    /**
+     * @param $filename
      * @return array
      * @throws ParseException
      */
-    private static function parseRoutes($filename)
+    private function parseRoutes($filename)
     {
         $routes = array();
 
@@ -113,47 +148,60 @@ class Parser
     }
 
     /**
+     * @param $route
+     * @return Route
+     * @throws ParseException
+     */
+    public function createRoute($route)
+    {
+        $regularExpression = self::getRegularExpression();
+        if (preg_match($regularExpression, $route, $parts) === 1) {
+            array_shift($parts);
+            list($controller, $method) = $this->generateCallback($parts['callable']);
+            return new Route($parts['httpMethod'], $parts['url'], new Callback($controller, $method));
+        } else {
+            throw new ParseException("Line doesn't matches Pattern");
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private static function getRegularExpression()
+    {
+        return sprintf(self::ROUTE_FORMAT, self::HTTP_METHOD, self::URI, self::_CALLABLE);
+    }
+
+    /**
      * @param $callable
      * @return array
      */
-    private static function generateCallback($callable)
+    private function generateCallback($callable)
     {
-        return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $callable);
+        return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->callableNameSpace . '\\' . $callable);
     }
 
     /**
-     * @param $filename
-     * @param bool $clearCache
-     * @return bool
-     * @throws ParseException
+     * @return string
      */
-    private static function fileUseable($filename, $clearCache = FALSE)
+    public function getCallableNameSpace()
     {
-        if ($clearCache) clearstatcache(True, $filename);
-        if (!file_exists($filename)) throw new ParseException(sprintf("File (%s) doesn't exist.", $filename));
-        if (!is_readable($filename)) throw new ParseException(sprintf("File (%s) isn't readable.", $filename));
-        return true;
+        return $this->callableNameSpace;
     }
 
     /**
-     * @param $filename
-     * @param bool $clearCache
-     * @return int
-     * @throws ParseException
+     * @param string $callableNameSpace
      */
-    private static function getTimestamp($filename, $clearCache = FALSE)
+    public function setCallableNameSpace($callableNameSpace)
     {
-        self::fileUseable($filename, $clearCache);
-        return filemtime($filename);
+        $this->callableNameSpace = $callableNameSpace;
     }
 
     /**
-     * @param $cacheTimestamp
-     * @param $routesTimestamp
-     * @return bool
+     * @param $enable
      */
-    private static function needRecache($cacheTimestamp, $routesTimestamp)
+    public function setCaching($enable)
     {
-        return $cacheTimestamp !== $routesTimestamp;
+        $this->caching = $enable;
     }
 }

@@ -20,10 +20,9 @@
         <testsuite name="tests">
             <file>phpunit/tests/CacheTest.php</file>
             <file>phpunit/tests/PatternTest.php</file>
-            <file>phpunit/tests/RouteTest.php</file>
             <file>phpunit/tests/FinderTest.php</file>
             <file>phpunit/tests/ParserTest.php</file>
-            <file>phpunit/tests/RouterTest.php</file>
+            <file>phpunit/tests/RouterunnerTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

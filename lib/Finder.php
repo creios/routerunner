@@ -14,7 +14,7 @@ class Finder
     /**
      * @var array
      */
-    private static $routes = array();
+    private $routes = array();
 
     /**
      * @param $httpMethod
@@ -22,11 +22,11 @@ class Finder
      * @return Route
      * @throws RouterException
      */
-    public static function findRoute($httpMethod, $uri)
+    public function findRoute($httpMethod, $uri)
     {
-        foreach (self::$routes as $key => $route) {
+        foreach ($this->routes as $key => $route) {
             /** @var Route $route */
-            if (($params = self::matchesRoute($route, $httpMethod, $uri)) !== false) {
+            if (($params = $this->matchesRoute($route, $httpMethod, $uri)) !== false) {
                 $route->setParameter($params);
                 return $route;
             }
@@ -40,10 +40,10 @@ class Finder
      * @param $uri
      * @return bool
      */
-    public static function matchesRoute(Route $route, $httpMethod, $uri)
+    public function matchesRoute(Route $route, $httpMethod, $uri)
     {
         $httpMethodPattern = Pattern::buildHttpMethod($route->getHttpMethod());
-        if(preg_match($httpMethodPattern, $httpMethod, $params2) === 1){
+        if (preg_match($httpMethodPattern, $httpMethod, $params2) === 1) {
             $pattern = Pattern::buildUri($route->getUri());
             if (preg_match($pattern, $uri, $params) === 1) {
                 array_shift($params);
@@ -56,33 +56,33 @@ class Finder
     /**
      * @return array
      */
-    public static function getRoutes()
+    public function getRoutes()
     {
-        return self::$routes;
+        return $this->routes;
     }
 
     /**
      * @param array $routes
      */
-    public static function setRoutes(array $routes)
+    public function setRoutes(array $routes)
     {
-        self::$routes = $routes;
+        $this->routes = $routes;
     }
 
     /**
      * @param Route $route
      */
-    public static function addRoute(Route $route)
+    public function addRoute(Route $route)
     {
-        self::$routes[] = $route;
+        $this->routes[] = $route;
     }
 
     /**
-     *
+     * @param array $routes
      */
-    public static function resetRoutes()
+    public function addRoutes(array $routes)
     {
-        self::$routes = array();
+        $this->routes = array_merge($this->routes, $routes);
     }
 
 }
