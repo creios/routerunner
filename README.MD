@@ -72,6 +72,7 @@ If you want to reduce the parsing time of your routesfile you can activate cachi
 a read- and writeable (from your webserver) file. Be careful, every content of the file will be deleted.
 
 ```php
+<?php
 // Setting the cachefile
 $routerunner->setCacheFile("path/to/cache");
 ```

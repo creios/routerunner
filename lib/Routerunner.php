@@ -104,4 +104,12 @@ class Routerunner
     {
         $this->parser->setCaching($enable);
     }
+
+    /**
+     * @param $path
+     */
+    public function setCacheFile($path)
+    {
+        $this->parser->getCache()->setFile($path);
+    }
 }

@@ -198,6 +198,14 @@ class Parser
     }
 
     /**
+     * @return Cache
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
+    /**
      * @param $enable
      */
     public function setCaching($enable)
