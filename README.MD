@@ -11,18 +11,19 @@
 
 ```php
 <?php
-use TimTegeler\Routerunner\Router;
+use TimTegeler\Routerunner\Routerunner;
 
-// Setting root namespace for controller 
-Router::setCallableNameSpace("Controller");
+$routerunner = new Routerunner();
+// Setting root namespace for controller
+$routerunner->setCallableNameSpace("Controller");
 
 // Adding routes
-Router::route("GET", "/", "Index->get");
-Router::route("GET", "/user/[numeric]", "User->get");
-Router::route("POST", "/login", "Index->post");
+$routerunner->route("GET", "/", "Index->get");
+$routerunner->route("GET", "/user/[numeric]", "User->get");
+$routerunner->route("POST", "/login", "Index->post");
 
 // Trigger execution 
-Router::execute($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+$routerunner->execute($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 ```
 
 ### Pseudo regular expression
@@ -61,8 +62,8 @@ You need to let Routerunner parse your routefile, but furthermore you can define
 
 ```php
 // Parsing the configfile
-Router::parse("path/to/routesfile");
-Router::route("GET", "/faq", "Index->faq");
+$routerunner->parse("path/to/routesfile");
+$routerunner->route("GET", "/faq", "Index->faq");
 ```
 
 ### Caching
@@ -72,7 +73,7 @@ a read- and writeable (from your webserver) file. Be careful, every content of t
 
 ```php
 // Setting the cachefile
-Router::setCacheFile("path/to/cache");
+$routerunner->setCacheFile("path/to/cache");
 ```
 
 ## Composer
