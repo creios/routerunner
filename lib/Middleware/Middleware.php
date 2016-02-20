@@ -12,7 +12,7 @@ abstract class Middleware implements MiddlewareInterface
     /**
      * @var string
      */
-    protected $callable;
+    protected $callback;
 
     /**
      * @param $controller
@@ -24,11 +24,11 @@ abstract class Middleware implements MiddlewareInterface
     }
 
     /**
-     * @param Callback $callable
+     * @param Callback $callback
      */
-    public function setCallback($callable)
+    public function setCallback($callback)
     {
-        $this->callable = $callable;
+        $this->callback = $callback;
     }
 
     /**
@@ -36,6 +36,6 @@ abstract class Middleware implements MiddlewareInterface
      */
     public function getCallback()
     {
-        return $this->callable;
+        return $this->callback;
     }
 }

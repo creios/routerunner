@@ -16,9 +16,9 @@ interface MiddlewareInterface
     public function process($controller);
 
     /**
-     * @param Callback $callable
+     * @param Callback $callback
      */
-    public function setCallback($callable);
+    public function setCallback($callback);
 
     /**
      * @return Callback

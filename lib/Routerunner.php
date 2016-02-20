@@ -82,11 +82,11 @@ class Routerunner
     }
 
     /**
-     * @param $callableNameSpace
+     * @param $controllerRootNameSpace
      */
-    public function setCallableNameSpace($callableNameSpace)
+    public function setControllerRootNameSpace($controllerRootNameSpace)
     {
-        $this->parser->setCallableNameSpace($callableNameSpace);
+        $this->parser->setControllerRootNameSpace($controllerRootNameSpace);
     }
 
     /**

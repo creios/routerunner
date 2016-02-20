@@ -15,7 +15,7 @@ use TimTegeler\Routerunner\Routerunner;
 
 $routerunner = new Routerunner();
 // Setting root namespace for controller
-$routerunner->setCallableNameSpace("Controller");
+$routerunner->setControllerRootNameSpace("Controller");
 
 // Adding routes
 $routerunner->route("GET", "/", "Index->get");

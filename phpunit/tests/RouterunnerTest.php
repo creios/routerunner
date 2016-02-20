@@ -11,7 +11,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testExecute()
     {
         $routerunner = new Routerunner();
-        $routerunner->setCallableNameSpace("TimTegeler\\Routerunner\\Mock");
+        $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
         $routerunner->route("GET", "/[numeric]/[string]", "Index->get");
         $routerunner->route("POST", "/[numeric]/[string]", "Index->post");
         $this->assertEquals("index->get", $routerunner->execute("GET", "/123/tim"));
@@ -21,7 +21,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testExecuteFallback()
     {
         $routerunner = new Routerunner();
-        $routerunner->setCallableNameSpace("TimTegeler\\Routerunner\\Mock");
+        $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
         $routerunner->parse(__DIR__ . "/../assets/routes");
         $this->assertEquals("index->get", $routerunner->execute("PUST", "/123/tim"));
     }
@@ -29,7 +29,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testExecuteException()
     {
         $routerunner = new Routerunner();
-        $routerunner->setCallableNameSpace("TimTegeler\\Routerunner\\Mock");
+        $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
         $this->setExpectedException("TimTegeler\\Routerunner\\Exception\\RouterException");
         $routerunner->execute("GET", "/");
     }
@@ -37,7 +37,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testMiddlewareTrue()
     {
         $routerunner = new Routerunner();
-        $routerunner->setCallableNameSpace("TimTegeler\\Routerunner\\Mock");
+        $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
         $routerunner->route("GET", "/[numeric]/[string]", "Index->get");
         $routerunner->route("POST", "/[numeric]/[string]", "Index->post");
         $loginMiddleware = new LoginTrue();
@@ -50,7 +50,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testMiddlewareLoginFalse()
     {
         $routerunner = new Routerunner();
-        $routerunner->setCallableNameSpace("TimTegeler\\Routerunner\\Mock");
+        $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
         $routerunner->route("GET", "/[numeric]/[string]", "Index->get");
         $routerunner->route("POST", "/[numeric]/[string]", "Index->post");
         $loginMiddleware = new LoginFalse();

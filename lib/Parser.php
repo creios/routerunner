@@ -38,7 +38,7 @@ class Parser
     /**
      * @var string
      */
-    private $callableNameSpace = "";
+    private $controllerRootNameSpace = "";
     /**
      * @var Cache
      */
@@ -178,23 +178,23 @@ class Parser
      */
     private function generateCallback($callable)
     {
-        return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->callableNameSpace . '\\' . $callable);
+        return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
     }
 
     /**
      * @return string
      */
-    public function getCallableNameSpace()
+    public function getControllerRootNameSpace()
     {
-        return $this->callableNameSpace;
+        return $this->controllerRootNameSpace;
     }
 
     /**
-     * @param string $callableNameSpace
+     * @param string $controllerRootNameSpace
      */
-    public function setCallableNameSpace($callableNameSpace)
+    public function setControllerRootNameSpace($controllerRootNameSpace)
     {
-        $this->callableNameSpace = $callableNameSpace;
+        $this->controllerRootNameSpace = $controllerRootNameSpace;
     }
 
     /**
