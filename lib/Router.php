@@ -116,24 +116,34 @@ class Router
     private function constructController($class)
     {
         if (class_exists($class)) {
-            $refMethod = new ReflectionMethod($class, '__construct');
-            $params = $refMethod->getParameters();
+            $refClass = new ReflectionClass($class);
 
-            $re_args = array();
+            if ($refClass->hasMethod('__construct')) {
+                $refMethod = new ReflectionMethod($class, '__construct');
+                $params = $refMethod->getParameters();
 
-            foreach ($params as $key => $param) {
-                if ($param->isPassedByReference()) {
-                    $re_args[$key] = &$this->controllerDependencies[$key];
+                if (count($params) > 0) {
+                    $constructorArgs = array();
+
+                    foreach ($params as $key => $param) {
+                        if ($param->isPassedByReference()) {
+                            $constructorArgs[$key] = &$this->controllerDependencies[$key];
+                        } else {
+                            $constructorArgs[$key] = $this->controllerDependencies[$key];
+                        }
+                    }
+
+                    $controller = $refClass->newInstanceArgs($constructorArgs);
                 } else {
-                    $re_args[$key] = $this->controllerDependencies[$key];
+                    $controller = $refClass->newInstance();
                 }
+
+            } else {
+                $controller = $refClass->newInstance();
             }
 
-            $refClass = new ReflectionClass($class);
-            $controller = $refClass->newInstanceArgs($re_args);
             return $controller;
         } else {
-            echo $class;
             throw new RouterException("Route is not callable");
         }
     }
