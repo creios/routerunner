@@ -76,7 +76,8 @@ class Router
 
         if (method_exists($controller, $method)) {
             if (is_array($route->getParameter())) {
-                $return = $controller->$method($route->getParameter());
+                $refMethod = new ReflectionMethod($callback->getController(), $method);
+                $return = $refMethod->invokeArgs($controller, $route->getParameter());
             } else {
                 $return = $controller->$method();
             }
