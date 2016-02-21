@@ -10,10 +10,9 @@ interface PostProcessorInterface
 {
 
     /**
-     * @param $controller
-     * @param $return
+     * @param $output
      * @return mixed
      */
-    public function process($controller, $return);
+    public function process($output);
 
 }
