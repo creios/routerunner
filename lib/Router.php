@@ -66,7 +66,7 @@ class Router
 
         foreach ($this->middlewares as $middleware) {
             /** @var Middleware $middleware */
-            if ($middleware->process($controller) == false) {
+            if ($middleware->process($controller) === false) {
                 $callback = $middleware->getCallback();
                 $method = $callback->getMethod();
                 $controller = self::constructController($callback->getController());
