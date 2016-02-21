@@ -83,7 +83,7 @@ class Router
             }
 
             if ($this->postProcessor != null) {
-                return $this->postProcessor->process($controller);
+                return $this->postProcessor->process($controller, $return);
             } else {
                 return $return;
             }

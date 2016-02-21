@@ -11,8 +11,9 @@ interface PostProcessorInterface
 
     /**
      * @param $controller
+     * @param $return
      * @return mixed
      */
-    public function process($controller);
+    public function process($controller, $return);
 
 }
