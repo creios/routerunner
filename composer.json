@@ -1,6 +1,5 @@
 {
   "name": "timtegeler/routerunner",
-  "version": "0.0.1",
   "description": "Routerunner is a router for HTTP-request written in PHP",
   "type": "library",
   "license": "MIT",
