@@ -80,9 +80,9 @@ $routerunner->setCacheFile("path/to/cache");
 
 ## Composer
 
-You can use [composer](https://getcomposer.org/) to download Routerunner. At the moment Routerunner ist not availabel 
-over [packagist](https://packagist.org/), but the first stable release will be published there. 
+You can use [composer](https://getcomposer.org/) to download and install Routerunner. Visit routerunner on [packagist](https://packagist.org/packages/timtegeler/routerunner).
 
+### composer.json
 ```json
 {
     "repositories": [
@@ -92,15 +92,23 @@ over [packagist](https://packagist.org/), but the first stable release will be p
         }
     ],
     "require": {
-        "timtegeler/routerunner": "dev-master"
+        "timtegeler/routerunner": "^0.0.1"
     }
 }
+```
+
+or
+
+### comandline
+
+```sh
+composer require timtegeler/routerunner
 ```
 
 ## Apache .htaccess
 
 If you are using Apache as your Webserver you need to rewrite all request to i.e. the index.php where 
-the router is excecuted. For accessing assets like CSS-, JS-, and imagefiles the rewrite excepts all existing files and directories.  
+routerunner is excecuted. For accessing assets like CSS-, JS-, and imagefiles the rewrite excepts all existing files and directories.
 
 ```
 RewriteEngine On
