@@ -15,6 +15,10 @@ class Finder
      * @var array
      */
     private $routes = array();
+    /**
+     * @var string
+     */
+    private $baseUri;
 
     /**
      * @param $httpMethod
@@ -43,11 +47,11 @@ class Finder
     public function matchesRoute(Route $route, $httpMethod, $uri)
     {
         $httpMethodPattern = Pattern::buildHttpMethod($route->getHttpMethod());
-        if (preg_match($httpMethodPattern, $httpMethod, $params2) === 1) {
-            $pattern = Pattern::buildUri($route->getUri());
-            if (preg_match($pattern, $uri, $params) === 1) {
-                array_shift($params);
-                return $params;
+        if (preg_match($httpMethodPattern, $httpMethod, $httpMethodParams) === 1) {
+            $uriPattern = Pattern::buildUri($this->baseUri . $route->getUri());
+            if (preg_match($uriPattern, $uri, $uriParams) === 1) {
+                array_shift($uriParams);
+                return $uriParams;
             }
         }
         return false;
@@ -85,4 +89,19 @@ class Finder
         $this->routes = array_merge($this->routes, $routes);
     }
 
+    /**
+     * @return string
+     */
+    public function getBaseUri()
+    {
+        return $this->baseUri;
+    }
+
+    /**
+     * @param string $baseUri
+     */
+    public function setBaseUri($baseUri)
+    {
+        $this->baseUri = $baseUri;
+    }
 }

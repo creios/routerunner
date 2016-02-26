@@ -104,4 +104,12 @@ class Routerunner
     {
         $this->parser->getCache()->setFile($path);
     }
+
+    /**
+     * @param $baseUri
+     */
+    public function setBaseUri($baseUri)
+    {
+        $this->router->getFinder()->setBaseUri($baseUri);
+    }
 }
