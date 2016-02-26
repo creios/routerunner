@@ -70,7 +70,7 @@ class Parser
                 if (self::needRecache($cacheTimestamp, $routesTimestamp)) {
                     // routes need recache
                     // writing routes to cache
-                    $this->cache->write(array($routesTimestamp, $routes));
+                    $this->cache->write([$routesTimestamp, $routes]);
                 }
             } else {
                 // cache is not filled
@@ -78,7 +78,7 @@ class Parser
                 // arsing routes
                 $routes = $this->parseRoutes($filename);
                 // writing routes to cache
-                $this->cache->write(array($routesTimestamp, $routes));
+                $this->cache->write([$routesTimestamp, $routes]);
             }
         } else {
             // caching is disabled or cache is not useable
@@ -131,7 +131,7 @@ class Parser
      */
     private function parseRoutes($filename)
     {
-        $routes = array();
+        $routes = [];
 
         self::fileUseable($filename);
 

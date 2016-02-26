@@ -12,19 +12,19 @@ class Pattern
     /**
      * @var array
      */
-    private static $httpMethodSearch = array("*");
+    private static $httpMethodSearch = ["*"];
     /**
      * @var array
      */
-    private static $httpMethodReplace = array("GET|POST");
+    private static $httpMethodReplace = ["GET|POST"];
     /**
      * @var array
      */
-    private static $uriSearch = array('/', "[string]", "[numeric]");
+    private static $uriSearch = ['/', "[string]", "[numeric]"];
     /**
      * @var array
      */
-    private static $uriReplace = array('\/', '(\w+)', '(\d+|\d+\.\d+)');
+    private static $uriReplace = ['\/', '(\w+)', '(\d+|\d+\.\d+)'];
 
     /**
      * @param $input

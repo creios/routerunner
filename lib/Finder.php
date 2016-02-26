@@ -14,7 +14,7 @@ class Finder
     /**
      * @var array
      */
-    private $routes = array();
+    private $routes = [];
     /**
      * @var string
      */

@@ -26,7 +26,7 @@ class Router
     /**
      * @var array
      */
-    private $middlewares = array();
+    private $middlewares = [];
     /**
      * @var PostProcessorInterface
      */

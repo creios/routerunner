@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/timtegeler/routerunner/badge.svg?branch=master&service=github)](https://coveralls.io/github/timtegeler/routerunner?branch=master)
 [![GitHub license](https://img.shields.io/github/license/timtegeler/routerunner.svg)]()
 
-**Routerunner** is a router for PHP 5.3+ based on pseudo regular expressions
+**Routerunner** is a router for PHP 5.4+ based on pseudo regular expressions
 
 * Simple [pseudo regular expression](#pseudo-regular-expression) for routing 
 * Defining routes in a separate [routesfile](#routesfile) without overhead from php
