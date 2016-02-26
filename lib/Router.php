@@ -2,7 +2,7 @@
 
 namespace TimTegeler\Routerunner;
 
-use ReflectionClass;
+use DI\ContainerBuilder;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
@@ -23,11 +23,6 @@ class Router
      * @var string
      */
     const FALLBACK_URI = "/";
-
-    /**
-     * @var array
-     */
-    private $controllerDependencies = array();
     /**
      * @var array
      */
@@ -117,32 +112,8 @@ class Router
     private function constructController($class)
     {
         if (class_exists($class)) {
-            $refClass = new ReflectionClass($class);
-
-            if ($refClass->hasMethod('__construct')) {
-                $refMethod = new ReflectionMethod($class, '__construct');
-                $params = $refMethod->getParameters();
-
-                if (count($params) > 0) {
-                    $constructorArgs = array();
-
-                    foreach ($params as $key => $param) {
-                        if ($param->isPassedByReference()) {
-                            $constructorArgs[$key] = &$this->controllerDependencies[$key];
-                        } else {
-                            $constructorArgs[$key] = $this->controllerDependencies[$key];
-                        }
-                    }
-
-                    $controller = $refClass->newInstanceArgs($constructorArgs);
-                } else {
-                    $controller = $refClass->newInstance();
-                }
-
-            } else {
-                $controller = $refClass->newInstance();
-            }
-
+            $container = ContainerBuilder::buildDevContainer();
+            $controller = $container->get($class);
             return $controller;
         } else {
             throw new RouterException("Route is not callable");
@@ -163,22 +134,6 @@ class Router
     public function setPostProcessor($postProcessor)
     {
         $this->postProcessor = $postProcessor;
-    }
-
-    /**
-     * @return array
-     */
-    public function getControllerDependencies()
-    {
-        return $this->controllerDependencies;
-    }
-
-    /**
-     * @param array $controllerDependencies
-     */
-    public function setControllerDependencies($controllerDependencies)
-    {
-        $this->controllerDependencies = $controllerDependencies;
     }
 
     /**

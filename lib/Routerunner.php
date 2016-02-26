@@ -90,14 +90,6 @@ class Routerunner
     }
 
     /**
-     * @param array $controllerDependencies
-     */
-    public function setControllerDependencies(array $controllerDependencies)
-    {
-        $this->router->setControllerDependencies($controllerDependencies);
-    }
-
-    /**
      * @param $enable
      */
     public function setCaching($enable)
