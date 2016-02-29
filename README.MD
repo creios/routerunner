@@ -174,7 +174,7 @@ You can use [composer](https://getcomposer.org/) to download and install Routeru
         }
     ],
     "require": {
-        "timtegeler/routerunner": "^0.0.1"
+        "timtegeler/routerunner": "^0.0.3"
     }
 }
 ```
