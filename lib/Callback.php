@@ -38,27 +38,11 @@ class Callback
     }
 
     /**
-     * @param string $controller
-     */
-    public function setController($controller)
-    {
-        $this->controller = $controller;
-    }
-
-    /**
      * @return string
      */
     public function getMethod()
     {
         return $this->method;
-    }
-
-    /**
-     * @param string $method
-     */
-    public function setMethod($method)
-    {
-        $this->method = $method;
     }
 
 }
