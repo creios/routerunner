@@ -51,8 +51,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
         $routerunner->route("GET", "/[numeric]/[string]", "Index->get");
         $routerunner->route("POST", "/[numeric]/[string]", "Index->post");
-        $loginMiddleware = new LoginTrue();
-        $loginMiddleware->setCallback(new Callback("TimTegeler\\Routerunner\\Mock\\Index","login"));
+        $loginMiddleware = new LoginTrue("TimTegeler\\Routerunner\\Mock\\Index","login");
         $routerunner->registerMiddleware($loginMiddleware);
         $this->assertEquals("index->get", $routerunner->execute("GET", "/123/tim"));
         $this->assertEquals("index->post", $routerunner->execute("POST", "/123/tim"));
@@ -64,8 +63,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
         $routerunner->route("GET", "/[numeric]/[string]", "Index->get");
         $routerunner->route("POST", "/[numeric]/[string]", "Index->post");
-        $loginMiddleware = new LoginFalse();
-        $loginMiddleware->setCallback(new Callback("TimTegeler\\Routerunner\\Mock\\Index","login"));
+        $loginMiddleware = new LoginFalse("TimTegeler\\Routerunner\\Mock\\Index","login");
         $routerunner->registerMiddleware($loginMiddleware);
         $this->assertEquals("index->login", $routerunner->execute("GET", "/123/tim"));
         $this->assertEquals("index->login", $routerunner->execute("POST", "/123/tim"));
