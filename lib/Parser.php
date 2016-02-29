@@ -182,14 +182,6 @@ class Parser
     }
 
     /**
-     * @return string
-     */
-    public function getControllerRootNameSpace()
-    {
-        return $this->controllerRootNameSpace;
-    }
-
-    /**
      * @param string $controllerRootNameSpace
      */
     public function setControllerRootNameSpace($controllerRootNameSpace)
