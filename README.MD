@@ -128,7 +128,9 @@ $routerunner->registerMiddleware($checkQuota);
 
 ### Postprocessor
 
-Postprocessing enables you to process the return value of your controller. One thinkable scenario would be a REST-api which uses JSON to transfer data. A Postprocessor could care about encoding the JSON-string.
+Postprocessing enables you to process the return value of your controller. One thinkable scenario could be a REST-api which uses JSON to transfer data. A Postprocessor could care about encoding the JSON-string.
+
+Admittedly postprocessing a return value only by triggering a single function isn't quite brave. A more conclusive argument for postprocessing would be a simple template-engine which renders HTML code.
 
 ```php
 <?php
