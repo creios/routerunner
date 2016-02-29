@@ -67,6 +67,52 @@ You need to let Routerunner parse your routefile, but furthermore you can define
 $routerunner->parse("path/to/routesfile");
 $routerunner->route("GET", "/faq", "Index->faq");
 ```
+### Middleware
+
+Middlewares are designed to implement contraints upon your regular routing.
+
+A middleware expects a controller- and a method-name as constructor parameters. This controller respectively methods acts as the target for a possibly rerouting. Every middleware  must implement the process-method; it takes the controller matched by the current route as a parameter and should return a boolean value. Routerunner evaluates the return value. If the return value is *false* then routerunner interrupts and tries to starts the method of the bounded controller. Otherwise routerunner tries to processes the next registered middlewares or starts the actually controller.'
+
+For example middlewares enable you to control the access to restricted controllers like private pages or something similar. Such a middleware could detect if a user is not logged in and reroute to the login-page.
+```php
+<?php
+
+use TimTegeler\Routerunner\Middleware\Middleware;
+
+/**
+ * Class checkQuota
+ */
+class checkQuota extends Middleware
+{
+    /**
+     * @var int
+     */
+    private static $quota = 3;
+    /**
+     * @param $controller
+     * @return bool
+     */
+    public function process($controller)
+    {
+        if (isset($_SESSION['quota'])) {
+            return $_SESSION['quota'] < self::$quota;
+        }
+        return true;
+    }
+}
+```
+
+Every middleware must registered with routerunner. Routerunner will process middlewares in the order they are registered.
+
+```php
+<?php
+
+use \TimTegeler\Routerunner\Callback;
+
+$checkQuota = new checkQuota(new Callback('User', 'exceededQuota'));
+
+$routerunner->registerMiddleware($checkQuota);
+```
 
 ### Caching
 
