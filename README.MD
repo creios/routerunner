@@ -152,6 +152,14 @@ class Encoder implements PostProcessorInterface
 }
 ```
 
+You can enable a Postprocessor by register it with routerunner.
+
+```php
+<?php
+
+$routerunner->setPostProcessor(new Encoder());
+```
+
 ## Composer
 
 You can use [composer](https://getcomposer.org/) to download and install Routerunner. Visit routerunner on [packagist](https://packagist.org/packages/timtegeler/routerunner).
