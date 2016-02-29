@@ -159,7 +159,4 @@ class Router
         return $this->finder;
     }
 
-
-
-
 }
