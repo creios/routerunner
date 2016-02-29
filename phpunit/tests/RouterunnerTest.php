@@ -1,6 +1,7 @@
 <?php
 namespace TimTegeler\Routerunner;
 
+use TimTegeler\Routerunner\Mock\Encoder;
 use TimTegeler\Routerunner\Mock\Login;
 use TimTegeler\Routerunner\Mock\LoginFalse;
 use TimTegeler\Routerunner\Mock\LoginTrue;
@@ -67,5 +68,14 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner->registerMiddleware($loginMiddleware);
         $this->assertEquals("index->login", $routerunner->execute("GET", "/123/tim"));
         $this->assertEquals("index->login", $routerunner->execute("POST", "/123/tim"));
+    }
+
+    public function testPostprocessing()
+    {
+        $routerunner = new Routerunner();
+        $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
+        $routerunner->route("GET", "/", "Index->api");
+        $routerunner->setPostProcessor(new Encoder());
+        $this->assertEquals('{"index":"login"}', $routerunner->execute("GET", "/"));
     }
 }
