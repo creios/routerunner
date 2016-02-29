@@ -74,34 +74,33 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("get", $route->getCallback()->getMethod());
     }
 
-//    public function testCachingPerformance()
-//    {
-//
-//        $parser->setCaching(false);
-//        $starttime = microtime();
-//        $parser->parse(__DIR__ . "/../assets/routes");
-//        $endtime = microtime();
-//        $parsingTimeWithoutCaching = $endtime - $starttime;
-//        echo $parsingTimeWithoutCaching." ";
-//
-//        $parser->setCaching(true);
-//        Cache::setFile(__DIR__ . "/../assets/cache");
-//        Cache::clear();
-//        $starttime = microtime();
-//        $parser->parse(__DIR__ . "/../assets/routes");
-//        $endtime = microtime();
-//        $parsingTimeWithCacheWrite = $endtime - $starttime;
-//        $this->assertGreaterThan($parsingTimeWithoutCaching, $parsingTimeWithCacheWrite);
-//        echo $parsingTimeWithCacheWrite." ";
-//
-//        $starttime = microtime();
-//        $parser->parse(__DIR__ . "/../assets/routes");
-//        $endtime = microtime();
-//        $parsingTimeWithCacheRead = $endtime - $starttime;
-//        $this->assertLessThan($parsingTimeWithCacheWrite, $parsingTimeWithCacheRead);
-//        echo $parsingTimeWithCacheRead."\r\n";
-//        //Cache::clear();
-//    }
+    public function testCaching()
+    {
+        $parser = new Parser();
+        $parser->setCaching(true);
+        $parser->getCache()->setFile(__DIR__ . "/../assets/cache");
+        $parser->parse(__DIR__ . "/../assets/routes");
+
+        $newRoute = "POST /example Index->post";
+        file_put_contents(__DIR__ . "/../assets/routes", $newRoute, FILE_APPEND);
+
+        $parser->parse(__DIR__ . "/../assets/routes");
+
+        $this->removeLastLine(__DIR__ . "/../assets/routes");
+    }
+
+    private function removeLastLine($fileName)
+    {
+        // load the data and delete the line from the array
+        $lines = file($fileName);
+        $last = sizeof($lines) - 1;
+        unset($lines[$last]);
+
+        // write the new data to the file
+        $fp = fopen($fileName, 'w');
+        fwrite($fp, implode('', $lines));
+        fclose($fp);
+    }
 
     public function testParseException()
     {

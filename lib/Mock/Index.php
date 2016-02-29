@@ -41,7 +41,8 @@ class Index
         return "index->login";
     }
 
-    public static function api(){
+    public static function api()
+    {
         return ['index' => 'login'];
     }
 }

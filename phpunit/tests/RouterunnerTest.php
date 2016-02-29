@@ -19,6 +19,18 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("index->post", $routerunner->execute("POST", "/123/tim"));
     }
 
+    public function testExecuteWithCache()
+    {
+        $routerunner = new Routerunner();
+        $routerunner->setControllerRootNameSpace("TimTegeler\\Routerunner\\Mock");
+        $routerunner->setCacheFile(__DIR__ . "/../assets/cache");
+        $routerunner->setCaching(true);
+        $routerunner->route("GET", "/[numeric]/[string]", "Index->get");
+        $routerunner->route("POST", "/[numeric]/[string]", "Index->post");
+        $this->assertEquals("index->get", $routerunner->execute("GET", "/123/tim"));
+        $this->assertEquals("index->post", $routerunner->execute("POST", "/123/tim"));
+    }
+
     public function testExecuteWithBaseUri()
     {
         $routerunner = new Routerunner();

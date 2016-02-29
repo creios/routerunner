@@ -137,7 +137,9 @@ class Parser
 
         if (($file = @fopen($filename, "r")) !== FALSE) {
             while (($route = fgets($file)) !== FALSE) {
-                $routes[] = self::createRoute($route);
+                if (trim($route) != "") {
+                    $routes[] = self::createRoute($route);
+                }
             }
         } else {
             throw new ParseException(sprintf("Error while reading file (%s).", $filename));
