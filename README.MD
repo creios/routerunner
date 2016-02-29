@@ -109,7 +109,7 @@ Every middleware must registered with routerunner. Routerunner will process midd
 
 use \TimTegeler\Routerunner\Callback;
 
-$checkQuota = new checkQuota(new Callback('User', 'exceededQuota'));
+$checkQuota = new checkQuota('User', 'exceededQuota');
 
 $routerunner->registerMiddleware($checkQuota);
 ```
