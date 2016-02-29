@@ -136,22 +136,6 @@ class Router
     }
 
     /**
-     * @return array
-     */
-    public function getMiddlewares()
-    {
-        return $this->middlewares;
-    }
-
-    /**
-     * @param array $middlewares
-     */
-    public function setMiddlewares($middlewares)
-    {
-        $this->middlewares = $middlewares;
-    }
-
-    /**
      * @return Finder
      */
     public function getFinder()
