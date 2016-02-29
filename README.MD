@@ -67,6 +67,18 @@ You need to let Routerunner parse your routefile, but furthermore you can define
 $routerunner->parse("path/to/routesfile");
 $routerunner->route("GET", "/faq", "Index->faq");
 ```
+
+### Caching
+
+If you want to reduce the parsing time of your routesfile you can activate caching with setting the path to
+a read- and writeable (from your webserver) file. Be careful, every content of the file will be deleted.
+
+```php
+<?php
+// Setting the cachefile
+$routerunner->setCacheFile("path/to/cache");
+```
+
 ### Middleware
 
 Middlewares are designed to implement contraints upon your regular routing.
@@ -114,15 +126,30 @@ $checkQuota = new checkQuota('User', 'exceededQuota');
 $routerunner->registerMiddleware($checkQuota);
 ```
 
-### Caching
+### Postprocessor
 
-If you want to reduce the parsing time of your routesfile you can activate caching with setting the path to
-a read- and writeable (from your webserver) file. Be careful, every content of the file will be deleted.
+Postprocessing enables you to process the return value of your controller. One thinkable scenario would be a REST-api which uses JSON to transfer data. A Postprocessor could care about encoding the JSON-string.
 
 ```php
 <?php
-// Setting the cachefile
-$routerunner->setCacheFile("path/to/cache");
+
+use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+
+/**
+ * Class Encoder
+ */
+class Encoder implements PostProcessorInterface
+{
+
+    /**
+     * @param $return
+     * @return string
+     */
+    public function process($return)
+    {
+        return json_encode($return);
+    }
+}
 ```
 
 ## Composer
