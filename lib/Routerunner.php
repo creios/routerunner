@@ -3,6 +3,7 @@
 namespace TimTegeler\Routerunner;
 
 use DI\ContainerBuilder;
+use Interop\Container\ContainerInterface;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
@@ -26,9 +27,9 @@ class Routerunner
     /**
      * Routerunner constructor.
      * @param $controllerRootNameSpace
-     * @param $container
+     * @param ContainerInterface $container
      */
-    public function __construct($controllerRootNameSpace = null, $container = null)
+    public function __construct($controllerRootNameSpace = null, ContainerInterface $container = null)
     {
         if ($container == null) {
             $container = ContainerBuilder::buildDevContainer();

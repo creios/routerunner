@@ -3,6 +3,7 @@
 namespace TimTegeler\Routerunner;
 
 use DI\Container;
+use Interop\Container\ContainerInterface;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
@@ -42,9 +43,9 @@ class Router
 
     /**
      * Router constructor.
-     * @param Container $container
+     * @param ContainerInterface $container
      */
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->finder = new Finder();
