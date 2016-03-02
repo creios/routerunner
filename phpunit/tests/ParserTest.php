@@ -6,7 +6,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateRoute()
     {
-        $parser = new Parser();
+        $parser = new Parser('');
         $this->assertInstanceOf('TimTegeler\Routerunner\Route', $parser->createRoute('*      /                                     index->get'));
         $this->assertInstanceOf('TimTegeler\Routerunner\Route', $parser->createRoute('GET    /                                     index->get'));
         $this->assertInstanceOf('TimTegeler\Routerunner\Route', $parser->createRoute('POST   /                                     index->post'));
@@ -42,7 +42,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateRouteExpetion()
     {
-        $parser = new Parser();
+        $parser = new Parser('');
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException');
         $this->assertInstanceOf('TimTegeler\Routerunner\Route', $parser->createRoute('/ index->get'));
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException');
@@ -63,7 +63,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $parser = new Parser();
+        $parser = new Parser('');
         $parser->setCaching(false);
         $routes = $parser->parse(__DIR__ . '/../assets/routes');
         /** @var Route $route */
@@ -76,7 +76,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCaching()
     {
-        $parser = new Parser();
+        $parser = new Parser('');
         $parser->setCaching(true);
         $parser->getCache()->setFile(__DIR__ . '/../assets/cache');
         $parser->parse(__DIR__ . '/../assets/routes');
@@ -104,7 +104,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseException()
     {
-        $parser = new Parser();
+        $parser = new Parser('');
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException');
         $parser->parse('not/existing/path');

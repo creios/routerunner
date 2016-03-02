@@ -2,7 +2,7 @@
 
 namespace TimTegeler\Routerunner;
 
-use DI\ContainerBuilder;
+use DI\Container;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
@@ -35,12 +35,18 @@ class Router
      * @var Finder
      */
     private $finder;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * Router constructor.
+     * @param Container $container
      */
-    public function __construct()
+    public function __construct(Container $container)
     {
+        $this->container = $container;
         $this->finder = new Finder();
     }
 
@@ -107,8 +113,7 @@ class Router
     private function constructController($class)
     {
         if (class_exists($class)) {
-            $container = ContainerBuilder::buildDevContainer();
-            $controller = $container->get($class);
+            $controller = $this->container->get($class);
             return $controller;
         } else {
             throw new RouterException("Route is not callable");

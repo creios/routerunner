@@ -2,6 +2,7 @@
 
 namespace TimTegeler\Routerunner;
 
+use DI\ContainerBuilder;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
@@ -24,11 +25,17 @@ class Routerunner
 
     /**
      * Routerunner constructor.
+     * @param $controllerRootNameSpace
+     * @param $container
      */
-    public function __construct()
+    public function __construct($controllerRootNameSpace, $container = null)
     {
-        $this->router = new Router();
+        if ($container == null) {
+            $container = ContainerBuilder::buildDevContainer();
+        }
+        $this->router = new Router($container);
         $this->parser = new Parser();
+        $this->parser->setControllerRootNameSpace($controllerRootNameSpace);
     }
 
     /**
@@ -79,14 +86,6 @@ class Routerunner
     public function setPostProcessor($postProcessor)
     {
         $this->router->setPostProcessor($postProcessor);
-    }
-
-    /**
-     * @param $controllerRootNameSpace
-     */
-    public function setControllerRootNameSpace($controllerRootNameSpace)
-    {
-        $this->parser->setControllerRootNameSpace($controllerRootNameSpace);
     }
 
     /**
