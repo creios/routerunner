@@ -69,12 +69,8 @@ class Router
         }
 
         if (method_exists($controller, $method)) {
-            if (is_array($route->getParameter())) {
-                $refMethod = new ReflectionMethod($callback->getController(), $method);
-                $return = $refMethod->invokeArgs($controller, $route->getParameter());
-            } else {
-                $return = $controller->$method();
-            }
+            $refMethod = new ReflectionMethod($callback->getController(), $method);
+            $return = $refMethod->invokeArgs($controller, $route->getParameter());
 
             if ($this->postProcessor != null) {
                 return $this->postProcessor->process($return);

@@ -22,7 +22,7 @@ class Route
      */
     private $callback;
     /**
-     * @var string
+     * @var array
      */
     private $parameter;
 
@@ -64,7 +64,7 @@ class Route
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getParameter()
     {
