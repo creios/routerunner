@@ -46,9 +46,11 @@ class Parser
 
     /**
      * Parser constructor.
+     * @param $controllerRootNameSpace
      */
-    public function __construct()
+    public function __construct($controllerRootNameSpace)
     {
+        $this->controllerRootNameSpace = rtrim($controllerRootNameSpace, '\\');
         $this->cache = new Cache();
     }
 
@@ -181,14 +183,6 @@ class Parser
     private function generateCallback($callable)
     {
         return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
-    }
-
-    /**
-     * @param string $controllerRootNameSpace
-     */
-    public function setControllerRootNameSpace($controllerRootNameSpace)
-    {
-        $this->controllerRootNameSpace = $controllerRootNameSpace;
     }
 
     /**

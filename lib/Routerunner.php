@@ -28,14 +28,13 @@ class Routerunner
      * @param $controllerRootNameSpace
      * @param $container
      */
-    public function __construct($controllerRootNameSpace, $container = null)
+    public function __construct($controllerRootNameSpace = null, $container = null)
     {
         if ($container == null) {
             $container = ContainerBuilder::buildDevContainer();
         }
         $this->router = new Router($container);
-        $this->parser = new Parser();
-        $this->parser->setControllerRootNameSpace($controllerRootNameSpace);
+        $this->parser = new Parser($controllerRootNameSpace);
     }
 
     /**
