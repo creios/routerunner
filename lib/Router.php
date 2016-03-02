@@ -101,7 +101,7 @@ class Router
         try {
             $route = $this->finder->findRoute($httpMethod, $uri);
         } catch (RouterException $e) {
-            $route = $this->finder->findRoute(self::FALLBACK_HTTP_METHOD, self::FALLBACK_URI);
+            $route = $this->finder->findRoute(self::FALLBACK_HTTP_METHOD, $this->getFinder()->getBaseUri() . self::FALLBACK_URI);
         }
         return $route;
     }
