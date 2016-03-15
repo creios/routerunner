@@ -6,3 +6,5 @@
 /phpunit            export-ignore
 /phpunit.xml        export-ignore
 /README.md          export-ignore
+/robo               export-ignore
+/RoboFile.php       export-ignore
