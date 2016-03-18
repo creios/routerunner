@@ -2,11 +2,13 @@
 
 namespace TimTegeler\Routerunner\Mock;
 
+use TimTegeler\Routerunner\Controller\ControllerInterface;
+
 /**
  * Class Index
  * @package TimTegeler\Routerunner\Mock
  */
-class Index
+class Index implements ControllerInterface
 {
 
     /**
@@ -45,4 +47,12 @@ class Index
     {
         return ['index' => 'login'];
     }
+
+    /**
+     * @param string $uri
+     */
+    public function setReroutedUri($uri)
+    {
+    }
+    
 }

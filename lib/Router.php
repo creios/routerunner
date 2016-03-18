@@ -5,6 +5,7 @@ namespace TimTegeler\Routerunner;
 use DI\Container;
 use Interop\Container\ContainerInterface;
 use ReflectionMethod;
+use TimTegeler\Routerunner\Controller\ControllerInterface;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
@@ -71,6 +72,7 @@ class Router
                 $callback = $middleware->getCallback();
                 $method = $callback->getMethod();
                 $controller = self::constructController($callback->getController());
+                $controller->setReroutedUri($uri);
                 break;
             }
         }
@@ -108,7 +110,7 @@ class Router
 
     /**
      * @param $class
-     * @return object
+     * @return ControllerInterface
      * @throws RouterException
      */
     private function constructController($class)
