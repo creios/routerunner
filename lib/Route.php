@@ -18,9 +18,9 @@ class Route
      */
     private $uri;
     /**
-     * @var Callback
+     * @var Call
      */
-    private $callback;
+    private $call;
     /**
      * @var array
      */
@@ -30,13 +30,13 @@ class Route
      * Route constructor.
      * @param $httpMethod
      * @param $uri
-     * @param \TimTegeler\Routerunner\Callback $callback
+     * @param \TimTegeler\Routerunner\Call $call
      */
-    public function __construct($httpMethod, $uri, $callback)
+    public function __construct($httpMethod, $uri, $call)
     {
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;
-        $this->callback = $callback;
+        $this->call = $call;
     }
 
     /**
@@ -56,11 +56,11 @@ class Route
     }
 
     /**
-     * @return \TimTegeler\Routerunner\Callback
+     * @return \TimTegeler\Routerunner\Call
      */
-    public function getCallback()
+    public function getCall()
     {
-        return $this->callback;
+        return $this->call;
     }
 
     /**

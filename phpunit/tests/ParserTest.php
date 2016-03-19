@@ -70,8 +70,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $route = $routes[0];
         $this->assertEquals('GET', $route->getHttpMethod());
         $this->assertEquals('/', $route->getUri());
-        $this->assertEquals('\Index', $route->getCallback()->getController());
-        $this->assertEquals('get', $route->getCallback()->getMethod());
+        $this->assertEquals('\Index', $route->getCall()->getController());
+        $this->assertEquals('get', $route->getCall()->getMethod());
     }
 
     public function testCaching()

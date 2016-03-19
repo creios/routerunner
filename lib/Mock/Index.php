@@ -54,5 +54,5 @@ class Index implements ControllerInterface
     public function setReroutedUri($uri)
     {
     }
-    
+
 }

@@ -61,24 +61,24 @@ class Router
     public function execute($httpMethod, $uri)
     {
         $route = self::findRoute($httpMethod, $uri);
-        $callback = $route->getCallback();
-        $method = $callback->getMethod();
+        $call = $route->getCall();
+        $method = $call->getMethod();
 
-        $controller = self::constructController($callback->getController());
+        $controller = self::constructController($call->getController());
 
         foreach ($this->middlewares as $middleware) {
             /** @var Middleware $middleware */
             if ($middleware->process($controller) === false) {
-                $callback = $middleware->getCallback();
-                $method = $callback->getMethod();
-                $controller = self::constructController($callback->getController());
+                $call = $middleware->getCall();
+                $method = $call->getMethod();
+                $controller = self::constructController($call->getController());
                 $controller->setReroutedUri($uri);
                 break;
             }
         }
 
         if (method_exists($controller, $method)) {
-            $refMethod = new ReflectionMethod($callback->getController(), $method);
+            $refMethod = new ReflectionMethod($call->getController(), $method);
             $return = $refMethod->invokeArgs($controller, $route->getParameter());
 
             if ($this->postProcessor != null) {

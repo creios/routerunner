@@ -51,13 +51,13 @@ class Routerunner
     /**
      * @param $httpMethod
      * @param $uri
-     * @param $callback
+     * @param $call
      * @throws Exception\ParseException
      */
-    public function route($httpMethod, $uri, $callback)
+    public function route($httpMethod, $uri, $call)
     {
         $routeFormat = "%s %s %s";
-        $route = sprintf($routeFormat, $httpMethod, $uri, $callback);
+        $route = sprintf($routeFormat, $httpMethod, $uri, $call);
         $this->router->getFinder()->addRoute($this->parser->createRoute($route));
     }
 

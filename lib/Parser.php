@@ -161,8 +161,8 @@ class Parser
         $regularExpression = self::getRegularExpression();
         if (preg_match($regularExpression, $route, $parts) === 1) {
             array_shift($parts);
-            list($controller, $method) = $this->generateCallback($parts['callable']);
-            return new Route($parts['httpMethod'], $parts['url'], new Callback($controller, $method));
+            list($controller, $method) = $this->generateCall($parts['callable']);
+            return new Route($parts['httpMethod'], $parts['url'], new Call($controller, $method));
         } else {
             throw new ParseException("Line doesn't matches Pattern");
         }
@@ -180,7 +180,7 @@ class Parser
      * @param $callable
      * @return array
      */
-    private function generateCallback($callable)
+    private function generateCall($callable)
     {
         return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
     }

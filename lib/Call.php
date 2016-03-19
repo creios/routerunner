@@ -3,10 +3,10 @@
 namespace TimTegeler\Routerunner;
 
 /**
- * Class Callback
+ * Class Call
  * @package TimTegeler\Routerunner
  */
-class Callback
+class Call
 {
 
     /**
@@ -19,7 +19,7 @@ class Callback
     private $method;
 
     /**
-     * Callback constructor.
+     * Call constructor.
      * @param string $controller
      * @param string $method
      */

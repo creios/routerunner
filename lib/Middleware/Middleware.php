@@ -2,7 +2,7 @@
 
 namespace TimTegeler\Routerunner\Middleware;
 
-use TimTegeler\Routerunner\Callback;
+use TimTegeler\Routerunner\Call;
 
 /**
  * Class Middleware
@@ -14,7 +14,7 @@ abstract class Middleware implements MiddlewareInterface
     /**
      * @var string
      */
-    protected $callback;
+    protected $call;
 
     /**
      * Middleware constructor.
@@ -23,7 +23,7 @@ abstract class Middleware implements MiddlewareInterface
      */
     public function __construct($controller, $method)
     {
-        $this->callback = new Callback($controller, $method);
+        $this->call = new Call($controller, $method);
     }
 
     /**
@@ -36,10 +36,10 @@ abstract class Middleware implements MiddlewareInterface
     }
 
     /**
-     * @return Callback
+     * @return Call
      */
-    public function getCallback()
+    public function getCall()
     {
-        return $this->callback;
+        return $this->call;
     }
 }
