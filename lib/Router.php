@@ -100,6 +100,9 @@ class Router
      */
     private function findRoute($httpMethod, $uri)
     {
+        if(empty($this->finder->getRoutes())){
+            throw new RouterException("No route available");
+        }
         try {
             $route = $this->finder->findRoute($httpMethod, $uri);
         } catch (RouterException $e) {

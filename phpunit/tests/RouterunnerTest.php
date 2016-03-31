@@ -57,7 +57,15 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testExecuteException()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException');
+        $routerunner->route('GET', '/test', 'Index->get');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Non of the routes matches uri');
+        $routerunner->execute('POST', '/test');
+    }
+
+    public function testExecuteExceptionNoRouteAvailable()
+    {
+        $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'No route available');
         $routerunner->execute('GET', '/');
     }
 
