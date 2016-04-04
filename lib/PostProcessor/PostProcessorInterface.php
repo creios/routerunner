@@ -10,7 +10,7 @@ interface PostProcessorInterface
 {
 
     /**
-     * @param $output
+     * @param mixed $output
      * @return mixed
      */
     public function process($output);
