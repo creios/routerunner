@@ -49,6 +49,7 @@ class Finder
         $httpMethodPattern = Pattern::buildHttpMethod($route->getHttpMethod());
         if (preg_match($httpMethodPattern, $httpMethod, $httpMethodParams) === 1) {
             $uriPattern = Pattern::buildUri($this->baseUri . $route->getUri());
+            $uri = explode('?', $uri)[0];
             if (preg_match($uriPattern, $uri, $uriParams) === 1) {
                 array_shift($uriParams);
                 return $uriParams;

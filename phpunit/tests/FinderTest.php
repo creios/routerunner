@@ -56,7 +56,7 @@ class FinderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index', $route->getCall()->getController());
         $this->assertEquals('post', $route->getCall()->getMethod());
 
-        $route = $finder->findRoute('GET', '/tim/123/subpath');
+        $route = $finder->findRoute('GET', '/tim/123/subpath?id=1&name=test');
         $this->assertEquals('GET', $route->getHttpMethod());
         $this->assertEquals('/[string]/[numeric]/subpath', $route->getUri());
         $this->assertEquals('index', $route->getCall()->getController());
