@@ -40,7 +40,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('TimTegeler\Routerunner\Route', $parser->createRoute('POST   /subpath/[numeric]                    c_controller->_post1'));
     }
 
-    public function testCreateRouteExpetion()
+    public function testCreateRouteException()
     {
         $parser = new Parser('\\');
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException');
