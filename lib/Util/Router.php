@@ -18,14 +18,6 @@ class Router
 {
 
     /**
-     * @var string
-     */
-    const FALLBACK_HTTP_METHOD = "GET";
-    /**
-     * @var string
-     */
-    const FALLBACK_URI = "/";
-    /**
      * @var array
      */
     private $middlewares = [];
@@ -41,6 +33,10 @@ class Router
      * @var Container
      */
     private $container;
+    /**
+     * @var Call
+     */
+    private $fallback;
 
     /**
      * Router constructor.
@@ -60,9 +56,16 @@ class Router
      */
     public function execute($httpMethod, $uri)
     {
-        $route = self::findRoute($httpMethod, $uri);
-        $call = $route->getCall();
-        $method = $call->getMethod();
+        try {
+            $route = $this->finder->findRoute($httpMethod, $uri);
+            $call = $route->getCall();
+            $method = $call->getMethod();
+            $parameter = $route->getParameter();
+        } catch (RouterException $e) {
+            $call = $this->fallback;
+            $method = $call->getMethod();
+            $parameter = [];
+        }
 
         $controller = self::constructController($call->getController());
 
@@ -79,7 +82,7 @@ class Router
 
         if (method_exists($controller, $method)) {
             $refMethod = new ReflectionMethod($call->getController(), $method);
-            $return = $refMethod->invokeArgs($controller, $route->getParameter());
+            $return = $refMethod->invokeArgs($controller, $parameter);
 
             if ($this->postProcessor != null) {
                 return $this->postProcessor->process($return);
@@ -90,25 +93,6 @@ class Router
             throw new RouterException("Route is not callable");
         }
 
-    }
-
-    /**
-     * @param $httpMethod
-     * @param $uri
-     * @return Route
-     * @throws RouterException
-     */
-    private function findRoute($httpMethod, $uri)
-    {
-        if(count($this->finder->getRoutes()) == 0){
-            throw new RouterException("No route available");
-        }
-        try {
-            $route = $this->finder->findRoute($httpMethod, $uri);
-        } catch (RouterException $e) {
-            $route = $this->finder->findRoute(self::FALLBACK_HTTP_METHOD, $this->getFinder()->getBaseUri() . self::FALLBACK_URI);
-        }
-        return $route;
     }
 
     /**
@@ -148,6 +132,22 @@ class Router
     public function getFinder()
     {
         return $this->finder;
+    }
+
+    /**
+     * @return Call
+     */
+    public function getFallback()
+    {
+        return $this->fallback;
+    }
+
+    /**
+     * @param Call $fallback
+     */
+    public function setFallback($fallback)
+    {
+        $this->fallback = $fallback;
     }
 
 }

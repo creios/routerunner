@@ -44,6 +44,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner->setBaseUri('/test');
         $routerunner->route('GET', '/', 'Index->get');
         $routerunner->route('GET', '/post', 'Index->post');
+        $routerunner->fallback('Index->get');
         $this->assertEquals('index->get', $routerunner->execute('GET', '/test/post/'));
     }
 
@@ -54,27 +55,12 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index->get', $routerunner->execute('PUST', '/123/tim'));
     }
 
-    public function testExecuteException()
-    {
-        $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->route('GET', '/test', 'Index->get');
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Non of the routes matches uri');
-        $routerunner->execute('POST', '/test');
-    }
-
-    public function testExecuteExceptionNoRouteAvailable()
-    {
-        $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'No route available');
-        $routerunner->execute('GET', '/');
-    }
-
     public function testMiddlewareTrue()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
         $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
         $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
-        $loginMiddleware = new LoginTrue('TimTegeler\Routerunner\Mock\Index','login');
+        $loginMiddleware = new LoginTrue('TimTegeler\Routerunner\Mock\Index', 'login');
         $routerunner->registerMiddleware($loginMiddleware);
         $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
         $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
@@ -85,7 +71,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
         $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
         $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
-        $loginMiddleware = new LoginFalse('TimTegeler\Routerunner\Mock\Index','login');
+        $loginMiddleware = new LoginFalse('TimTegeler\Routerunner\Mock\Index', 'login');
         $routerunner->registerMiddleware($loginMiddleware);
         $this->assertEquals('index->login', $routerunner->execute('GET', '/123/tim'));
         $this->assertEquals('index->login', $routerunner->execute('POST', '/123/tim'));

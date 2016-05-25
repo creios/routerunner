@@ -7,6 +7,7 @@ use Interop\Container\ContainerInterface;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+use TimTegeler\Routerunner\Util\Call;
 use TimTegeler\Routerunner\Util\Parser;
 use TimTegeler\Routerunner\Util\Router;
 
@@ -46,7 +47,8 @@ class Routerunner
      */
     public function parse($filename)
     {
-        $routes = $this->parser->parse($filename);
+        list($routes, $fallback) = $this->parser->parse($filename);
+        $this->router->setFallback($fallback);
         $this->router->getFinder()->addRoutes($routes);
     }
 
@@ -59,6 +61,15 @@ class Routerunner
     public function route($httpMethod, $uri, $call)
     {
         $this->router->getFinder()->addRoute($this->parser->createRoute($httpMethod, $uri, $call));
+    }
+
+    /**
+     * @param string $call
+     */
+    public function fallback($call)
+    {
+        list($controller, $method) = $this->parser->generateCall($call);
+        $this->router->setFallback(new Call($controller, $method));
     }
 
     /**

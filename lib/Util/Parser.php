@@ -63,14 +63,14 @@ class Parser
                 // cache is not filled
                 $routesTimestamp = self::getTimestamp($filename, TRUE);
                 // arsing routes
-                $routes = $this->parseRoutes($filename);
+                $routes = $this->parseConfig($filename);
                 // writing routes to cache
                 $this->cache->write([$routesTimestamp, $routes]);
             }
         } else {
             // caching is disabled or cache is not useable
             // parsing routes
-            $routes = $this->parseRoutes($filename);
+            $routes = $this->parseConfig($filename);
         }
         return $routes;
     }
@@ -116,7 +116,7 @@ class Parser
      * @return array
      * @throws ParseException
      */
-    private function parseRoutes($filename)
+    private function parseConfig($filename)
     {
 
         self::fileUseable($filename);
@@ -126,7 +126,10 @@ class Parser
         foreach ($config['routes'] as $routeParts) {
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
         }
-        return $routes;
+
+        list($controller, $method) = $this->generateCall($config['fallback']);
+        $fallback = new Call($controller, $method);
+        return [$routes, $fallback];
     }
 
     /**
@@ -145,7 +148,7 @@ class Parser
      * @param $callable
      * @return array
      */
-    private function generateCall($callable)
+    public function generateCall($callable)
     {
         return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
     }

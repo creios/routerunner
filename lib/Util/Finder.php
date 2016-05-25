@@ -28,6 +28,9 @@ class Finder
      */
     public function findRoute($httpMethod, $uri)
     {
+        if (count($this->getRoutes()) == 0) {
+            throw new RouterException("No route available");
+        }
         foreach ($this->routes as $key => $route) {
             /** @var Route $route */
             if (($params = $this->matchesRoute($route, $httpMethod, $uri)) !== false) {
@@ -36,6 +39,22 @@ class Finder
             }
         }
         throw new RouterException("Non of the routes matches uri");
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+
+    /**
+     * @param array $routes
+     */
+    public function setRoutes(array $routes)
+    {
+        $this->routes = $routes;
     }
 
     /**
@@ -59,22 +78,6 @@ class Finder
     }
 
     /**
-     * @return array
-     */
-    public function getRoutes()
-    {
-        return $this->routes;
-    }
-
-    /**
-     * @param array $routes
-     */
-    public function setRoutes(array $routes)
-    {
-        $this->routes = $routes;
-    }
-
-    /**
      * @param Route $route
      */
     public function addRoute(Route $route)
@@ -91,14 +94,6 @@ class Finder
     }
 
     /**
-     * @param string $baseUri
-     */
-    public function setBaseUri($baseUri)
-    {
-        $this->baseUri = $baseUri;
-    }
-
-    /**
      * @return string
      */
     public function getBaseUri()
@@ -106,5 +101,12 @@ class Finder
         return $this->baseUri;
     }
 
+    /**
+     * @param string $baseUri
+     */
+    public function setBaseUri($baseUri)
+    {
+        $this->baseUri = $baseUri;
+    }
 
 }

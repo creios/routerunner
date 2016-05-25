@@ -47,7 +47,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parser('\\');
         $parser->setCaching(false);
-        $routes = $parser->parse(__DIR__ . '/../assets/config.yml');
+        list($routes) = $parser->parse(__DIR__ . '/../assets/config.yml');
         /** @var Route $route */
         $route = $routes[0];
         $this->assertEquals('GET', $route->getHttpMethod());
