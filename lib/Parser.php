@@ -2,6 +2,7 @@
 
 namespace TimTegeler\Routerunner;
 
+use Symfony\Component\Yaml\Yaml;
 use TimTegeler\Routerunner\Exception\ParseException;
 
 /**
@@ -15,22 +16,6 @@ class Parser
      * @var string
      */
     const SEPARATOR_OF_CLASS_AND_METHOD = "->";
-    /**
-     * @var string
-     */
-    const HTTP_METHOD = '(?<httpMethod>GET|POST|\*)';
-    /**
-     * @var string
-     */
-    const URI = '(?<url>(\/[a-zA-Z0-9]+|\/\[string\]|\/\[numeric\]|\/)*(#[a-zA-Z0-9]+)?)';
-    /**
-     * @var string
-     */
-    const _CALLABLE = '(?<callable>([a-zA-Z]*\\\\)*[a-zA-Z]+[_a-zA-Z0-9]*->[_a-zA-Z]+[_a-zA-Z0-9]*)';
-    /**
-     * @var string
-     */
-    const ROUTE_FORMAT = '^%s[ \t]*%s[ \t]*%s^';
     /**
      * @var bool
      */
@@ -133,47 +118,27 @@ class Parser
      */
     private function parseRoutes($filename)
     {
-        $routes = [];
 
         self::fileUseable($filename);
 
-        if (($file = @fopen($filename, "r")) !== FALSE) {
-            while (($route = fgets($file)) !== FALSE) {
-                if (trim($route) != "") {
-                    $routes[] = self::createRoute($route);
-                }
-            }
-        } else {
-            throw new ParseException(sprintf("Error while reading file (%s).", $filename));
+        $config = Yaml::parse(file_get_contents($filename));
+        $routes = [];
+        foreach ($config['routes'] as $routeParts) {
+            $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
         }
-        fclose($file);
-
         return $routes;
     }
 
     /**
-     * @param $route
+     * @param $httpMethod
+     * @param $url
+     * @param $call
      * @return Route
-     * @throws ParseException
      */
-    public function createRoute($route)
+    public function createRoute($httpMethod, $url, $call)
     {
-        $regularExpression = self::getRegularExpression();
-        if (preg_match($regularExpression, $route, $parts) === 1) {
-            array_shift($parts);
-            list($controller, $method) = $this->generateCall($parts['callable']);
-            return new Route($parts['httpMethod'], $parts['url'], new Call($controller, $method));
-        } else {
-            throw new ParseException("Line doesn't matches Pattern");
-        }
-    }
-
-    /**
-     * @return string
-     */
-    private static function getRegularExpression()
-    {
-        return sprintf(self::ROUTE_FORMAT, self::HTTP_METHOD, self::URI, self::_CALLABLE);
+        list($controller, $method) = $this->generateCall($call);
+        return new Route($httpMethod, $url, new Call($controller, $method));
     }
 
     /**

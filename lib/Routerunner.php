@@ -56,9 +56,7 @@ class Routerunner
      */
     public function route($httpMethod, $uri, $call)
     {
-        $routeFormat = "%s %s %s";
-        $route = sprintf($routeFormat, $httpMethod, $uri, $call);
-        $this->router->getFinder()->addRoute($this->parser->createRoute($route));
+        $this->router->getFinder()->addRoute($this->parser->createRoute($httpMethod, $uri, $call));
     }
 
     /**

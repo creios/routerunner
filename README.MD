@@ -19,7 +19,7 @@ $routerunner = new Routerunner("Controller");
 
 // Adding routes
 $routerunner->route("GET", "/", "Index->get");
-$routerunner->route("GET", "/user/[numeric]", "User->get");
+$routerunner->route("GET", "/user/(numeric)", "User->get");
 $routerunner->route("POST", "/login", "Index->post");
 
 // Trigger execution 
@@ -39,12 +39,12 @@ POST    // Match POST
 
 #### URI
 ```
-[numeric]  // Match all numeric values like 1, 1.1, 2, 143, ... 
-[string]   // Match all strings like alice, bob, eve, ...
+(numeric)  // Match all numeric values like 1, 1.1, 2, 143, ...
+(string)   // Match all strings like alice, bob, eve, ...
 
 // examples
-/user/[numeric] // Match /user/1, /user/2, /user/3, ...
-/user/[string]  // Match /user/alice, /user/bob, /user/eve, ...
+/user/(numeric) // Match /user/1, /user/2, /user/3, ...
+/user/(string)  // Match /user/alice, /user/bob, /user/eve, ...
 ```
 
 
@@ -54,7 +54,7 @@ With the routesfile you can define your routes in a more clean fashion.
 
 ```
 GET    /                Index->get
-GET    /user/[numeric]  User->get
+GET    /user/(numeric)  User->get
 POST   /login           Index->post
 ```
 

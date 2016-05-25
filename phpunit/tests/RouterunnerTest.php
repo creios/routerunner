@@ -11,8 +11,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testExecute()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->route('GET', '/[numeric]/[string]', 'Index->get');
-        $routerunner->route('POST', '/[numeric]/[string]', 'Index->post');
+        $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
+        $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
         $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
         $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
     }
@@ -22,8 +22,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
         $routerunner->setCacheFile(__DIR__ . '/../assets/cache');
         $routerunner->setCaching(true);
-        $routerunner->route('GET', '/[numeric]/[string]', 'Index->get');
-        $routerunner->route('POST', '/[numeric]/[string]', 'Index->post');
+        $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
+        $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
         $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
         $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
     }
@@ -32,8 +32,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
         $routerunner->setBaseUri('/test');
-        $routerunner->route('GET', '/[numeric]/[string]', 'Index->get');
-        $routerunner->route('POST', '/[numeric]/[string]', 'Index->post');
+        $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
+        $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
         $this->assertEquals('index->get', $routerunner->execute('GET', '/test/123/tim'));
         $this->assertEquals('index->post', $routerunner->execute('POST', '/test/123/tim'));
     }
@@ -50,7 +50,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithParseFallback()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->parse(__DIR__ . '/../assets/routes');
+        $routerunner->parse(__DIR__ . '/../assets/config.yml');
         $this->assertEquals('index->get', $routerunner->execute('PUST', '/123/tim'));
     }
 
@@ -72,8 +72,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testMiddlewareTrue()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->route('GET', '/[numeric]/[string]', 'Index->get');
-        $routerunner->route('POST', '/[numeric]/[string]', 'Index->post');
+        $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
+        $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
         $loginMiddleware = new LoginTrue('TimTegeler\Routerunner\Mock\Index','login');
         $routerunner->registerMiddleware($loginMiddleware);
         $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
@@ -83,8 +83,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testMiddlewareLoginFalse()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->route('GET', '/[numeric]/[string]', 'Index->get');
-        $routerunner->route('POST', '/[numeric]/[string]', 'Index->post');
+        $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
+        $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
         $loginMiddleware = new LoginFalse('TimTegeler\Routerunner\Mock\Index','login');
         $routerunner->registerMiddleware($loginMiddleware);
         $this->assertEquals('index->login', $routerunner->execute('GET', '/123/tim'));

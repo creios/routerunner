@@ -40,7 +40,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $routes = array();
         $routes[] = new Route('*', '/', new Call('foo', 'bar'));
         $routes[] = new Route('GET', '/', new Call('foo', 'bar'));
-        $routes[] = new Route('POST', '/subpath/[numeric]/[string]', new Call('foo', 'bar'));
+        $routes[] = new Route('POST', '/subpath/(numeric)/(string)', new Call('foo', 'bar'));
         $cache->write($routes);
         $this->assertEquals($routes, $cache->read());
         $cache->clear();

@@ -20,7 +20,7 @@ class Pattern
     /**
      * @var array
      */
-    private static $uriSearch = ['/', "[string]", "[numeric]"];
+    private static $uriSearch = ['/', "(string)", "(numeric)"];
     /**
      * @var array
      */

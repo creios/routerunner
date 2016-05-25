@@ -12,7 +12,7 @@ class FinderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $finder->matchesRoute($route, 'POST', '/'));
         $route = new Route('GET', '/', new Call('foo','bar'));
         $this->assertEmpty($finder->matchesRoute($route, 'GET', '/'));
-        $route = new Route('POST', '/subpath/[numeric]/[string]', new Call('foo','bar'));
+        $route = new Route('POST', '/subpath/(numeric)/(string)', new Call('foo','bar'));
         $this->assertEquals(array('123', 'tim'), $finder->matchesRoute($route, 'POST', '/subpath/123/tim'));
     }
 
@@ -35,8 +35,8 @@ class FinderTest extends \PHPUnit_Framework_TestCase
     {
         $finder = new Finder();
         $finder->addRoute(new Route('GET', '/', new Call('index','get')));
-        $finder->addRoute(new Route('POST', '/subpath/[numeric]/[string]', new Call('index','post')));
-        $finder->addRoute(new Route('GET', '/[string]/[numeric]/subpath', new Call('index','get')));
+        $finder->addRoute(new Route('POST', '/subpath/(numeric)/(string)', new Call('index','post')));
+        $finder->addRoute(new Route('GET', '/(string)/(numeric)/subpath', new Call('index','get')));
 
         $route = $finder->findRoute('GET', '/');
         $this->assertEquals('GET', $route->getHttpMethod());
@@ -46,19 +46,19 @@ class FinderTest extends \PHPUnit_Framework_TestCase
 
         $route = $finder->findRoute('POST', '/subpath/123/tim');
         $this->assertEquals('POST', $route->getHttpMethod());
-        $this->assertEquals('/subpath/[numeric]/[string]', $route->getUri());
+        $this->assertEquals('/subpath/(numeric)/(string)', $route->getUri());
         $this->assertEquals('index', $route->getCall()->getController());
         $this->assertEquals('post', $route->getCall()->getMethod());
 
         $route = $finder->findRoute('POST', '/subpath/123.34/tim');
         $this->assertEquals('POST', $route->getHttpMethod());
-        $this->assertEquals('/subpath/[numeric]/[string]', $route->getUri());
+        $this->assertEquals('/subpath/(numeric)/(string)', $route->getUri());
         $this->assertEquals('index', $route->getCall()->getController());
         $this->assertEquals('post', $route->getCall()->getMethod());
 
         $route = $finder->findRoute('GET', '/tim/123/subpath?id=1&name=test');
         $this->assertEquals('GET', $route->getHttpMethod());
-        $this->assertEquals('/[string]/[numeric]/subpath', $route->getUri());
+        $this->assertEquals('/(string)/(numeric)/subpath', $route->getUri());
         $this->assertEquals('index', $route->getCall()->getController());
         $this->assertEquals('get', $route->getCall()->getMethod());;
     }
