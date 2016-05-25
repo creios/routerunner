@@ -1,6 +1,6 @@
 <?php
 
-namespace TimTegeler\Routerunner;
+namespace TimTegeler\Routerunner\Util;
 
 use Symfony\Component\Yaml\Yaml;
 use TimTegeler\Routerunner\Exception\ParseException;

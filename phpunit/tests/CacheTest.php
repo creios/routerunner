@@ -1,6 +1,10 @@
 <?php
 namespace TimTegeler\Routerunner;
 
+use TimTegeler\Routerunner\Util\Cache;
+use TimTegeler\Routerunner\Util\Call;
+use TimTegeler\Routerunner\Util\Route;
+
 class CacheTest extends \PHPUnit_Framework_TestCase
 {
 

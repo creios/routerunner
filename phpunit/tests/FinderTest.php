@@ -1,6 +1,10 @@
 <?php
 namespace TimTegeler\Routerunner;
 
+use TimTegeler\Routerunner\Util\Call;
+use TimTegeler\Routerunner\Util\Finder;
+use TimTegeler\Routerunner\Util\Route;
+
 class FinderTest extends \PHPUnit_Framework_TestCase
 {
 

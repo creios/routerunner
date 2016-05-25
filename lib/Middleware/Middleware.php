@@ -2,7 +2,7 @@
 
 namespace TimTegeler\Routerunner\Middleware;
 
-use TimTegeler\Routerunner\Call;
+use TimTegeler\Routerunner\Util\Call;
 
 /**
  * Class Middleware

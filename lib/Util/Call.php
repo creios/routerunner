@@ -1,6 +1,6 @@
 <?php
 
-namespace TimTegeler\Routerunner;
+namespace TimTegeler\Routerunner\Util;
 
 /**
  * Class Call

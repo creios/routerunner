@@ -1,6 +1,8 @@
 <?php
 namespace TimTegeler\Routerunner;
 
+use TimTegeler\Routerunner\Util\Pattern;
+
 class PatternTest extends \PHPUnit_Framework_TestCase
 {
 

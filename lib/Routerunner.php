@@ -7,6 +7,8 @@ use Interop\Container\ContainerInterface;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+use TimTegeler\Routerunner\Util\Parser;
+use TimTegeler\Routerunner\Util\Router;
 
 /**
  * Class Routerunner
