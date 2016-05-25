@@ -2,7 +2,8 @@
 
 namespace TimTegeler\Routerunner\Util;
 
-use TimTegeler\Routerunner\Exception\CacheException;
+use phpFastCache\Core\DriverAbstract;
+use phpFastCache\Core\DriverInterface;
 
 /**
  * Class Cache
@@ -11,51 +12,20 @@ use TimTegeler\Routerunner\Exception\CacheException;
 class Cache
 {
 
-    /**
-     * @var
-     */
-    public $file;
+    /** @var DriverAbstract */
+    private $cache;
+    /** @var string */
+    private $key = 'config';
 
     /**
-     * @return bool
-     * @throws CacheException
+     * Cache constructor.
+     * @param DriverInterface $cache
+     * @param string $key
      */
-    public function useable()
+    public function __construct(DriverInterface $cache, $key)
     {
-        self::exist();
-        self::readable();
-        self::writeable();
-        return true;
-    }
-
-    /**
-     * @return bool
-     * @throws CacheException
-     */
-    public function exist()
-    {
-        if (file_exists($this->file)) return true;
-        throw new CacheException(sprintf("File (%s) doesn't exist.", $this->file));
-    }
-
-    /**
-     * @return bool
-     * @throws CacheException
-     */
-    public function readable()
-    {
-        if (is_readable($this->file)) return true;
-        throw new CacheException(sprintf("File (%s) isn't readable.", $this->file));
-    }
-
-    /**
-     * @return bool
-     * @throws CacheException
-     */
-    public function writeable()
-    {
-        if (is_writeable($this->file)) return true;
-        throw new CacheException(sprintf("File (%s) isn't writeable.", $this->file));
+        $this->cache = $cache;
+        $this->key = $key;
     }
 
     /**
@@ -63,8 +33,7 @@ class Cache
      */
     public function filled()
     {
-        clearstatcache(True, $this->file);
-        return filesize($this->file) > 0;
+        return $this->cache->isExisting($this->key);
     }
 
     /**
@@ -72,7 +41,7 @@ class Cache
      */
     public function read()
     {
-        $cache = file_get_contents($this->file);
+        $cache = $this->cache->get($this->key);
         return unserialize($cache);
     }
 
@@ -82,7 +51,7 @@ class Cache
     public function write($cache)
     {
         $cache = serialize($cache);
-        file_put_contents($this->file, $cache);
+        $this->cache->set($this->key, $cache);
     }
 
     /**
@@ -90,15 +59,7 @@ class Cache
      */
     public function clear()
     {
-        return file_put_contents($this->file, NULL);
-    }
-
-    /**
-     * @param string $file
-     */
-    public function setFile($file)
-    {
-        $this->file = $file;
+        return $this->cache->delete($this->key);
     }
 
 }

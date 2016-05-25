@@ -2,6 +2,7 @@
 
 namespace TimTegeler\Routerunner\Util;
 
+use phpFastCache\CacheManager;
 use Symfony\Component\Yaml\Yaml;
 use TimTegeler\Routerunner\Exception\ParseException;
 
@@ -36,7 +37,7 @@ class Parser
     public function __construct($controllerRootNameSpace)
     {
         $this->controllerRootNameSpace = rtrim($controllerRootNameSpace, '\\');
-        $this->cache = new Cache();
+        $this->cache = new Cache(CacheManager::Files(), 'routerunner_cache');
     }
 
     /**
@@ -46,7 +47,7 @@ class Parser
      */
     public function parse($filename)
     {
-        if ($this->caching && $this->cache->useable()) {
+        if ($this->caching) {
             // caching is enabled and the cache is useable
             if ($this->cache->filled()) {
                 // cache is filled

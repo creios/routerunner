@@ -108,14 +108,6 @@ class Routerunner
     }
 
     /**
-     * @param $path
-     */
-    public function setCacheFile($path)
-    {
-        $this->parser->getCache()->setFile($path);
-    }
-
-    /**
      * @param $baseUri
      */
     public function setBaseUri($baseUri)

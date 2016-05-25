@@ -60,7 +60,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parser('\\');
         $parser->setCaching(true);
-        $parser->getCache()->setFile(__DIR__ . '/../assets/cache');
         $parser->parse(__DIR__ . '/../assets/config.yml');
 
         $newRoute = 'POST /example Index->post';

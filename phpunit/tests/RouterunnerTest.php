@@ -20,7 +20,6 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testExecuteWithCache()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->setCacheFile(__DIR__ . '/../assets/cache');
         $routerunner->setCaching(true);
         $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
         $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
