@@ -83,11 +83,27 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         fclose($fp);
     }
 
-    public function testParseException()
+    public function testParseExceptionNoConfig()
     {
         $parser = new Parser('\\');
         $parser->setCaching(false);
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'File doesn\'t exist.');
         $parser->parse('not/existing/path');
+    }
+
+    public function testParseExceptionNoRoutes()
+    {
+        $parser = new Parser('\\');
+        $parser->setCaching(false);
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a routes section.');
+        $parser->parse(__DIR__ . '/../assets/config-no-routes.yml');
+    }
+
+    public function testParseExceptionNoFallback()
+    {
+        $parser = new Parser('\\');
+        $parser->setCaching(false);
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a fallback.');
+        $parser->parse(__DIR__ . '/../assets/config-no-fallback.yml');
     }
 }

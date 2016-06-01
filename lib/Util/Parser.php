@@ -97,8 +97,8 @@ class Parser
     private static function fileUseable($filename, $clearCache = FALSE)
     {
         if ($clearCache) clearstatcache(True, $filename);
-        if (!file_exists($filename)) throw new ParseException(sprintf("File (%s) doesn't exist.", $filename));
-        if (!is_readable($filename)) throw new ParseException(sprintf("File (%s) isn't readable.", $filename));
+        if (!file_exists($filename)) throw new ParseException(sprintf("File doesn't exist.", $filename));
+        if (!is_readable($filename)) throw new ParseException(sprintf("File isn't readable.", $filename));
         return true;
     }
 
@@ -123,6 +123,19 @@ class Parser
         self::fileUseable($filename);
 
         $config = Yaml::parse(file_get_contents($filename));
+
+        if (isset($config['routes']) == false) {
+            throw new ParseException("Config doesn't have a routes section.");
+        }
+
+        if (is_array($config['routes']) == false) {
+            throw new ParseException("Routes section of config is not a list.");
+        }
+
+        if (isset($config['fallback']) == false) {
+            throw new ParseException("Config doesn't have a fallback.");
+        }
+
         $routes = [];
         foreach ($config['routes'] as $routeParts) {
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
