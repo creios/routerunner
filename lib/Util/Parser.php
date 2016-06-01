@@ -142,7 +142,9 @@ class Parser
         }
 
         list($controller, $method) = $this->generateCall($config['fallback']);
+
         $fallback = new Call($controller, $method);
+
         return [$routes, $fallback];
     }
 
