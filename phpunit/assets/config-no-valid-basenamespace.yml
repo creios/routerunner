@@ -22,4 +22,4 @@ routes:
 
 fallback: Index->get
 
-baseNamespace: TimTegeler\Routerunner\Mock
+baseNamespace: 1337\Controllers

@@ -52,7 +52,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $route = $routes[0];
         $this->assertEquals('GET', $route->getHttpMethod());
         $this->assertEquals('/', $route->getUri());
-        $this->assertEquals('\Index', $route->getCall()->getController());
+        $this->assertEquals('TimTegeler\Routerunner\Mock\Index', $route->getCall()->getController());
         $this->assertEquals('get', $route->getCall()->getMethod());
     }
 
@@ -105,5 +105,21 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a fallback.');
         $parser->parse(__DIR__ . '/../assets/config-no-fallback.yml');
+    }
+
+    public function testParseExceptionNoBaseNamespace()
+    {
+        $parser = new Parser('\\');
+        $parser->setCaching(false);
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a baseNamespace.');
+        $parser->parse(__DIR__ . '/../assets/config-no-basenamespace.yml');
+    }
+
+    public function testParseExceptionNoValidBaseNamespace()
+    {
+        $parser = new Parser('\\');
+        $parser->setCaching(false);
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'BaseNamespace is not a valid namespace.');
+        $parser->parse(__DIR__ . '/../assets/config-no-valid-basenamespace.yml');
     }
 }

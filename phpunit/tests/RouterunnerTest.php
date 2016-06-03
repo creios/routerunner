@@ -49,7 +49,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
 
     public function testExecuteWithParseFallback()
     {
-        $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
+        $routerunner = new Routerunner();
         $routerunner->parse(__DIR__ . '/../assets/config.yml');
         $this->assertEquals('index->get', $routerunner->execute('PUST', '/123/tim'));
     }

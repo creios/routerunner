@@ -18,13 +18,17 @@ class Parser
      */
     const SEPARATOR_OF_CLASS_AND_METHOD = "->";
     /**
+     * @var string
+     */
+    const NAMESPACE_REGEXP = "/^(?:\\\\|\\\\?[a-z_A-Z]\\w+(?:\\\\[a-z_A-Z]\\w+)*)$/";
+    /**
      * @var bool
      */
     private $caching = False;
     /**
      * @var string
      */
-    private $controllerRootNameSpace = "";
+    private $controllerRootNameSpace;
     /**
      * @var Cache
      */
@@ -33,10 +37,15 @@ class Parser
     /**
      * Parser constructor.
      * @param $controllerRootNameSpace
+     * @throws ParseException
      */
-    public function __construct($controllerRootNameSpace)
+    public function __construct($controllerRootNameSpace = null)
     {
-        $this->controllerRootNameSpace = rtrim($controllerRootNameSpace, '\\');
+        if ($controllerRootNameSpace != null && preg_match(self::NAMESPACE_REGEXP, $controllerRootNameSpace) == 0) {
+            throw new ParseException("BaseNamespace is not a valid namespace.");
+        } else {
+            $this->controllerRootNameSpace = $controllerRootNameSpace;
+        }
         $this->cache = new Cache(CacheManager::Files(), 'routerunner_cache');
     }
 
@@ -51,29 +60,29 @@ class Parser
             // caching is enabled and the cache is useable
             if ($this->cache->filled()) {
                 // cache is filled
-                // reading routes from cache
-                list($cacheTimestamp, $routes) = $this->cache->read();
+                // reading config from cache
+                list($cacheTimestamp, $config) = $this->cache->read();
                 // getting timestamp from file
-                $routesTimestamp = self::getTimestamp($filename, TRUE);
-                if (self::needRecache($cacheTimestamp, $routesTimestamp)) {
-                    // routes need recache
-                    // writing routes to cache
-                    $this->cache->write([$routesTimestamp, $routes]);
+                $configTimestamp = self::getTimestamp($filename, TRUE);
+                if (self::needRecache($cacheTimestamp, $configTimestamp)) {
+                    // config need recache
+                    // writing config to cache
+                    $this->cache->write([$configTimestamp, $config]);
                 }
             } else {
                 // cache is not filled
-                $routesTimestamp = self::getTimestamp($filename, TRUE);
-                // arsing routes
-                $routes = $this->parseConfig($filename);
-                // writing routes to cache
-                $this->cache->write([$routesTimestamp, $routes]);
+                $configTimestamp = self::getTimestamp($filename, TRUE);
+                // arsing config
+                $config = $this->parseConfig($filename);
+                // writing config to cache
+                $this->cache->write([$configTimestamp, $config]);
             }
         } else {
             // caching is disabled or cache is not useable
-            // parsing routes
-            $routes = $this->parseConfig($filename);
+            // parsing config
+            $config = $this->parseConfig($filename);
         }
-        return $routes;
+        return $config;
     }
 
     /**
@@ -136,6 +145,16 @@ class Parser
             throw new ParseException("Config doesn't have a fallback.");
         }
 
+        if (isset($config['baseNamespace']) == false) {
+            throw new ParseException("Config doesn't have a baseNamespace.");
+        }
+
+        if (preg_match(self::NAMESPACE_REGEXP, $config['baseNamespace']) == 0) {
+            throw new ParseException("BaseNamespace is not a valid namespace.");
+        }
+
+        $this->controllerRootNameSpace = rtrim($config['baseNamespace'], '\\');
+
         $routes = [];
         foreach ($config['routes'] as $routeParts) {
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
@@ -167,14 +186,6 @@ class Parser
     public function generateCall($callable)
     {
         return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
-    }
-
-    /**
-     * @return Cache
-     */
-    public function getCache()
-    {
-        return $this->cache;
     }
 
     /**

@@ -94,14 +94,6 @@ class Finder
     }
 
     /**
-     * @return string
-     */
-    public function getBaseUri()
-    {
-        return $this->baseUri;
-    }
-
-    /**
      * @param string $baseUri
      */
     public function setBaseUri($baseUri)

@@ -1,1 +1,3 @@
 fallback: Index->get
+
+baseNamespace: Routerunner_Example\Controllers
