@@ -20,6 +20,4 @@ routes:
   - [GET, /subpath/(numeric)/(string)#anchor, Index->get]
   - [POST, /subpath/(numeric)/(string)#anchor, Index->post]
 
-fallback: Index->get
-
-baseNamespace: TimTegeler\Routerunner\Mock
+baseNamespace: Routerunner_Example\Controllers

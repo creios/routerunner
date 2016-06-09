@@ -21,5 +21,3 @@ routes:
   - [POST, /subpath/(numeric)/(string)#anchor, Index->post]
 
 fallback: Index->get
-
-baseNamespace: TimTegeler\Routerunner\Mock

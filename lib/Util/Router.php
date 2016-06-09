@@ -90,7 +90,7 @@ class Router
                 return $return;
             }
         } else {
-            throw new RouterException("Route is not callable");
+            throw new RouterException("Method can not be found.");
         }
 
     }
@@ -106,7 +106,7 @@ class Router
             $controller = $this->container->get($class);
             return $controller;
         } else {
-            throw new RouterException("Route is not callable");
+            throw new RouterException("Controller can not be found.");
         }
     }
 
@@ -132,14 +132,6 @@ class Router
     public function getFinder()
     {
         return $this->finder;
-    }
-
-    /**
-     * @return Call
-     */
-    public function getFallback()
-    {
-        return $this->fallback;
     }
 
     /**

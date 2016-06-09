@@ -18,13 +18,17 @@ class Parser
      */
     const SEPARATOR_OF_CLASS_AND_METHOD = "->";
     /**
+     * @var string
+     */
+    const NAMESPACE_REGEXP = "/^(?:\\\\|\\\\?[a-z_A-Z]\\w+(?:\\\\[a-z_A-Z]\\w+)*)$/";
+    /**
      * @var bool
      */
     private $caching = False;
     /**
      * @var string
      */
-    private $controllerRootNameSpace = "";
+    private $controllerBaseNamespace = null;
     /**
      * @var Cache
      */
@@ -32,17 +36,21 @@ class Parser
 
     /**
      * Parser constructor.
-     * @param $controllerRootNameSpace
+     * @param $controllerBaseNamespace
+     * @throws ParseException
      */
-    public function __construct($controllerRootNameSpace)
+    public function __construct($controllerBaseNamespace = null)
     {
-        $this->controllerRootNameSpace = rtrim($controllerRootNameSpace, '\\');
+        if ($controllerBaseNamespace != null) {
+            self::validateBaseNamespace($controllerBaseNamespace);
+            $this->controllerBaseNamespace = $controllerBaseNamespace;
+        }
         $this->cache = new Cache(CacheManager::Files(), 'routerunner_cache');
     }
 
     /**
      * @param $filename
-     * @return array
+     * @return Config
      * @throws ParseException
      */
     public function parse($filename)
@@ -51,29 +59,29 @@ class Parser
             // caching is enabled and the cache is useable
             if ($this->cache->filled()) {
                 // cache is filled
-                // reading routes from cache
-                list($cacheTimestamp, $routes) = $this->cache->read();
+                // reading config from cache
+                list($cacheTimestamp, $config) = $this->cache->read();
                 // getting timestamp from file
-                $routesTimestamp = self::getTimestamp($filename, TRUE);
-                if (self::needRecache($cacheTimestamp, $routesTimestamp)) {
-                    // routes need recache
-                    // writing routes to cache
-                    $this->cache->write([$routesTimestamp, $routes]);
+                $configTimestamp = self::getTimestamp($filename, TRUE);
+                if (self::needRecache($cacheTimestamp, $configTimestamp)) {
+                    // config need recache
+                    // writing config to cache
+                    $this->cache->write([$configTimestamp, $config]);
                 }
             } else {
                 // cache is not filled
-                $routesTimestamp = self::getTimestamp($filename, TRUE);
-                // arsing routes
-                $routes = $this->parseConfig($filename);
-                // writing routes to cache
-                $this->cache->write([$routesTimestamp, $routes]);
+                $configTimestamp = self::getTimestamp($filename, TRUE);
+                // arsing config
+                $config = $this->parseConfig($filename);
+                // writing config to cache
+                $this->cache->write([$configTimestamp, $config]);
             }
         } else {
             // caching is disabled or cache is not useable
-            // parsing routes
-            $routes = $this->parseConfig($filename);
+            // parsing config
+            $config = $this->parseConfig($filename);
         }
-        return $routes;
+        return $config;
     }
 
     /**
@@ -97,8 +105,8 @@ class Parser
     private static function fileUseable($filename, $clearCache = FALSE)
     {
         if ($clearCache) clearstatcache(True, $filename);
-        if (!file_exists($filename)) throw new ParseException(sprintf("File (%s) doesn't exist.", $filename));
-        if (!is_readable($filename)) throw new ParseException(sprintf("File (%s) isn't readable.", $filename));
+        if (!file_exists($filename)) throw new ParseException(sprintf("File doesn't exist", $filename));
+        if (!is_readable($filename)) throw new ParseException(sprintf("File isn't readable", $filename));
         return true;
     }
 
@@ -114,7 +122,7 @@ class Parser
 
     /**
      * @param $filename
-     * @return array
+     * @return Config
      * @throws ParseException
      */
     private function parseConfig($filename)
@@ -123,14 +131,33 @@ class Parser
         self::fileUseable($filename);
 
         $config = Yaml::parse(file_get_contents($filename));
+
+        if (isset($config['routes']) == false) {
+            throw new ParseException("Config doesn't have a routes section");
+        }
+
+        if (is_array($config['routes']) == false) {
+            throw new ParseException("Routes section of config is not a list");
+        }
+
+        if (isset($config['fallback']) == false) {
+            throw new ParseException("Config doesn't have a fallback");
+        }
+
+        if (isset($config['baseNamespace']) == false) {
+            throw new ParseException("Config doesn't have a baseNamespace");
+        }
+
+        self::validateBaseNamespace($config['baseNamespace']);
+
+        $this->controllerBaseNamespace = rtrim($config['baseNamespace'], '\\');
+
         $routes = [];
         foreach ($config['routes'] as $routeParts) {
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
         }
 
-        list($controller, $method) = $this->generateCall($config['fallback']);
-        $fallback = new Call($controller, $method);
-        return [$routes, $fallback];
+        return new Config($routes, $this->generateCall($config['fallback']), $this->controllerBaseNamespace);
     }
 
     /**
@@ -141,25 +168,28 @@ class Parser
      */
     public function createRoute($httpMethod, $url, $call)
     {
-        list($controller, $method) = $this->generateCall($call);
-        return new Route($httpMethod, $url, new Call($controller, $method));
+        return new Route($httpMethod, $url, $this->generateCall($call));
     }
 
     /**
      * @param $callable
-     * @return array
+     * @return Call
      */
     public function generateCall($callable)
     {
-        return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
+        list($controller, $method) = explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerBaseNamespace . '\\' . $callable);
+        return new Call($controller, $method);
     }
 
     /**
-     * @return Cache
+     * @param $baseNamespace
+     * @throws ParseException
      */
-    public function getCache()
+    private static function validateBaseNamespace($baseNamespace)
     {
-        return $this->cache;
+        if (preg_match(self::NAMESPACE_REGEXP, $baseNamespace) == 0) {
+            throw new ParseException("BaseNamespace is not a valid namespace.");
+        }
     }
 
     /**
@@ -169,4 +199,5 @@ class Parser
     {
         $this->caching = $enable;
     }
+
 }
