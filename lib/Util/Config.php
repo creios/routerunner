@@ -21,18 +21,24 @@ class Config
      * @var string
      */
     private $baseNamespace;
+    /**
+     * @var string
+     */
+    private $basePath;
 
     /**
      * Config constructor.
      * @param array $routes
      * @param Call $fallBack
      * @param string $baseNamespace
+     * @param string $basePath
      */
-    public function __construct(array $routes, Call $fallBack, $baseNamespace)
+    public function __construct(array $routes, Call $fallBack, $baseNamespace, $basePath)
     {
         $this->routes = $routes;
         $this->fallBack = $fallBack;
         $this->baseNamespace = $baseNamespace;
+        $this->basePath = $basePath;
     }
 
     /**
@@ -57,6 +63,14 @@ class Config
     public function getBaseNamespace()
     {
         return $this->baseNamespace;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->basePath;
     }
     
 }
