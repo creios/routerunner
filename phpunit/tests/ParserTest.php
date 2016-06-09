@@ -87,7 +87,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parser('\\');
         $parser->setCaching(false);
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'File doesn\'t exist.');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'File doesn\'t exist');
         $parser->parse('not/existing/path');
     }
 
@@ -95,7 +95,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parser('\\');
         $parser->setCaching(false);
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a routes section.');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a routes section');
         $parser->parse(__DIR__ . '/../assets/config-no-routes.yml');
     }
 
@@ -103,7 +103,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parser('\\');
         $parser->setCaching(false);
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a fallback.');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a fallback');
         $parser->parse(__DIR__ . '/../assets/config-no-fallback.yml');
     }
 
@@ -111,7 +111,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parser('\\');
         $parser->setCaching(false);
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a baseNamespace.');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a baseNamespace');
         $parser->parse(__DIR__ . '/../assets/config-no-basenamespace.yml');
     }
 
@@ -119,7 +119,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parser('\\');
         $parser->setCaching(false);
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'BaseNamespace is not a valid namespace.');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'BaseNamespace is not a valid namespace');
         $parser->parse(__DIR__ . '/../assets/config-no-valid-basenamespace.yml');
     }
 }
