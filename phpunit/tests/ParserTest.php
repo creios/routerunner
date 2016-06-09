@@ -47,9 +47,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = new Parser('\\');
         $parser->setCaching(false);
-        list($routes) = $parser->parse(__DIR__ . '/../assets/config.yml');
+        $config = $parser->parse(__DIR__ . '/../assets/config.yml');
         /** @var Route $route */
-        $route = $routes[0];
+        $route = $config->getRoutes()[0];
         $this->assertEquals('GET', $route->getHttpMethod());
         $this->assertEquals('/', $route->getUri());
         $this->assertEquals('TimTegeler\Routerunner\Mock\Index', $route->getCall()->getController());

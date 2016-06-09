@@ -51,7 +51,7 @@ class Parser
 
     /**
      * @param $filename
-     * @return array
+     * @return Config
      * @throws ParseException
      */
     public function parse($filename)
@@ -123,7 +123,7 @@ class Parser
 
     /**
      * @param $filename
-     * @return array
+     * @return Config
      * @throws ParseException
      */
     private function parseConfig($filename)
@@ -164,7 +164,7 @@ class Parser
 
         $fallback = new Call($controller, $method);
 
-        return [$routes, $fallback];
+        return new Config($routes, $fallback, $this->controllerRootNameSpace);
     }
 
     /**

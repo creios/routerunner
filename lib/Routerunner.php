@@ -47,9 +47,9 @@ class Routerunner
      */
     public function parse($filename)
     {
-        list($routes, $fallback) = $this->parser->parse($filename);
-        $this->router->setFallback($fallback);
-        $this->router->getFinder()->addRoutes($routes);
+        $config = $this->parser->parse($filename);
+        $this->router->setFallback($config->getFallBack());
+        $this->router->getFinder()->addRoutes($config->getRoutes());
     }
 
     /**
