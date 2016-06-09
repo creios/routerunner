@@ -94,7 +94,7 @@ class Routerunner
     /**
      * @param PostProcessorInterface $postProcessor
      */
-    public function setPostProcessor($postProcessor)
+    public function setPostProcessor(PostProcessorInterface $postProcessor)
     {
         $this->router->setPostProcessor($postProcessor);
     }
