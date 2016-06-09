@@ -28,7 +28,7 @@ class Parser
     /**
      * @var string
      */
-    private $controllerRootNameSpace;
+    private $controllerBaseNamespace = null;
     /**
      * @var Cache
      */
@@ -36,15 +36,14 @@ class Parser
 
     /**
      * Parser constructor.
-     * @param $controllerRootNameSpace
+     * @param $controllerBaseNamespace
      * @throws ParseException
      */
-    public function __construct($controllerRootNameSpace = null)
+    public function __construct($controllerBaseNamespace = null)
     {
-        if ($controllerRootNameSpace != null && preg_match(self::NAMESPACE_REGEXP, $controllerRootNameSpace) == 0) {
-            throw new ParseException("BaseNamespace is not a valid namespace.");
-        } else {
-            $this->controllerRootNameSpace = $controllerRootNameSpace;
+        if ($controllerBaseNamespace != null) {
+            self::validateBaseNamespace($controllerBaseNamespace);
+            $this->controllerBaseNamespace = $controllerBaseNamespace;
         }
         $this->cache = new Cache(CacheManager::Files(), 'routerunner_cache');
     }
@@ -149,18 +148,16 @@ class Parser
             throw new ParseException("Config doesn't have a baseNamespace.");
         }
 
-        if (preg_match(self::NAMESPACE_REGEXP, $config['baseNamespace']) == 0) {
-            throw new ParseException("BaseNamespace is not a valid namespace.");
-        }
+        self::validateBaseNamespace($config['baseNamespace']);
 
-        $this->controllerRootNameSpace = rtrim($config['baseNamespace'], '\\');
+        $this->controllerBaseNamespace = rtrim($config['baseNamespace'], '\\');
 
         $routes = [];
         foreach ($config['routes'] as $routeParts) {
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
         }
 
-        return new Config($routes, $this->generateCall($config['fallback']), $this->controllerRootNameSpace);
+        return new Config($routes, $this->generateCall($config['fallback']), $this->controllerBaseNamespace);
     }
 
     /**
@@ -180,8 +177,19 @@ class Parser
      */
     public function generateCall($callable)
     {
-        list($controller, $method) = explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
+        list($controller, $method) = explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerBaseNamespace . '\\' . $callable);
         return new Call($controller, $method);
+    }
+
+    /**
+     * @param $baseNamespace
+     * @throws ParseException
+     */
+    private static function validateBaseNamespace($baseNamespace)
+    {
+        if (preg_match(self::NAMESPACE_REGEXP, $baseNamespace) == 0) {
+            throw new ParseException("BaseNamespace is not a valid namespace.");
+        }
     }
 
     /**
