@@ -160,11 +160,7 @@ class Parser
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
         }
 
-        list($controller, $method) = $this->generateCall($config['fallback']);
-
-        $fallback = new Call($controller, $method);
-
-        return new Config($routes, $fallback, $this->controllerRootNameSpace);
+        return new Config($routes, $this->generateCall($config['fallback']), $this->controllerRootNameSpace);
     }
 
     /**
@@ -175,17 +171,17 @@ class Parser
      */
     public function createRoute($httpMethod, $url, $call)
     {
-        list($controller, $method) = $this->generateCall($call);
-        return new Route($httpMethod, $url, new Call($controller, $method));
+        return new Route($httpMethod, $url, $this->generateCall($call));
     }
 
     /**
      * @param $callable
-     * @return array
+     * @return Call
      */
     public function generateCall($callable)
     {
-        return explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
+        list($controller, $method) = explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerRootNameSpace . '\\' . $callable);
+        return new Call($controller, $method);
     }
 
     /**
@@ -195,4 +191,5 @@ class Parser
     {
         $this->caching = $enable;
     }
+
 }

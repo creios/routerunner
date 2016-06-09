@@ -7,7 +7,6 @@ use Interop\Container\ContainerInterface;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
-use TimTegeler\Routerunner\Util\Call;
 use TimTegeler\Routerunner\Util\Parser;
 use TimTegeler\Routerunner\Util\Router;
 
@@ -68,8 +67,7 @@ class Routerunner
      */
     public function fallback($call)
     {
-        list($controller, $method) = $this->parser->generateCall($call);
-        $this->router->setFallback(new Call($controller, $method));
+        $this->router->setFallback($this->parser->generateCall($call));
     }
 
     /**
@@ -114,4 +112,5 @@ class Routerunner
     {
         $this->router->getFinder()->setBaseUri($baseUri);
     }
+    
 }
