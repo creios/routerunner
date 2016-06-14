@@ -168,12 +168,6 @@ You can use [composer](https://getcomposer.org/) to download and install Routeru
 ### composer.json
 ```json
 {
-    "repositories": [
-        {
-        "url": "https://github.com/timtegeler/routerunner.git",
-        "type": "git"
-        }
-    ],
     "require": {
         "timtegeler/routerunner": "^0.0.3"
     }
