@@ -61,13 +61,14 @@ class Router
             $call = $route->getCall();
             $method = $call->getMethod();
             $parameter = $route->getParameter();
+            $controller = self::constructController($call->getController());
         } catch (RouterException $e) {
             $call = $this->fallback;
             $method = $call->getMethod();
             $parameter = [];
+            $controller = self::constructController($call->getController());
+            $controller->setReroutedUri($uri);
         }
-
-        $controller = self::constructController($call->getController());
 
         foreach ($this->middlewares as $middleware) {
             /** @var Middleware $middleware */
