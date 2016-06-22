@@ -35,7 +35,7 @@ routes:
 
 fallback: Index->get
 
-baseNamespace: Controlelr\Namespace
+baseNamespace: Controller\Namespace
 ```
 
 ### Pseudo regular expression
