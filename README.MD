@@ -12,17 +12,12 @@
 
 ```php
 <?php
+
 use TimTegeler\Routerunner\Routerunner;
 
-// Setting root namespace for controller
-$routerunner = new Routerunner("Controller");
-
-// Adding routes
-$routerunner->route("GET", "/", "Index->get");
-$routerunner->route("GET", "/user/(numeric)", "User->get");
-$routerunner->route("POST", "/login", "Index->post");
-
-// Trigger execution 
+// Setting path to config file
+$routerunner = new Routerunner("/path/to/config.yml");
+// Trigger execution
 $routerunner->execute($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 ```
 
@@ -32,7 +27,6 @@ Routerunner uses a pseudo regular expressions to describe the [HTTP-method](http
 
 #### HTTP-method
 ```
-*       // Match GET and POST  
 GET     // Match GET
 POST    // Match POST
 ```
@@ -48,23 +42,21 @@ POST    // Match POST
 ```
 
 
-### Routesfile
+### Config file
 
-With the routesfile you can define your routes in a more clean fashion.
+With the yml-based config file you can define your routes and configure routerunner in a clean fashion.
 
-```
-GET    /                Index->get
-GET    /user/(numeric)  User->get
-POST   /login           Index->post
-```
+```yml
+routes:
+  - [GET, /, Index->get]
+  - [GET, /subpath#anchor, Index->get]
+  - [GET, /api, Index->api]
+  - [GET, /(string), Index->get]
+  - [POST, /(string)/(numeric), Index->post]
 
-You need to let Routerunner parse your routefile, but furthermore you can define routes in php.
+fallback: Index->get
 
-```php
-<?php
-// Parsing the configfile
-$routerunner->parse("path/to/routesfile");
-$routerunner->route("GET", "/faq", "Index->faq");
+baseNamespace: Controlelr\Namespace
 ```
 
 ### Caching
@@ -74,8 +66,9 @@ a read- and writeable (from your webserver) file. Be careful, every content of t
 
 ```php
 <?php
-// Setting the cachefile
-$routerunner->setCacheFile("path/to/cache");
+
+// Enabling caching
+$routerunner->setCaching(true);
 ```
 
 ### Middleware
@@ -91,9 +84,9 @@ For example middlewares enable you to control the access to restricted controlle
 use TimTegeler\Routerunner\Middleware\Middleware;
 
 /**
- * Class checkQuota
+ * Class CheckQuota
  */
-class checkQuota extends Middleware
+class CheckQuota extends Middleware
 {
     /**
      * @var int
@@ -117,10 +110,7 @@ Every middleware must registered with routerunner. Routerunner will process midd
 
 ```php
 <?php
-
-use \TimTegeler\Routerunner\Callback;
-
-$checkQuota = new checkQuota('User', 'exceededQuota');
+$checkQuota = new CheckQuota('User', 'exceededQuota');
 
 $routerunner->registerMiddleware($checkQuota);
 ```
@@ -169,7 +159,7 @@ You can use [composer](https://getcomposer.org/) to download and install Routeru
 ```json
 {
     "require": {
-        "timtegeler/routerunner": "^0.0.3"
+        "timtegeler/routerunner": "^1.0.0"
     }
 }
 ```
