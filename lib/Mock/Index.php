@@ -43,6 +43,9 @@ class Index implements ControllerInterface
         return "index->login";
     }
 
+    /**
+     * @return array
+     */
     public static function api()
     {
         return ['index' => 'login'];

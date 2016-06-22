@@ -5,6 +5,7 @@ routes:
   - [POST, /subpath#anchor, Index->post]
   - [GET, /subpath/subpath, Index->get]
   - [POST, /subpath/subpath, Index->post]
+  - [GET, /api, Index->api]
   - [GET, /(string), Index->get]
   - [POST, /(string), Index->post]
   - [GET, /(string)/(numeric), Index->get]

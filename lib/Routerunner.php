@@ -28,24 +28,18 @@ class Routerunner
 
     /**
      * Routerunner constructor.
+     * @param string $configFilePath
      * @param ContainerInterface $container
+     * @throws Exception\ParseException
      */
-    public function __construct(ContainerInterface $container = null)
+    public function __construct($configFilePath, ContainerInterface $container = null)
     {
         if ($container == null) {
             $container = ContainerBuilder::buildDevContainer();
         }
         $this->router = new Router($container);
         $this->parser = new Parser();
-    }
-
-    /**
-     * @param $filename
-     * @throws Exception\ParseException
-     */
-    public function parse($filename)
-    {
-        $config = $this->parser->parse($filename);
+        $config = $this->parser->parse($configFilePath);
         $this->router->setFallback($config->getFallBack());
         $this->router->getFinder()->addRoutes($config->getRoutes());
         $this->router->getFinder()->setBasePath($config->getBasePath());
