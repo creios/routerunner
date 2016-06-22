@@ -27,10 +27,10 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
     }
 
-    public function testExecuteWithBaseUri()
+    public function testExecuteWithBasePath()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->setBaseUri('/test');
+        $routerunner->setBasePath('/test');
         $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
         $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
         $this->assertEquals('index->get', $routerunner->execute('GET', '/test/123/tim'));
@@ -40,7 +40,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testExecuteFallback()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->setBaseUri('/test');
+        $routerunner->setBasePath('/test');
         $routerunner->route('GET', '/', 'Index->get');
         $routerunner->route('GET', '/post', 'Index->post');
         $routerunner->fallback('Index->get');

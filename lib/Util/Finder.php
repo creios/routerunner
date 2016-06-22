@@ -18,7 +18,7 @@ class Finder
     /**
      * @var string
      */
-    private $baseUri;
+    private $basePath;
 
     /**
      * @param $httpMethod
@@ -67,7 +67,7 @@ class Finder
     {
         $httpMethodPattern = Pattern::buildHttpMethod($route->getHttpMethod());
         if (preg_match($httpMethodPattern, $httpMethod, $httpMethodParams) === 1) {
-            $uriPattern = Pattern::buildUri($this->baseUri . $route->getUri());
+            $uriPattern = Pattern::buildUri($this->basePath . $route->getUri());
             $uri = explode('?', $uri)[0];
             if (preg_match($uriPattern, $uri, $uriParams) === 1) {
                 array_shift($uriParams);
@@ -94,11 +94,11 @@ class Finder
     }
 
     /**
-     * @param string $baseUri
+     * @param string $basePath
      */
-    public function setBaseUri($baseUri)
+    public function setBasePath($basePath)
     {
-        $this->baseUri = $baseUri;
+        $this->basePath = $basePath;
     }
 
 }

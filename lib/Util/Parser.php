@@ -22,6 +22,10 @@ class Parser
      */
     const NAMESPACE_REGEXP = "/^(?:\\\\|\\\\?[a-z_A-Z]\\w+(?:\\\\[a-z_A-Z]\\w+)*)$/";
     /**
+     * @var string
+     */
+    const PATH_REGEXP = "/^((?:[a-zA-Z09-9])+\\/)+$/";
+    /**
      * @var bool
      */
     private $caching = False;
@@ -148,6 +152,14 @@ class Parser
             throw new ParseException("Config doesn't have a baseNamespace");
         }
 
+        $basePath = null;
+        if (isset($config['basePath']) == true) {
+            $basePath = $config['basePath'];
+            if (preg_match(self::PATH_REGEXP, $basePath) == 0) {
+                throw new ParseException("BasePath is not a valid path");
+            }
+        }
+
         self::validateBaseNamespace($config['baseNamespace']);
 
         $this->controllerBaseNamespace = rtrim($config['baseNamespace'], '\\');
@@ -157,7 +169,7 @@ class Parser
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
         }
 
-        return new Config($routes, $this->generateCall($config['fallback']), $this->controllerBaseNamespace);
+        return new Config($routes, $this->generateCall($config['fallback']), $this->controllerBaseNamespace, $basePath);
     }
 
     /**

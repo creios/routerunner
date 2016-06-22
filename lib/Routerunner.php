@@ -49,6 +49,7 @@ class Routerunner
         $config = $this->parser->parse($filename);
         $this->router->setFallback($config->getFallBack());
         $this->router->getFinder()->addRoutes($config->getRoutes());
+        $this->router->getFinder()->setBasePath($config->getBasePath());
     }
 
     /**
@@ -106,11 +107,11 @@ class Routerunner
     }
 
     /**
-     * @param $baseUri
+     * @param $basePath
      */
-    public function setBaseUri($baseUri)
+    public function setBasePath($basePath)
     {
-        $this->router->getFinder()->setBaseUri($baseUri);
+        $this->router->getFinder()->setBasePath($basePath);
     }
-    
+
 }

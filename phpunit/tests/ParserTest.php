@@ -122,4 +122,12 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'BaseNamespace is not a valid namespace');
         $parser->parse(__DIR__ . '/../assets/config-no-valid-basenamespace.yml');
     }
+
+    public function testParseExceptionNoValidBasePath()
+    {
+        $parser = new Parser('\\');
+        $parser->setCaching(false);
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'BasePath is not a valid path');
+        $parser->parse(__DIR__ . '/../assets/config-no-valid-basepath.yml');
+    }
 }
