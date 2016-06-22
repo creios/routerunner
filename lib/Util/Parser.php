@@ -40,15 +40,10 @@ class Parser
 
     /**
      * Parser constructor.
-     * @param $controllerBaseNamespace
      * @throws ParseException
      */
-    public function __construct($controllerBaseNamespace = null)
+    public function __construct()
     {
-        if ($controllerBaseNamespace != null) {
-            self::validateBaseNamespace($controllerBaseNamespace);
-            $this->controllerBaseNamespace = $controllerBaseNamespace;
-        }
         $this->cache = new Cache(CacheManager::Files(), 'routerunner_cache');
     }
 

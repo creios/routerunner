@@ -1,51 +1,8 @@
 <?php
 namespace TimTegeler\Routerunner;
 
-use TimTegeler\Routerunner\Mock\Encoder;
-use TimTegeler\Routerunner\Mock\LoginFalse;
-use TimTegeler\Routerunner\Mock\LoginTrue;
-
 class RouterunnerTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testExecute()
-    {
-        $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
-        $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
-        $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
-        $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
-    }
-
-    public function testExecuteWithCache()
-    {
-        $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->setCaching(true);
-        $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
-        $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
-        $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
-        $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
-    }
-
-    public function testExecuteWithBasePath()
-    {
-        $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->setBasePath('/test');
-        $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
-        $routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
-        $this->assertEquals('index->get', $routerunner->execute('GET', '/test/123/tim'));
-        $this->assertEquals('index->post', $routerunner->execute('POST', '/test/123/tim'));
-    }
-
-    public function testExecuteFallback()
-    {
-        $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
-        $routerunner->setBasePath('/test');
-        $routerunner->route('GET', '/', 'Index->get');
-        $routerunner->route('GET', '/post', 'Index->post');
-        $routerunner->fallback('Index->get');
-        $this->assertEquals('index->get', $routerunner->execute('GET', '/test/post/'));
-    }
 
     public function testExecuteWithParseFallback()
     {
@@ -54,7 +11,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index->get', $routerunner->execute('PUST', '/123/tim'));
     }
 
-    public function testMiddlewareTrue()
+    /*public function testMiddlewareTrue()
     {
         $routerunner = new Routerunner('TimTegeler\Routerunner\Mock');
         $routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
@@ -83,5 +40,6 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner->setPostProcessor(new Encoder());
         $this->assertEquals('{"index":"login"}', $routerunner->execute('GET', '/'));
     }
+    */
 
 }

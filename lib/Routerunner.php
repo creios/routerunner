@@ -28,16 +28,15 @@ class Routerunner
 
     /**
      * Routerunner constructor.
-     * @param $controllerRootNameSpace
      * @param ContainerInterface $container
      */
-    public function __construct($controllerRootNameSpace = null, ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container = null)
     {
         if ($container == null) {
             $container = ContainerBuilder::buildDevContainer();
         }
         $this->router = new Router($container);
-        $this->parser = new Parser($controllerRootNameSpace);
+        $this->parser = new Parser();
     }
 
     /**
@@ -50,25 +49,6 @@ class Routerunner
         $this->router->setFallback($config->getFallBack());
         $this->router->getFinder()->addRoutes($config->getRoutes());
         $this->router->getFinder()->setBasePath($config->getBasePath());
-    }
-
-    /**
-     * @param $httpMethod
-     * @param $uri
-     * @param $call
-     * @throws Exception\ParseException
-     */
-    public function route($httpMethod, $uri, $call)
-    {
-        $this->router->getFinder()->addRoute($this->parser->createRoute($httpMethod, $uri, $call));
-    }
-
-    /**
-     * @param string $call
-     */
-    public function fallback($call)
-    {
-        $this->router->setFallback($this->parser->generateCall($call));
     }
 
     /**
@@ -104,14 +84,6 @@ class Routerunner
     public function setCaching($enable)
     {
         $this->parser->setCaching($enable);
-    }
-
-    /**
-     * @param $basePath
-     */
-    public function setBasePath($basePath)
-    {
-        $this->router->getFinder()->setBasePath($basePath);
     }
 
 }
