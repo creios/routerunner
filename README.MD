@@ -21,6 +21,23 @@ $routerunner = new Routerunner("/path/to/config.yml");
 $routerunner->execute($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 ```
 
+### Config file
+
+With the yml-based config file you can define your routes and configure routerunner in a clean fashion.
+
+```yml
+routes:
+  - [GET, /, Index->get]
+  - [GET, /subpath#anchor, Index->get]
+  - [GET, /api, Index->api]
+  - [GET, /(string), Index->get]
+  - [POST, /(string)/(numeric), Index->post]
+
+fallback: Index->get
+
+baseNamespace: Controlelr\Namespace
+```
+
 ### Pseudo regular expression
 
 Routerunner uses a pseudo regular expressions to describe the [HTTP-method](https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol) and [URI](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier). 
@@ -39,24 +56,6 @@ POST    // Match POST
 // examples
 /user/(numeric) // Match /user/1, /user/2, /user/3, ...
 /user/(string)  // Match /user/alice, /user/bob, /user/eve, ...
-```
-
-
-### Config file
-
-With the yml-based config file you can define your routes and configure routerunner in a clean fashion.
-
-```yml
-routes:
-  - [GET, /, Index->get]
-  - [GET, /subpath#anchor, Index->get]
-  - [GET, /api, Index->api]
-  - [GET, /(string), Index->get]
-  - [POST, /(string)/(numeric), Index->post]
-
-fallback: Index->get
-
-baseNamespace: Controlelr\Namespace
 ```
 
 ### Caching
