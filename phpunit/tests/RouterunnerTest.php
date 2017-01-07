@@ -17,12 +17,25 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     public function testMiddlewareTrue()
     {
         $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
-        //$routerunner->route('GET', '/(numeric)/(string)', 'Index->get');
-        //$routerunner->route('POST', '/(numeric)/(string)', 'Index->post');
         $loginMiddleware = new LoginTrue('TimTegeler\Routerunner\Mock\Index', 'login');
         $routerunner->registerMiddleware($loginMiddleware);
         $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
         $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
+        //REST
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->create', $routerunner->execute('POST', '/user'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->retrieve', $routerunner->execute('GET', '/user/1'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->update', $routerunner->execute('PUT', '/user/1'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->delete', $routerunner->execute('DELETE', '/user/1'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->list', $routerunner->execute('GET', '/user'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\Group->retrieve', $routerunner->execute('GET', '/group/1'));
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Method can not be found.');
+        $routerunner->execute('POST', '/group');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Method can not be found.');
+        $routerunner->execute('PUT', '/group/1');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Method can not be found.');
+        $routerunner->execute('DELETE', '/group/1');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Method can not be found.');
+        $routerunner->execute('GET', '/group');
     }
 
     public function testMiddlewareLoginFalse()
@@ -40,6 +53,6 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner->setPostProcessor(new Encoder());
         $this->assertEquals('{"index":"login"}', $routerunner->execute('GET', '/api'));
     }
-    
+
 
 }

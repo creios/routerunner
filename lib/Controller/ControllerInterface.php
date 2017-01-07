@@ -13,5 +13,4 @@ interface ControllerInterface
      * @param string $uri
      */
     public function setReroutedUri($uri);
-
 }

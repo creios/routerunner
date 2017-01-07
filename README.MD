@@ -33,6 +33,10 @@ routes:
   - [GET, /(string), Index->get]
   - [POST, /(string)/(numeric), Index->post]
 
+rest: 
+  - [CRUDL, /user, User]
+  - [L, /group, User]
+  
 fallback: Index->get
 
 baseNamespace: Controller\Namespace

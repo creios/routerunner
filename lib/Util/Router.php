@@ -96,7 +96,7 @@ class Router
 
     }
 
-    /**
+   /**
      * @param $class
      * @return ControllerInterface
      * @throws RouterException

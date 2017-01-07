@@ -41,6 +41,12 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('TimTegeler\Routerunner\Util\Route', $parser->createRoute('POST', '/subpath/(numeric)', 'c_controller->_post'));
         $this->assertInstanceOf('TimTegeler\Routerunner\Util\Route', $parser->createRoute('GET', '/subpath/(numeric)', 'c_controller->_get1'));
         $this->assertInstanceOf('TimTegeler\Routerunner\Util\Route', $parser->createRoute('POST', '/subpath/(numeric)', 'c_controller->_post1'));
+        //REST
+        $this->assertInstanceOf('TimTegeler\Routerunner\Util\Route', $parser->createRoute('GET', '/subpath/(numeric)', 'c_controller->retrieve'));
+        $this->assertInstanceOf('TimTegeler\Routerunner\Util\Route', $parser->createRoute('GET', '/subpath', 'c_controller->list'));
+        $this->assertInstanceOf('TimTegeler\Routerunner\Util\Route', $parser->createRoute('POST', '/subpath', 'c_controller->create'));
+        $this->assertInstanceOf('TimTegeler\Routerunner\Util\Route', $parser->createRoute('PUT', '/subpath/(numeric)', 'c_controller->update'));
+        $this->assertInstanceOf('TimTegeler\Routerunner\Util\Route', $parser->createRoute('DELETE', '/subpath/(numeric)', 'c_controller->delete'));
     }
 
     public function testParse()

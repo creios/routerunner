@@ -16,7 +16,7 @@ class Pattern
     /**
      * @var array
      */
-    private static $httpMethodReplace = ["GET|POST"];
+    private static $httpMethodReplace = ["GET|POST|PUT|DELETE"];
     /**
      * @var array
      */
