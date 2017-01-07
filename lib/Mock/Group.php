@@ -19,7 +19,7 @@ class Group implements RetrieveControllerInterface
      * @param int $id
      * @return string
      */
-    public function retrieve(int $id)
+    public function _retrieve($id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }

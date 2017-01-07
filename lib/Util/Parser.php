@@ -214,7 +214,7 @@ class Parser
      */
     private function createCreateRoute($path, $controller)
     {
-        return $this->createRoute("POST", $path, $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "create");
+        return $this->createRoute("POST", $path, $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_create");
     }
 
     /**
@@ -224,7 +224,7 @@ class Parser
      */
     private function createRetrieveRoute($path, $controller)
     {
-        return $this->createRoute("GET", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "retrieve");
+        return $this->createRoute("GET", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_retrieve");
     }
 
     /**
@@ -234,7 +234,7 @@ class Parser
      */
     private function createUpdateRoute($path, $controller)
     {
-        return $this->createRoute("PUT", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "update");
+        return $this->createRoute("PUT", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_update");
     }
 
     /**
@@ -244,7 +244,7 @@ class Parser
      */
     private function createDeleteRoute($path, $controller)
     {
-        return $this->createRoute("DELETE", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "delete");
+        return $this->createRoute("DELETE", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_delete");
     }
 
     /**
@@ -254,7 +254,7 @@ class Parser
      */
     private function createListRoute($path, $controller)
     {
-        return $this->createRoute("GET", $path, $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "list");
+        return $this->createRoute("GET", $path, $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_list");
     }
 
     /**

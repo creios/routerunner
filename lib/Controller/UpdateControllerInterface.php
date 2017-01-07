@@ -12,5 +12,5 @@ interface UpdateControllerInterface extends ControllerInterface
      * @param int $id
      * @return mixed
      */
-    public function update(int $id);
+    public function _update($id);
 }

@@ -18,7 +18,7 @@ class User implements RestControllerInterface
     /**
      * @return string
      */
-    public function create()
+    public function _create()
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
@@ -27,7 +27,7 @@ class User implements RestControllerInterface
      * @param int $id
      * @return string
      */
-    public function delete(int $id)
+    public function _delete($id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
@@ -35,16 +35,7 @@ class User implements RestControllerInterface
     /**
      * @return string
      */
-    public function list()
-    {
-        return __CLASS__ . "->" . __FUNCTION__;
-    }
-
-    /**
-     * @param int $id
-     * @return string
-     */
-    public function retrieve(int $id)
+    public function _list()
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
@@ -53,7 +44,16 @@ class User implements RestControllerInterface
      * @param int $id
      * @return string
      */
-    public function update(int $id)
+    public function _retrieve($id)
+    {
+        return __CLASS__ . "->" . __FUNCTION__;
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function _update($id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }

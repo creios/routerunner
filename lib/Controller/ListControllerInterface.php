@@ -11,5 +11,5 @@ interface ListControllerInterface extends ControllerInterface
     /**
      * @return mixed
      */
-    public function list();
+    public function _list();
 }

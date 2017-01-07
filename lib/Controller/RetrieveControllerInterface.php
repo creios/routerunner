@@ -12,5 +12,5 @@ interface RetrieveControllerInterface extends ControllerInterface
      * @param int $id
      * @return mixed
      */
-    public function retrieve(int $id);
+    public function _retrieve($id);
 }

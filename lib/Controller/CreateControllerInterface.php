@@ -11,5 +11,5 @@ interface CreateControllerInterface extends ControllerInterface
     /**
      * @return mixed
      */
-    public function create();
+    public function _create();
 }

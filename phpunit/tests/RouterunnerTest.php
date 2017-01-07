@@ -22,12 +22,12 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
         $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
         //REST
-        $this->assertEquals('TimTegeler\Routerunner\Mock\User->create', $routerunner->execute('POST', '/user'));
-        $this->assertEquals('TimTegeler\Routerunner\Mock\User->retrieve', $routerunner->execute('GET', '/user/1'));
-        $this->assertEquals('TimTegeler\Routerunner\Mock\User->update', $routerunner->execute('PUT', '/user/1'));
-        $this->assertEquals('TimTegeler\Routerunner\Mock\User->delete', $routerunner->execute('DELETE', '/user/1'));
-        $this->assertEquals('TimTegeler\Routerunner\Mock\User->list', $routerunner->execute('GET', '/user'));
-        $this->assertEquals('TimTegeler\Routerunner\Mock\Group->retrieve', $routerunner->execute('GET', '/group/1'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->_create', $routerunner->execute('POST', '/user'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->_retrieve', $routerunner->execute('GET', '/user/1'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->_update', $routerunner->execute('PUT', '/user/1'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->_delete', $routerunner->execute('DELETE', '/user/1'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\User->_list', $routerunner->execute('GET', '/user'));
+        $this->assertEquals('TimTegeler\Routerunner\Mock\Group->_retrieve', $routerunner->execute('GET', '/group/1'));
         $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Method can not be found.');
         $routerunner->execute('POST', '/group');
         $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Method can not be found.');

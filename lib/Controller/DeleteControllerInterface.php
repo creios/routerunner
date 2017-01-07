@@ -12,5 +12,5 @@ interface DeleteControllerInterface extends ControllerInterface
      * @param int $id
      * @return mixed
      */
-    public function delete(int $id);
+    public function _delete($id);
 }
