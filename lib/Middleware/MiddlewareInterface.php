@@ -2,7 +2,7 @@
 
 namespace TimTegeler\Routerunner\Middleware;
 
-use TimTegeler\Routerunner\Util\Call;
+use TimTegeler\Routerunner\Components\Call;
 
 /**
  * Interface MiddlewareInterface
@@ -13,16 +13,16 @@ interface MiddlewareInterface
 
     /**
      * MiddlewareInterface constructor.
-     * @param $controller
-     * @param $method
+     * @param $controllerName
+     * @param $methodName
      */
-    public function __construct($controller, $method);
+    public function __construct($controllerName, $methodName);
 
     /**
-     * @param $controller
+     * @param $call
      * @return bool
      */
-    public function process($controller);
+    public function process($call);
 
     /**
      * @return Call

@@ -1,10 +1,10 @@
 <?php
 
-namespace TimTegeler\Routerunner\Util;
+namespace TimTegeler\Routerunner\Components;
 
 /**
  * Class Config
- * @package TimTegeler\Routerunner\Util
+ * @package TimTegeler\Routerunner\Components
  */
 class Config
 {

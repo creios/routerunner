@@ -2,9 +2,9 @@
 namespace TimTegeler\Routerunner;
 
 use phpFastCache\CacheManager;
-use TimTegeler\Routerunner\Util\Cache;
-use TimTegeler\Routerunner\Util\Call;
-use TimTegeler\Routerunner\Util\Route;
+use TimTegeler\Routerunner\Components\Cache;
+use TimTegeler\Routerunner\Components\Call;
+use TimTegeler\Routerunner\Components\Route;
 
 class CacheTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace TimTegeler\Routerunner\Util;
+namespace TimTegeler\Routerunner\Components;
 
 use phpFastCache\Core\DriverAbstract;
 use phpFastCache\Core\DriverInterface;

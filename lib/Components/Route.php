@@ -1,6 +1,6 @@
 <?php
 
-namespace TimTegeler\Routerunner\Util;
+namespace TimTegeler\Routerunner\Components;
 
 /**
  * Class Route
@@ -30,7 +30,7 @@ class Route
      * Route constructor.
      * @param $httpMethod
      * @param $uri
-     * @param \TimTegeler\Routerunner\Util\Call $call
+     * @param \TimTegeler\Routerunner\Components\Call $call
      */
     public function __construct($httpMethod, $uri, $call)
     {
@@ -56,7 +56,7 @@ class Route
     }
 
     /**
-     * @return \TimTegeler\Routerunner\Util\Call
+     * @return \TimTegeler\Routerunner\Components\Call
      */
     public function getCall()
     {
