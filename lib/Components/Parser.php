@@ -38,7 +38,6 @@ class Parser
      */
     private $cache;
 
-
     /**
      * Parser constructor.
      * @throws ParseException
@@ -197,6 +196,17 @@ class Parser
     }
 
     /**
+     * @param $baseNamespace
+     * @throws ParseException
+     */
+    private static function validateBaseNamespace($baseNamespace)
+    {
+        if (preg_match(self::NAMESPACE_REGEXP, $baseNamespace) == 0) {
+            throw new ParseException("BaseNamespace is not a valid namespace.");
+        }
+    }
+
+    /**
      * @param $httpMethod
      * @param $url
      * @param $call
@@ -205,6 +215,16 @@ class Parser
     public function createRoute($httpMethod, $url, $call)
     {
         return new Route($httpMethod, $url, $this->generateCall($call));
+    }
+
+    /**
+     * @param $callable
+     * @return Call
+     */
+    public function generateCall($callable)
+    {
+        list($controller, $method) = explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerBaseNamespace . '\\' . $callable);
+        return new Call($controller, $method);
     }
 
     /**
@@ -255,27 +275,6 @@ class Parser
     private function createListRoute($path, $controller)
     {
         return $this->createRoute("GET", $path, $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_list");
-    }
-
-    /**
-     * @param $callable
-     * @return Call
-     */
-    public function generateCall($callable)
-    {
-        list($controller, $method) = explode(self::SEPARATOR_OF_CLASS_AND_METHOD, $this->controllerBaseNamespace . '\\' . $callable);
-        return new Call($controller, $method);
-    }
-
-    /**
-     * @param $baseNamespace
-     * @throws ParseException
-     */
-    private static function validateBaseNamespace($baseNamespace)
-    {
-        if (preg_match(self::NAMESPACE_REGEXP, $baseNamespace) == 0) {
-            throw new ParseException("BaseNamespace is not a valid namespace.");
-        }
     }
 
     /**

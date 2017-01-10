@@ -2,7 +2,6 @@
 
 namespace TimTegeler\Routerunner\Components;
 
-
 /**
  * Class Request
  * @package TimTegeler\Routerunner\Components
@@ -41,6 +40,5 @@ class Request
     {
         return $this->path;
     }
-
 
 }

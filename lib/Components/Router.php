@@ -87,7 +87,6 @@ class Router
         return $execution;
     }
 
-
     /**
      * @param Request $request
      * @return Route
@@ -106,6 +105,22 @@ class Router
             }
         }
         throw new RouterException("Non of the routes matches uri");
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+
+    /**
+     * @param array $routes
+     */
+    public function setRoutes(array $routes)
+    {
+        $this->routes = $routes;
     }
 
     /**
@@ -131,9 +146,9 @@ class Router
      * @param $input
      * @return string
      */
-    public static function buildUri($input)
+    public static function buildHttpMethod($input)
     {
-        $regularExpression = str_replace(self::$uriSearch, self::$uriReplace, $input);
+        $regularExpression = str_replace(self::$httpMethodSearch, self::$httpMethodReplace, $input);
         return sprintf('/^%s$/', $regularExpression);
     }
 
@@ -141,9 +156,9 @@ class Router
      * @param $input
      * @return string
      */
-    public static function buildHttpMethod($input)
+    public static function buildUri($input)
     {
-        $regularExpression = str_replace(self::$httpMethodSearch, self::$httpMethodReplace, $input);
+        $regularExpression = str_replace(self::$uriSearch, self::$uriReplace, $input);
         return sprintf('/^%s$/', $regularExpression);
     }
 
@@ -155,7 +170,6 @@ class Router
         $this->middlewares[] = $middleware;
     }
 
-
     /**
      * @param Call $fallback
      */
@@ -163,23 +177,6 @@ class Router
     {
         $this->fallback = $fallback;
     }
-
-    /**
-     * @return array
-     */
-    public function getRoutes()
-    {
-        return $this->routes;
-    }
-
-    /**
-     * @param array $routes
-     */
-    public function setRoutes(array $routes)
-    {
-        $this->routes = $routes;
-    }
-
 
     /**
      * @param Route $route

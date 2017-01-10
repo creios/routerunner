@@ -47,7 +47,8 @@ class Execution
      * @param string $path
      * @return Execution
      */
-    public function withReroutedPath($path){
+    public function withReroutedPath($path)
+    {
         $new = clone $this;
         $new->reroutedPath = $path;
         return $new;
@@ -56,7 +57,8 @@ class Execution
     /**
      * @return bool
      */
-    public function hasRerouted(){
+    public function hasRerouted()
+    {
         return $this->reroutedPath !== null;
     }
 

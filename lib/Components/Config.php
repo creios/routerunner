@@ -72,5 +72,5 @@ class Config
     {
         return $this->basePath;
     }
-    
+
 }

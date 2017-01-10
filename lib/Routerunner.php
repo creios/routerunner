@@ -4,14 +4,14 @@ namespace TimTegeler\Routerunner;
 
 use DI\ContainerBuilder;
 use Interop\Container\ContainerInterface;
+use TimTegeler\Routerunner\Components\Dispatcher;
 use TimTegeler\Routerunner\Components\Execution;
+use TimTegeler\Routerunner\Components\Parser;
 use TimTegeler\Routerunner\Components\Request;
+use TimTegeler\Routerunner\Components\Router;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
-use TimTegeler\Routerunner\Components\Dispatcher;
-use TimTegeler\Routerunner\Components\Parser;
-use TimTegeler\Routerunner\Components\Router;
 
 /**
  * Class Routerunner
@@ -61,6 +61,15 @@ class Routerunner
     }
 
     /**
+     * @param Execution $execution
+     * @return mixed
+     */
+    public function dispatch(Execution $execution)
+    {
+        return $this->dispatcher->dispatch($execution);
+    }
+
+    /**
      * @param string $method
      * @param string $path
      * @return Execution
@@ -69,15 +78,6 @@ class Routerunner
     {
 
         return $this->router->route(new Request($method, $path));
-    }
-
-    /**
-     * @param Execution $execution
-     * @return mixed
-     */
-    public function dispatch(Execution $execution)
-    {
-        return $this->dispatcher->dispatch($execution);
     }
 
     /**
