@@ -2,11 +2,13 @@
 
 namespace TimTegeler\Routerunner\Exception;
 
+use Exception;
+
 /**
- * Class RouterException
+ * Class RouterunnerException
  * @package TimTegeler\Routerunner\Exception
  */
-class RouterException extends RouterunnerException
+class RouterunnerException extends Exception
 {
 
 }

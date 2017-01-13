@@ -4,11 +4,14 @@ namespace TimTegeler\Routerunner;
 
 use DI\ContainerBuilder;
 use Interop\Container\ContainerInterface;
+use TimTegeler\Routerunner\Components\Dispatcher;
+use TimTegeler\Routerunner\Components\Execution;
+use TimTegeler\Routerunner\Components\Parser;
+use TimTegeler\Routerunner\Components\Request;
+use TimTegeler\Routerunner\Components\Router;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
-use TimTegeler\Routerunner\Util\Parser;
-use TimTegeler\Routerunner\Util\Router;
 
 /**
  * Class Routerunner
@@ -37,23 +40,44 @@ class Routerunner
         if ($container == null) {
             $container = ContainerBuilder::buildDevContainer();
         }
-        $this->router = new Router($container);
         $this->parser = new Parser();
+        $this->router = new Router();
+        $this->dispatcher = new Dispatcher($container);
         $config = $this->parser->parse($configFilePath);
         $this->router->setFallback($config->getFallBack());
-        $this->router->getFinder()->addRoutes($config->getRoutes());
-        $this->router->getFinder()->setBasePath($config->getBasePath());
+        $this->router->addRoutes($config->getRoutes());
+        $this->router->setBasePath($config->getBasePath());
     }
 
     /**
-     * @param $httpMethod
-     * @param $uri
+     * @param string $method
+     * @param string $path
      * @return mixed
      * @throws RouterException
      */
-    public function execute($httpMethod, $uri)
+    public function execute($method, $path)
     {
-        return $this->router->execute($httpMethod, $uri);
+        return $this->dispatch($this->route($method, $path));
+    }
+
+    /**
+     * @param Execution $execution
+     * @return mixed
+     */
+    public function dispatch(Execution $execution)
+    {
+        return $this->dispatcher->dispatch($execution);
+    }
+
+    /**
+     * @param string $method
+     * @param string $path
+     * @return Execution
+     */
+    public function route($method, $path)
+    {
+
+        return $this->router->route(new Request($method, $path));
     }
 
     /**
@@ -69,7 +93,7 @@ class Routerunner
      */
     public function setPostProcessor(PostProcessorInterface $postProcessor)
     {
-        $this->router->setPostProcessor($postProcessor);
+        $this->dispatcher->setPostProcessor($postProcessor);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace TimTegeler\Routerunner\Util;
+namespace TimTegeler\Routerunner\Components;
 
 use phpFastCache\CacheManager;
 use Symfony\Component\Yaml\Yaml;
@@ -164,7 +164,46 @@ class Parser
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
         }
 
+        if (isset($config['rest']) == true) {
+
+            if (is_array($config['rest']) == false) {
+                throw new ParseException("Rest section of config is not a list");
+            }
+
+            foreach ($config['rest'] as $restParts) {
+//                if (strlen($restParts[0]) > 5) {
+//                    throw new ParseException("Please only use a combination of C,R,U,D,L");
+//                }
+                if (strstr($restParts[0], "C") !== false) {
+                    $routes[] = $this->createCreateRoute($restParts[1], $restParts[2]);
+                }
+                if (strstr($restParts[0], "R") !== false) {
+                    $routes[] = $this->createRetrieveRoute($restParts[1], $restParts[2]);
+                }
+                if (strstr($restParts[0], "U") !== false) {
+                    $routes[] = $this->createUpdateRoute($restParts[1], $restParts[2]);
+                }
+                if (strstr($restParts[0], "D") !== false) {
+                    $routes[] = $this->createDeleteRoute($restParts[1], $restParts[2]);
+                }
+                if (strstr($restParts[0], "L") !== false) {
+                    $routes[] = $this->createListRoute($restParts[1], $restParts[2]);
+                }
+            }
+        }
+
         return new Config($routes, $this->generateCall($config['fallback']), $this->controllerBaseNamespace, $basePath);
+    }
+
+    /**
+     * @param $baseNamespace
+     * @throws ParseException
+     */
+    private static function validateBaseNamespace($baseNamespace)
+    {
+        if (preg_match(self::NAMESPACE_REGEXP, $baseNamespace) == 0) {
+            throw new ParseException("BaseNamespace is not a valid namespace.");
+        }
     }
 
     /**
@@ -189,14 +228,53 @@ class Parser
     }
 
     /**
-     * @param $baseNamespace
-     * @throws ParseException
+     * @param $path
+     * @param $controller
+     * @return Route
      */
-    private static function validateBaseNamespace($baseNamespace)
+    private function createCreateRoute($path, $controller)
     {
-        if (preg_match(self::NAMESPACE_REGEXP, $baseNamespace) == 0) {
-            throw new ParseException("BaseNamespace is not a valid namespace.");
-        }
+        return $this->createRoute("POST", $path, $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_create");
+    }
+
+    /**
+     * @param $path
+     * @param $controller
+     * @return Route
+     */
+    private function createRetrieveRoute($path, $controller)
+    {
+        return $this->createRoute("GET", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_retrieve");
+    }
+
+    /**
+     * @param $path
+     * @param $controller
+     * @return Route
+     */
+    private function createUpdateRoute($path, $controller)
+    {
+        return $this->createRoute("PUT", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_update");
+    }
+
+    /**
+     * @param $path
+     * @param $controller
+     * @return Route
+     */
+    private function createDeleteRoute($path, $controller)
+    {
+        return $this->createRoute("DELETE", $path . "/(numeric)", $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_delete");
+    }
+
+    /**
+     * @param $path
+     * @param $controller
+     * @return Route
+     */
+    private function createListRoute($path, $controller)
+    {
+        return $this->createRoute("GET", $path, $controller . self::SEPARATOR_OF_CLASS_AND_METHOD . "_list");
     }
 
     /**
