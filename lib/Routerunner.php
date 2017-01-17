@@ -33,6 +33,10 @@ class Routerunner implements MiddlewareInterface
      * @var Parser
      */
     private $parser;
+    /**
+     * @var Dispatcher
+     */
+    private $dispatcher;
 
     /**
      * Routerunner constructor.
@@ -81,7 +85,6 @@ class Routerunner implements MiddlewareInterface
      */
     public function route($method, $path)
     {
-
         return $this->router->route(new Request($method, $path));
     }
 
