@@ -28,6 +28,10 @@ class Routerunner
      * @var Parser
      */
     private $parser;
+    /**
+     * @var Dispatcher
+     */
+    private $dispatcher;
 
     /**
      * Routerunner constructor.
@@ -76,7 +80,6 @@ class Routerunner
      */
     public function route($method, $path)
     {
-
         return $this->router->route(new Request($method, $path));
     }
 
