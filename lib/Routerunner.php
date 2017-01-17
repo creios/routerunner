@@ -3,7 +3,12 @@
 namespace TimTegeler\Routerunner;
 
 use DI\ContainerBuilder;
+use GuzzleHttp\Psr7\Response;
 use Interop\Container\ContainerInterface;
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TimTegeler\Routerunner\Components\Dispatcher;
 use TimTegeler\Routerunner\Components\Execution;
 use TimTegeler\Routerunner\Components\Parser;
@@ -17,7 +22,7 @@ use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
  * Class Routerunner
  * @package TimTegeler\Routerunner
  */
-class Routerunner
+class Routerunner implements MiddlewareInterface
 {
 
     /**
@@ -104,4 +109,24 @@ class Routerunner
         $this->parser->setCaching($enable);
     }
 
+    /**
+     * Process an incoming server request and return a response, optionally delegating
+     * to the next middleware component to create the response.
+     *
+     * @param ServerRequestInterface $request
+     * @param DelegateInterface $delegate
+     *
+     * @return ResponseInterface
+     */
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    {
+        $result = $this->dispatch($this->route($request->getMethod(), $request->getRequestTarget()));
+        if ($result instanceof ResponseInterface) {
+            return $result;
+        } else {
+            return $response = (new Response())
+                ->withProtocolVersion('1.1')
+                ->withBody(\GuzzleHttp\Psr7\stream_for($result));
+        }
+    }
 }

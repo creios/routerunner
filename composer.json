@@ -13,7 +13,9 @@
     "php": ">=5.5.9",
     "php-di/php-di": "^5.2",
     "symfony/yaml": "^3.0",
-    "phpFastCache/phpFastCache": "^4.3"
+    "phpFastCache/phpFastCache": "^4.3",
+    "http-interop/http-middleware": "^0.4.1",
+    "guzzlehttp/psr7": "^1.3"
   },
   "require-dev": {
     "phpunit/phpunit": "4.8.*"
