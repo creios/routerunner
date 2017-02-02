@@ -8,6 +8,7 @@
 
 * Simple [pseudo regular expression](#pseudo-regular-expression) for routing 
 * Defining routes in a separate [routesfile](#routesfile) without overhead from php
+* REST support based on CRUDL actions
 * [Cachig](#caching) routesfile to reduce the parsing time 
 
 ```php
@@ -35,7 +36,7 @@ routes:
 
 rest: 
   - [CRUDL, /user, User]
-  - [L, /group, User]
+  - [L, /group, Group]
   
 fallback: Index->get
 
@@ -81,6 +82,7 @@ Middlewares are designed to implement contraints upon your regular routing.
 A middleware expects a controller- and a method-name as constructor parameters. This controller respectively methods acts as the target for a possibly rerouting. Every middleware  must implement the process-method; it takes the controller matched by the current route as a parameter and should return a boolean value. Routerunner evaluates the return value. If the return value is *false* then routerunner interrupts and tries to starts the method of the bounded controller. Otherwise routerunner tries to processes the next registered middlewares or starts the actually controller.'
 
 For example middlewares enable you to control the access to restricted controllers like private pages or something similar. Such a middleware could detect if a user is not logged in and reroute to the login-page.
+
 ```php
 <?php
 
@@ -162,7 +164,7 @@ You can use [composer](https://getcomposer.org/) to download and install Routeru
 ```json
 {
     "require": {
-        "timtegeler/routerunner": "^1.0.0"
+        "timtegeler/routerunner": "^1.1.0"
     }
 }
 ```
