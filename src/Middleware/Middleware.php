@@ -2,7 +2,7 @@
 
 namespace TimTegeler\Routerunner\Middleware;
 
-use TimTegeler\Routerunner\Util\Call;
+use TimTegeler\Routerunner\Components\Call;
 
 /**
  * Class Middleware
@@ -18,19 +18,19 @@ abstract class Middleware implements MiddlewareInterface
 
     /**
      * Middleware constructor.
-     * @param $controller
-     * @param $method
+     * @param string $controllerName
+     * @param string $methodName
      */
-    public function __construct($controller, $method)
+    public function __construct($controllerName, $methodName)
     {
-        $this->call = new Call($controller, $method);
+        $this->call = new Call($controllerName, $methodName);
     }
 
     /**
-     * @param $controller
+     * @param Call $call
      * @return bool
      */
-    public function process($controller)
+    public function process($call)
     {
         return true;
     }

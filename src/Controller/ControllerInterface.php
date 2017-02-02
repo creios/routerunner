@@ -10,8 +10,7 @@ interface ControllerInterface
 {
 
     /**
-     * @param string $uri
+     * @param string $path
      */
-    public function setReroutedUri($uri);
-
+    public function setReroutedPath($path);
 }

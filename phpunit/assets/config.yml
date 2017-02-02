@@ -6,10 +6,6 @@ routes:
   - [GET, /subpath/subpath, Index->get]
   - [POST, /subpath/subpath, Index->post]
   - [GET, /api, Index->api]
-  - [GET, /(string), Index->get]
-  - [POST, /(string), Index->post]
-  - [GET, /(string)/(numeric), Index->get]
-  - [POST, /(string)/(numeric), Index->post]
   - [GET, /(numeric)/(string), Index->get]
   - [POST, /(numeric)/(string), Index->post]
   - [GET, /(string)/(numeric)/subpath, Index->get]
@@ -21,6 +17,10 @@ routes:
   - [GET, /subpath/(numeric)/(string)#anchor, Index->get]
   - [POST, /subpath/(numeric)/(string)#anchor, Index->post]
 
+rest:
+  - [CRUDL, /user, User]
+  - [CRUDL, /group, Group]
+
 fallback: Index->get
 
-baseNamespace: TimTegeler\Routerunner\Mock
+baseNamespace: TimTegeler\Routerunner

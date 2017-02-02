@@ -3,10 +3,10 @@
 namespace TimTegeler\Routerunner\Exception;
 
 /**
- * Class ParseException
+ * Class RouterException
  * @package TimTegeler\Routerunner\Exception
  */
-class ParseException extends \Exception
+class RouterException extends RouterunnerException
 {
 
 }
