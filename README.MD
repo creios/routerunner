@@ -10,6 +10,7 @@
 * Defining routes in a separate [routesfile](#routesfile) without overhead from php
 * REST support based on CRUDL actions
 * [Cachig](#caching) routesfile to reduce the parsing time 
+* Implements the PSR-15 middleware interface
 
 ```php
 <?php
@@ -75,9 +76,23 @@ a read- and writeable (from your webserver) file. Be careful, every content of t
 $routerunner->setCaching(true);
 ```
 
-### Middleware
+### PSR-15 middleware
 
-Middlewares are designed to implement contraints upon your regular routing.
+Routerunner implements the PSR-15 middleware interface. That means that you can use Routerunner directly with a PSR-15 Dispatcher.
+
+```php
+<?php
+
+$dispatcher = new Dispatcher([
+    new Routerunner("/path/to/config.yml")
+]);
+
+$response = $dispatcher->dispatch(new ServerRequest());
+```
+
+### Routerunner Middleware
+
+Middlewares are designed to implement constraints upon your regular routing.
 
 A middleware expects a controller- and a method-name as constructor parameters. This controller respectively methods acts as the target for a possibly rerouting. Every middleware  must implement the process-method; it takes the controller matched by the current route as a parameter and should return a boolean value. Routerunner evaluates the return value. If the return value is *false* then routerunner interrupts and tries to starts the method of the bounded controller. Otherwise routerunner tries to processes the next registered middlewares or starts the actually controller.'
 
@@ -120,7 +135,7 @@ $checkQuota = new CheckQuota('User', 'exceededQuota');
 $routerunner->registerMiddleware($checkQuota);
 ```
 
-### Postprocessor
+### Routerunner Postprocessor
 
 Postprocessing enables you to process the return value of your controller. One thinkable scenario could be a REST-api which uses JSON to transfer data. A Postprocessor could care about encoding the JSON-string.
 
