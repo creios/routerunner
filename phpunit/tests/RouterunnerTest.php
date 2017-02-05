@@ -175,44 +175,49 @@ class User implements RestControllerInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @return string
      */
-    public function _create()
+    public function _create(ServerRequestInterface $request)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param int $id
      * @return string
      */
-    public function _delete($id)
+    public function _delete(ServerRequestInterface $request, $id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @return string
      */
-    public function _list()
+    public function _list(ServerRequestInterface $request)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param int $id
      * @return string
      */
-    public function _retrieve($id)
+    public function _retrieve(ServerRequestInterface $request, $id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param int $id
      * @return string
      */
-    public function _update($id)
+    public function _update(ServerRequestInterface $request, $id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
@@ -233,10 +238,11 @@ class Group implements RetrieveControllerInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param int $id
      * @return string
      */
-    public function _retrieve($id)
+    public function _retrieve(ServerRequestInterface $request, $id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
