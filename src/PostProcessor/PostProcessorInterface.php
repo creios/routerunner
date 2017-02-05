@@ -1,6 +1,7 @@
 <?php
 
 namespace TimTegeler\Routerunner\PostProcessor;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Interface PostProcessorInterface
@@ -10,9 +11,10 @@ interface PostProcessorInterface
 {
 
     /**
+     * @param ServerRequestInterface $request
      * @param mixed $output
      * @return mixed
      */
-    public function process($output);
+    public function process(ServerRequestInterface $request, $output);
 
 }

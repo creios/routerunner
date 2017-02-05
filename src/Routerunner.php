@@ -14,7 +14,6 @@ use TimTegeler\Routerunner\Components\Execution;
 use TimTegeler\Routerunner\Components\Parser;
 use TimTegeler\Routerunner\Components\Request;
 use TimTegeler\Routerunner\Components\Router;
-use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
 
@@ -37,6 +36,10 @@ class Routerunner implements MiddlewareInterface
      * @var Dispatcher
      */
     private $dispatcher;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
     /**
      * Routerunner constructor.
@@ -49,6 +52,7 @@ class Routerunner implements MiddlewareInterface
         if ($container == null) {
             $container = ContainerBuilder::buildDevContainer();
         }
+        $this->container = $container;
         $this->parser = new Parser();
         $this->router = new Router();
         $this->dispatcher = new Dispatcher($container);
@@ -59,21 +63,10 @@ class Routerunner implements MiddlewareInterface
     }
 
     /**
-     * @param string $method
-     * @param string $path
-     * @return mixed
-     * @throws RouterException
-     */
-    public function execute($method, $path)
-    {
-        return $this->dispatch($this->route($method, $path));
-    }
-
-    /**
      * @param Execution $execution
      * @return mixed
      */
-    public function dispatch(Execution $execution)
+    protected function dispatch(Execution $execution)
     {
         return $this->dispatcher->dispatch($execution);
     }
@@ -83,7 +76,7 @@ class Routerunner implements MiddlewareInterface
      * @param string $path
      * @return Execution
      */
-    public function route($method, $path)
+    protected function route($method, $path)
     {
         return $this->router->route(new Request($method, $path));
     }
@@ -123,6 +116,7 @@ class Routerunner implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
+        $this->container->set(ServerRequestInterface::class, $request);
         $result = $this->dispatch($this->route($request->getMethod(), $request->getRequestTarget()));
         if ($result instanceof ResponseInterface) {
             return $result;

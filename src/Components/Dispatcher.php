@@ -3,6 +3,7 @@
 namespace TimTegeler\Routerunner\Components;
 
 use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Controller\ControllerInterface;
@@ -53,11 +54,13 @@ class Dispatcher
                 if ($execution->hasRerouted()) {
                     $controller->setReroutedPath($execution->getReroutedPath());
                 }
+                $request = $this->container->get(ServerRequestInterface::class);
                 $refMethod = new ReflectionMethod($controllerName, $methodName);
-                $return = $refMethod->invokeArgs($controller, $execution->getParameters());
+                $return = $refMethod->invokeArgs($controller,
+                    array_merge([$request], $execution->getParameters()));
 
                 if ($this->postProcessor != null) {
-                    return $this->postProcessor->process($return);
+                    return $this->postProcessor->process($request, $return);
                 } else {
                     return $return;
                 }
