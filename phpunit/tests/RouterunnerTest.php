@@ -9,7 +9,8 @@ use TimTegeler\Routerunner\Controller\ControllerInterface;
 use TimTegeler\Routerunner\Controller\RestControllerInterface;
 use TimTegeler\Routerunner\Controller\RetrieveControllerInterface;
 use TimTegeler\Routerunner\Middleware\Middleware;
-use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PreProcessorInterface;
 
 class RouterunnerTest extends \PHPUnit_Framework_TestCase
 {
@@ -112,10 +113,11 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index->login', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
     }
 
-    public function testPostprocessing()
+    public function testProcessing()
     {
         $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
-        $routerunner->setPostProcessor(new Encoder());
+        $routerunner->setPreProcessor(new PreProcessor());
+        $routerunner->setPostProcessor(new PostProcessor());
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
         $this->serverRequest->method('getMethod')->willReturn('GET');
         $this->serverRequest->method('getRequestTarget')->willReturn('/api');
@@ -125,10 +127,27 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
 }
 
 /**
- * Class Encoder
+ * Class PreProcessor
  * @package TimTegeler\Routerunner
  */
-class Encoder implements PostProcessorInterface
+class PreProcessor implements PreProcessorInterface
+{
+
+    /**
+     * @param ServerRequestInterface $serverRequest
+     * @return ServerRequestInterface
+     */
+    public function process(ServerRequestInterface $serverRequest)
+    {
+        return $serverRequest;
+    }
+}
+
+/**
+ * Class PostProcessor
+ * @package TimTegeler\Routerunner
+ */
+class PostProcessor implements PostProcessorInterface
 {
 
     /**

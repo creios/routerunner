@@ -15,7 +15,8 @@ use TimTegeler\Routerunner\Components\Parser;
 use TimTegeler\Routerunner\Components\Request;
 use TimTegeler\Routerunner\Components\Router;
 use TimTegeler\Routerunner\Middleware\Middleware;
-use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PreProcessorInterface;
 
 /**
  * Class Routerunner
@@ -63,30 +64,19 @@ class Routerunner implements MiddlewareInterface
     }
 
     /**
-     * @param Execution $execution
-     * @return mixed
-     */
-    protected function dispatch(Execution $execution)
-    {
-        return $this->dispatcher->dispatch($execution);
-    }
-
-    /**
-     * @param string $method
-     * @param string $path
-     * @return Execution
-     */
-    protected function route($method, $path)
-    {
-        return $this->router->route(new Request($method, $path));
-    }
-
-    /**
      * @param Middleware $middleware
      */
     public function registerMiddleware(Middleware $middleware)
     {
         $this->router->registerMiddleware($middleware);
+    }
+
+    /**
+     * @param PreProcessorInterface $preProcessor
+     */
+    public function setPreProcessor(PreProcessorInterface $preProcessor)
+    {
+        $this->dispatcher->setPreProcessor($preProcessor);
     }
 
     /**
@@ -125,5 +115,24 @@ class Routerunner implements MiddlewareInterface
                 ->withProtocolVersion('1.1')
                 ->withBody(\GuzzleHttp\Psr7\stream_for($result));
         }
+    }
+
+    /**
+     * @param Execution $execution
+     * @return mixed
+     */
+    protected function dispatch(Execution $execution)
+    {
+        return $this->dispatcher->dispatch($execution);
+    }
+
+    /**
+     * @param string $method
+     * @param string $path
+     * @return Execution
+     */
+    protected function route($method, $path)
+    {
+        return $this->router->route(new Request($method, $path));
     }
 }

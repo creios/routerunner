@@ -8,7 +8,8 @@ use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Controller\ControllerInterface;
 use TimTegeler\Routerunner\Exception\DispatcherException;
-use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PreProcessorInterface;
 
 /**
  * Class Dispatcher
@@ -17,6 +18,10 @@ use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
 class Dispatcher
 {
 
+    /**
+     * @var PreProcessorInterface
+     */
+    private $preProcessor;
     /**
      * @var PostProcessorInterface
      */
@@ -55,10 +60,18 @@ class Dispatcher
                     $controller->setReroutedPath($execution->getReroutedPath());
                 }
                 $request = $this->container->get(ServerRequestInterface::class);
+
+                // pre processing
+                if ($this->preProcessor != null) {
+                    $request = $this->preProcessor->process($request);
+                }
+
+                // actual dispatch
                 $refMethod = new ReflectionMethod($controllerName, $methodName);
                 $return = $refMethod->invokeArgs($controller,
                     array_merge([$request], $execution->getParameters()));
 
+                // pre processing
                 if ($this->postProcessor != null) {
                     return $this->postProcessor->process($request, $return);
                 } else {
@@ -72,6 +85,14 @@ class Dispatcher
         } else {
             throw new DispatcherException("Controller can not be found.");
         }
+    }
+
+    /**
+     * @param PreProcessorInterface $preProcessor
+     */
+    public function setPreProcessor($preProcessor)
+    {
+        $this->preProcessor = $preProcessor;
     }
 
     /**

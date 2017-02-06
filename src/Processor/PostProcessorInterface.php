@@ -1,11 +1,12 @@
 <?php
 
-namespace TimTegeler\Routerunner\PostProcessor;
+namespace TimTegeler\Routerunner\Processor;
+
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Interface PostProcessorInterface
- * @package TimTegeler\Routerunner\PostProcessor
+ * @package TimTegeler\Routerunner\Processor
  */
 interface PostProcessorInterface
 {

@@ -1,6 +1,7 @@
 <?php
 
 namespace TimTegeler\Routerunner\Controller;
+
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
