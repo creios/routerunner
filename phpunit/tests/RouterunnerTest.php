@@ -135,9 +135,10 @@ class PreProcessor implements PreProcessorInterface
 
     /**
      * @param ServerRequestInterface $serverRequest
+     * @param ControllerInterface $controller
      * @return ServerRequestInterface
      */
-    public function process(ServerRequestInterface $serverRequest)
+    public function process(ServerRequestInterface $serverRequest, ControllerInterface $controller)
     {
         return $serverRequest;
     }

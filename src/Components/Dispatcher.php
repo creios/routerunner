@@ -63,7 +63,7 @@ class Dispatcher
 
                 // pre processing
                 if ($this->preProcessor != null) {
-                    $request = $this->preProcessor->process($request);
+                    $request = $this->preProcessor->process($request, $controller);
                 }
 
                 // actual dispatch
