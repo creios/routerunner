@@ -1,20 +1,37 @@
 <?php
 namespace TimTegeler\Routerunner;
 
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use PHPUnit_Framework_MockObject_MockObject;
+use Psr\Http\Message\ServerRequestInterface;
 use TimTegeler\Routerunner\Components\Call;
 use TimTegeler\Routerunner\Controller\ControllerInterface;
 use TimTegeler\Routerunner\Controller\RestControllerInterface;
 use TimTegeler\Routerunner\Controller\RetrieveControllerInterface;
 use TimTegeler\Routerunner\Middleware\Middleware;
-use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PreProcessorInterface;
 
 class RouterunnerTest extends \PHPUnit_Framework_TestCase
 {
 
+    /** @var PHPUnit_Framework_MockObject_MockObject|ServerRequestInterface */
+    private $serverRequest;
+    /** @var PHPUnit_Framework_MockObject_MockObject|DelegateInterface */
+    private $delegate;
+
+    public function setUp()
+    {
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->delegate = $this->getMockBuilder(DelegateInterface::class)->getMock();
+    }
+
     public function testExecuteWithParseFallback()
     {
+        $this->serverRequest->method('getMethod')->willReturn('PUST');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/123/tim');
         $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
-        $this->assertEquals('index->get', $routerunner->execute('PUST', '/123/tim'));
+        $this->assertEquals('index->get', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
     }
 
     public function testMiddlewareTrue()
@@ -22,23 +39,63 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
         $loginMiddleware = new LoginTrue('TimTegeler\Routerunner\Index', 'login');
         $routerunner->registerMiddleware($loginMiddleware);
-        $this->assertEquals('index->get', $routerunner->execute('GET', '/123/tim'));
-        $this->assertEquals('index->post', $routerunner->execute('POST', '/123/tim'));
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('GET');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/123/tim');
+        $this->assertEquals('index->get', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('POST');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/123/tim');
+        $this->assertEquals('index->post', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
         //REST
-        $this->assertEquals('TimTegeler\Routerunner\User->_create', $routerunner->execute('POST', '/user'));
-        $this->assertEquals('TimTegeler\Routerunner\User->_retrieve', $routerunner->execute('GET', '/user/1'));
-        $this->assertEquals('TimTegeler\Routerunner\User->_update', $routerunner->execute('PUT', '/user/1'));
-        $this->assertEquals('TimTegeler\Routerunner\User->_delete', $routerunner->execute('DELETE', '/user/1'));
-        $this->assertEquals('TimTegeler\Routerunner\User->_list', $routerunner->execute('GET', '/user'));
-        $this->assertEquals('TimTegeler\Routerunner\Group->_retrieve', $routerunner->execute('GET', '/group/1'));
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('POST');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/user');
+        $this->assertEquals('TimTegeler\Routerunner\User->_create', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('PUT');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/user/1');
+        $this->assertEquals('TimTegeler\Routerunner\User->_update', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('DELETE');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/user/1');
+        $this->assertEquals('TimTegeler\Routerunner\User->_delete', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('GET');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/user/1');
+        $this->assertEquals('TimTegeler\Routerunner\User->_retrieve', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('GET');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/user');
+        $this->assertEquals('TimTegeler\Routerunner\User->_list', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('GET');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/group/1');
+        $this->assertEquals('TimTegeler\Routerunner\Group->_retrieve', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('POST');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/group');
         $this->setExpectedException('TimTegeler\Routerunner\Exception\DispatcherException', 'Method can not be found.');
-        $routerunner->execute('POST', '/group');
+        $routerunner->process($this->serverRequest, $this->delegate);
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('PUT');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/group/1');
         $this->setExpectedException('TimTegeler\Routerunner\Exception\DispatcherException', 'Method can not be found.');
-        $routerunner->execute('PUT', '/group/1');
+        $routerunner->process($this->serverRequest, $this->delegate);
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('DELETE');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/group/1');
         $this->setExpectedException('TimTegeler\Routerunner\Exception\DispatcherException', 'Method can not be found.');
-        $routerunner->execute('DELETE', '/group/1');
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\DispatcherException', 'Method can not be found.');
-        $routerunner->execute('GET', '/group');
+        $routerunner->process($this->serverRequest, $this->delegate);
     }
 
     public function testMiddlewareLoginFalse()
@@ -46,32 +103,60 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
         $loginMiddleware = new LoginFalse('TimTegeler\Routerunner\Index', 'login');
         $routerunner->registerMiddleware($loginMiddleware);
-        $this->assertEquals('index->login', $routerunner->execute('GET', '/123/tim'));
-        $this->assertEquals('index->login', $routerunner->execute('POST', '/123/tim'));
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('DELETE');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/123/tim');
+        $this->assertEquals('index->login', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('POST');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/123/tim');
+        $this->assertEquals('index->login', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
     }
 
-    public function testPostprocessing()
+    public function testProcessing()
     {
         $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
-        $routerunner->setPostProcessor(new Encoder());
-        $this->assertEquals('{"index":"login"}', $routerunner->execute('GET', '/api'));
+        $routerunner->setPreProcessor(new PreProcessor());
+        $routerunner->setPostProcessor(new PostProcessor());
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('GET');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/api');
+        $this->assertEquals('{"index":"login"}', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
     }
-
 
 }
 
 /**
- * Class Encoder
+ * Class PreProcessor
  * @package TimTegeler\Routerunner
  */
-class Encoder implements PostProcessorInterface
+class PreProcessor implements PreProcessorInterface
 {
 
     /**
-     * @param $return
+     * @param ServerRequestInterface $serverRequest
+     * @param ControllerInterface $controller
+     * @return ServerRequestInterface
+     */
+    public function process(ServerRequestInterface $serverRequest, ControllerInterface $controller)
+    {
+        return $serverRequest;
+    }
+}
+
+/**
+ * Class PostProcessor
+ * @package TimTegeler\Routerunner
+ */
+class PostProcessor implements PostProcessorInterface
+{
+
+    /**
+     * @param ServerRequestInterface $serverRequest
+     * @param mixed $return
      * @return string
      */
-    public function process($return)
+    public function process(ServerRequestInterface $serverRequest, $return)
     {
         return json_encode($return);
     }
@@ -110,44 +195,49 @@ class User implements RestControllerInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @return string
      */
-    public function _create()
+    public function _create(ServerRequestInterface $request)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param int $id
      * @return string
      */
-    public function _delete($id)
+    public function _delete(ServerRequestInterface $request, $id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @return string
      */
-    public function _list()
+    public function _list(ServerRequestInterface $request)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param int $id
      * @return string
      */
-    public function _retrieve($id)
+    public function _retrieve(ServerRequestInterface $request, $id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param int $id
      * @return string
      */
-    public function _update($id)
+    public function _update(ServerRequestInterface $request, $id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
@@ -168,10 +258,11 @@ class Group implements RetrieveControllerInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param int $id
      * @return string
      */
-    public function _retrieve($id)
+    public function _retrieve(ServerRequestInterface $request, $id)
     {
         return __CLASS__ . "->" . __FUNCTION__;
     }
