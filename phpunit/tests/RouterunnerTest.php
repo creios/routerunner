@@ -73,6 +73,21 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->serverRequest->method('getMethod')->willReturn('GET');
         $this->serverRequest->method('getRequestTarget')->willReturn('/user');
         $this->assertEquals('TimTegeler\Routerunner\User->_list', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+        
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('PUT');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/user/john');
+        $this->assertEquals('TimTegeler\Routerunner\User->_update', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('DELETE');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/user/john');
+        $this->assertEquals('TimTegeler\Routerunner\User->_delete', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
+
+        $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        $this->serverRequest->method('getMethod')->willReturn('GET');
+        $this->serverRequest->method('getRequestTarget')->willReturn('/user/john');
+        $this->assertEquals('TimTegeler\Routerunner\User->_retrieve', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
 
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
         $this->serverRequest->method('getMethod')->willReturn('GET');
