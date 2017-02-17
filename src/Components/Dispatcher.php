@@ -7,6 +7,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Controller\ControllerInterface;
+use TimTegeler\Routerunner\Controller\CreateControllerInterface;
+use TimTegeler\Routerunner\Controller\DeleteControllerInterface;
+use TimTegeler\Routerunner\Controller\ListControllerInterface;
+use TimTegeler\Routerunner\Controller\RetrieveControllerInterface;
+use TimTegeler\Routerunner\Controller\UpdateControllerInterface;
 use TimTegeler\Routerunner\Exception\DispatcherException;
 use TimTegeler\Routerunner\Processor\PostProcessorInterface;
 use TimTegeler\Routerunner\Processor\PreProcessorInterface;
@@ -66,10 +71,19 @@ class Dispatcher
                     $request = $this->preProcessor->process($request, $controller);
                 }
 
+                // prepare parameters
+                if ($execution->hasParameters()) {
+                    $request->withAttribute('parameters', $execution->getParameters());
+                }
+                if (self::executionNeedsId($controller, $methodName)) {
+                    $arguments = array_merge([$request], $execution->getParameters());
+                } else {
+                    $arguments = [$request];
+                }
+
                 // actual dispatch
                 $refMethod = new ReflectionMethod($controllerName, $methodName);
-                $return = $refMethod->invokeArgs($controller,
-                    array_merge([$request], $execution->getParameters()));
+                $return = $refMethod->invokeArgs($controller, $arguments);
 
                 // pre processing
                 if ($this->postProcessor != null) {
@@ -85,6 +99,29 @@ class Dispatcher
         } else {
             throw new DispatcherException("Controller can not be found.");
         }
+    }
+
+    /**
+     * @param ControllerInterface $controller
+     * @param string $method
+     * @return bool
+     */
+    private static function executionNeedsId(ControllerInterface $controller, $method)
+    {
+        return
+            (
+                $controller instanceof CreateControllerInterface ||
+                $controller instanceof RetrieveControllerInterface ||
+                $controller instanceof UpdateControllerInterface ||
+                $controller instanceof DeleteControllerInterface ||
+                $controller instanceof ListControllerInterface
+            )
+            &&
+            (
+                $method === '_retrieve' ||
+                $method === '_update' ||
+                $method === '_delete'
+            );
     }
 
     /**
