@@ -73,7 +73,7 @@ class Dispatcher
 
                 // prepare parameters
                 if ($execution->hasParameters()) {
-                    $request->withAttribute('parameters', $execution->getParameters());
+                    $request = $request->withAttribute('parameters', $execution->getParameters());
                 }
                 if (self::executionNeedsId($controller, $methodName)) {
                     $arguments = array_merge([$request], $execution->getParameters());
