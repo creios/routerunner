@@ -12,7 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use TimTegeler\Routerunner\Components\Dispatcher;
 use TimTegeler\Routerunner\Components\Execution;
 use TimTegeler\Routerunner\Components\Parser;
-use TimTegeler\Routerunner\Components\Request;
 use TimTegeler\Routerunner\Components\Router;
 use TimTegeler\Routerunner\Middleware\Middleware;
 use TimTegeler\Routerunner\Processor\PostProcessorInterface;
@@ -107,14 +106,14 @@ class Routerunner implements MiddlewareInterface
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $this->container->set(ServerRequestInterface::class, $request);
-        $result = $this->dispatch($this->route($request->getMethod(), $request->getRequestTarget()));
+        $result = $this->dispatch($this->route($request));
         if ($result instanceof ResponseInterface) {
             return $result;
-        } else {
-            return $response = (new Response())
-                ->withProtocolVersion('1.1')
-                ->withBody(\GuzzleHttp\Psr7\stream_for($result));
         }
+
+        return $response = (new Response())
+            ->withProtocolVersion('1.1')
+            ->withBody(\GuzzleHttp\Psr7\stream_for($result));
     }
 
     /**
@@ -127,12 +126,11 @@ class Routerunner implements MiddlewareInterface
     }
 
     /**
-     * @param string $method
-     * @param string $path
+     * @param ServerRequestInterface $request
      * @return Execution
      */
-    protected function route($method, $path)
+    protected function route(ServerRequestInterface $request)
     {
-        return $this->router->route(new Request($method, $path));
+        return $this->router->route($request);
     }
 }

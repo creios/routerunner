@@ -2,6 +2,7 @@
 
 namespace TimTegeler\Routerunner\Components;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
 
@@ -53,11 +54,12 @@ class Router
     private $basePath;
 
     /**
-     * @param Request $request
+     * @param ServerRequestInterface $serverRequest
      * @return Execution
      */
-    public function route(Request $request)
+    public function route(ServerRequestInterface $serverRequest)
     {
+        $request = new Request($serverRequest->getMethod(), $serverRequest->getRequestTarget());
         $hasBeenRerouted = false;
         try {
             $route = $this->findRoute($request);
@@ -72,7 +74,7 @@ class Router
         if (count($this->middlewares) > 0) {
             foreach ($this->middlewares as $middleware) {
                 /** @var Middleware $middleware */
-                if ($middleware->process($call) === false) {
+                if ($middleware->process($serverRequest, $call) === false) {
                     $call = $middleware->getCall();
                     $hasBeenRerouted = true;
                     break;

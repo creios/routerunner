@@ -1,4 +1,5 @@
 <?php
+
 namespace TimTegeler\Routerunner;
 
 use Interop\Http\ServerMiddleware\DelegateInterface;
@@ -76,7 +77,7 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->serverRequest->method('getMethod')->willReturn('GET');
         $this->serverRequest->method('getRequestTarget')->willReturn('/user');
         $this->assertEquals('TimTegeler\Routerunner\User->_list', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
-        
+
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
         $this->serverRequest->method('withAttribute')->willReturn($this->serverRequest);
         $this->serverRequest->method('getMethod')->willReturn('PUT');
@@ -187,16 +188,26 @@ class PostProcessor implements PostProcessorInterface
 class LoginTrue extends Middleware
 {
 
+    public function __construct($controllerName, $methodName)
+    {
+        parent::__construct(new Call($controllerName, $methodName));
+    }
 }
 
 class LoginFalse extends Middleware
 {
 
+    public function __construct($controllerName, $methodName)
+    {
+        parent::__construct(new Call($controllerName, $methodName));
+    }
+
     /**
+     * @param ServerRequestInterface $serverRequest
      * @param Call $call
      * @return bool
      */
-    public function process($call)
+    public function process(ServerRequestInterface $serverRequest, $call)
     {
         return false;
     }
