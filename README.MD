@@ -30,7 +30,7 @@ With the yml-based config file you can define your routes and configure routerun
 ```yml
 routes:
   - [GET, /, Index->get]
-  - [GET, /subpath#anchor, Index->get]
+  - [GET, /subpath, Index->get]
   - [GET, /api, Index->api]
   - [GET, /(string), Index->get]
   - [POST, /(string)/(numeric), Index->post]
