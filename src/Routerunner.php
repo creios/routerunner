@@ -12,11 +12,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use TimTegeler\Routerunner\Components\Dispatcher;
 use TimTegeler\Routerunner\Components\Execution;
 use TimTegeler\Routerunner\Components\Parser;
-use TimTegeler\Routerunner\Components\Request;
 use TimTegeler\Routerunner\Components\Router;
-use TimTegeler\Routerunner\Exception\RouterException;
 use TimTegeler\Routerunner\Middleware\Middleware;
-use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PreProcessorInterface;
 
 /**
  * Class Routerunner
@@ -37,6 +36,10 @@ class Routerunner implements MiddlewareInterface
      * @var Dispatcher
      */
     private $dispatcher;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
     /**
      * Routerunner constructor.
@@ -49,6 +52,7 @@ class Routerunner implements MiddlewareInterface
         if ($container == null) {
             $container = ContainerBuilder::buildDevContainer();
         }
+        $this->container = $container;
         $this->parser = new Parser();
         $this->router = new Router();
         $this->dispatcher = new Dispatcher($container);
@@ -59,41 +63,19 @@ class Routerunner implements MiddlewareInterface
     }
 
     /**
-     * @param string $method
-     * @param string $path
-     * @return mixed
-     * @throws RouterException
-     */
-    public function execute($method, $path)
-    {
-        return $this->dispatch($this->route($method, $path));
-    }
-
-    /**
-     * @param Execution $execution
-     * @return mixed
-     */
-    public function dispatch(Execution $execution)
-    {
-        return $this->dispatcher->dispatch($execution);
-    }
-
-    /**
-     * @param string $method
-     * @param string $path
-     * @return Execution
-     */
-    public function route($method, $path)
-    {
-        return $this->router->route(new Request($method, $path));
-    }
-
-    /**
      * @param Middleware $middleware
      */
     public function registerMiddleware(Middleware $middleware)
     {
         $this->router->registerMiddleware($middleware);
+    }
+
+    /**
+     * @param PreProcessorInterface $preProcessor
+     */
+    public function setPreProcessor(PreProcessorInterface $preProcessor)
+    {
+        $this->dispatcher->setPreProcessor($preProcessor);
     }
 
     /**
@@ -123,13 +105,32 @@ class Routerunner implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $result = $this->dispatch($this->route($request->getMethod(), $request->getRequestTarget()));
+        $this->container->set(ServerRequestInterface::class, $request);
+        $result = $this->dispatch($this->route($request));
         if ($result instanceof ResponseInterface) {
             return $result;
-        } else {
-            return $response = (new Response())
-                ->withProtocolVersion('1.1')
-                ->withBody(\GuzzleHttp\Psr7\stream_for($result));
         }
+
+        return $response = (new Response())
+            ->withProtocolVersion('1.1')
+            ->withBody(\GuzzleHttp\Psr7\stream_for($result));
+    }
+
+    /**
+     * @param Execution $execution
+     * @return mixed
+     */
+    protected function dispatch(Execution $execution)
+    {
+        return $this->dispatcher->dispatch($execution);
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return Execution
+     */
+    protected function route(ServerRequestInterface $request)
+    {
+        return $this->router->route($request);
     }
 }

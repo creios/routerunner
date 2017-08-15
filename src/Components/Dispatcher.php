@@ -3,11 +3,15 @@
 namespace TimTegeler\Routerunner\Components;
 
 use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Controller\ControllerInterface;
+use TimTegeler\Routerunner\Controller\CreateControllerInterface;
+use TimTegeler\Routerunner\Controller\ListControllerInterface;
 use TimTegeler\Routerunner\Exception\DispatcherException;
-use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PostProcessorInterface;
+use TimTegeler\Routerunner\Processor\PreProcessorInterface;
 
 /**
  * Class Dispatcher
@@ -16,6 +20,10 @@ use TimTegeler\Routerunner\PostProcessor\PostProcessorInterface;
 class Dispatcher
 {
 
+    /**
+     * @var PreProcessorInterface
+     */
+    private $preProcessor;
     /**
      * @var PostProcessorInterface
      */
@@ -53,11 +61,30 @@ class Dispatcher
                 if ($execution->hasRerouted()) {
                     $controller->setReroutedPath($execution->getReroutedPath());
                 }
-                $refMethod = new ReflectionMethod($controllerName, $methodName);
-                $return = $refMethod->invokeArgs($controller, $execution->getParameters());
+                $request = $this->container->get(ServerRequestInterface::class);
 
+                // pre processing
+                if ($this->preProcessor != null) {
+                    $request = $this->preProcessor->process($request, $controller);
+                }
+
+                // prepare parameters
+                if ($execution->hasParameters()) {
+                    $request = $request->withAttribute('parameters', $execution->getParameters());
+                }
+                if (self::executionNeedsId($controller, $methodName)) {
+                    $arguments = array_merge([$request], $execution->getParameters());
+                } else {
+                    $arguments = [$request];
+                }
+
+                // actual dispatch
+                $refMethod = new ReflectionMethod($controllerName, $methodName);
+                $return = $refMethod->invokeArgs($controller, $arguments);
+
+                // pre processing
                 if ($this->postProcessor != null) {
-                    return $this->postProcessor->process($return);
+                    return $this->postProcessor->process($request, $return);
                 } else {
                     return $return;
                 }
@@ -69,6 +96,27 @@ class Dispatcher
         } else {
             throw new DispatcherException("Controller can not be found.");
         }
+    }
+
+    /**
+     * @param ControllerInterface $controller
+     * @param string $method
+     * @return bool
+     */
+    private static function executionNeedsId(ControllerInterface $controller, $method)
+    {
+        return !(
+            ($controller instanceof CreateControllerInterface && $method === '_create') ||
+            ($controller instanceof ListControllerInterface && $method === '_list')
+        );
+    }
+
+    /**
+     * @param PreProcessorInterface $preProcessor
+     */
+    public function setPreProcessor($preProcessor)
+    {
+        $this->preProcessor = $preProcessor;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace TimTegeler\Routerunner\Middleware;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TimTegeler\Routerunner\Components\Call;
 
 /**
@@ -12,25 +13,25 @@ abstract class Middleware implements MiddlewareInterface
 {
 
     /**
-     * @var string
+     * @var Call
      */
     protected $call;
 
     /**
      * Middleware constructor.
-     * @param string $controllerName
-     * @param string $methodName
+     * @param Call $call
      */
-    public function __construct($controllerName, $methodName)
+    public function __construct(Call $call)
     {
-        $this->call = new Call($controllerName, $methodName);
+        $this->call = $call;
     }
 
     /**
+     * @param ServerRequestInterface $serverRequest
      * @param Call $call
      * @return bool
      */
-    public function process($call)
+    public function process(ServerRequestInterface $serverRequest, $call)
     {
         return true;
     }

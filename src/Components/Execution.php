@@ -44,6 +44,14 @@ class Execution
     }
 
     /**
+     * @return bool
+     */
+    public function hasParameters()
+    {
+        return count($this->parameters) > 0;
+    }
+
+    /**
      * @param string $path
      * @return Execution
      */

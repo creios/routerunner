@@ -2,6 +2,7 @@
 
 namespace TimTegeler\Routerunner\Middleware;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TimTegeler\Routerunner\Components\Call;
 
 /**
@@ -12,17 +13,11 @@ interface MiddlewareInterface
 {
 
     /**
-     * MiddlewareInterface constructor.
-     * @param $controllerName
-     * @param $methodName
-     */
-    public function __construct($controllerName, $methodName);
-
-    /**
-     * @param $call
+     * @param ServerRequestInterface $request
+     * @param Call $call
      * @return bool
      */
-    public function process($call);
+    public function process(ServerRequestInterface $request, $call);
 
     /**
      * @return Call
