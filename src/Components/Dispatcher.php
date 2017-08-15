@@ -8,10 +8,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Controller\ControllerInterface;
 use TimTegeler\Routerunner\Controller\CreateControllerInterface;
-use TimTegeler\Routerunner\Controller\DeleteControllerInterface;
 use TimTegeler\Routerunner\Controller\ListControllerInterface;
-use TimTegeler\Routerunner\Controller\RetrieveControllerInterface;
-use TimTegeler\Routerunner\Controller\UpdateControllerInterface;
 use TimTegeler\Routerunner\Exception\DispatcherException;
 use TimTegeler\Routerunner\Processor\PostProcessorInterface;
 use TimTegeler\Routerunner\Processor\PreProcessorInterface;
@@ -108,20 +105,10 @@ class Dispatcher
      */
     private static function executionNeedsId(ControllerInterface $controller, $method)
     {
-        return
-            (
-                $controller instanceof CreateControllerInterface ||
-                $controller instanceof RetrieveControllerInterface ||
-                $controller instanceof UpdateControllerInterface ||
-                $controller instanceof DeleteControllerInterface ||
-                $controller instanceof ListControllerInterface
-            )
-            &&
-            (
-                $method === '_retrieve' ||
-                $method === '_update' ||
-                $method === '_delete'
-            );
+        return !(
+            ($controller instanceof CreateControllerInterface && $method === '_create') ||
+            ($controller instanceof ListControllerInterface && $method === '_list')
+        );
     }
 
     /**
