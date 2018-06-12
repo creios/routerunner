@@ -1,6 +1,8 @@
 <?php
 namespace TimTegeler\Routerunner;
 
+use phpFastCache\CacheManager;
+use TimTegeler\Routerunner\Components\Cache;
 use TimTegeler\Routerunner\Components\Parser;
 use TimTegeler\Routerunner\Components\Route;
 
@@ -9,7 +11,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateRoute()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $this->assertInstanceOf('TimTegeler\Routerunner\Components\Route', $parser->createRoute('*', '/', 'index->get'));
         $this->assertInstanceOf('TimTegeler\Routerunner\Components\Route', $parser->createRoute('GET', '/', 'index->get'));
         $this->assertInstanceOf('TimTegeler\Routerunner\Components\Route', $parser->createRoute('POST', '/', 'index->post'));
@@ -51,7 +53,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(false);
         $config = $parser->parse(__DIR__ . '/../assets/config.yml');
         /** @var Route $route */
@@ -64,7 +66,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCaching()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(true);
         $parser->parse(__DIR__ . '/../assets/config.yml');
 
@@ -91,7 +93,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseExceptionNoConfig()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'File doesn\'t exist');
         $parser->parse('not/existing/path');
@@ -99,7 +101,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseExceptionNoRoutes()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a routes section');
         $parser->parse(__DIR__ . '/../assets/config-no-routes.yml');
@@ -107,7 +109,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseExceptionNoFallback()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a fallback');
         $parser->parse(__DIR__ . '/../assets/config-no-fallback.yml');
@@ -115,7 +117,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseExceptionNoBaseNamespace()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Config doesn\'t have a baseNamespace');
         $parser->parse(__DIR__ . '/../assets/config-no-basenamespace.yml');
@@ -123,7 +125,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseExceptionNoValidBaseNamespace()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'BaseNamespace is not a valid namespace');
         $parser->parse(__DIR__ . '/../assets/config-no-valid-basenamespace.yml');
@@ -131,7 +133,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParseExceptionNoValidBasePath()
     {
-        $parser = new Parser('\\');
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'BasePath is not a valid path');
         $parser->parse(__DIR__ . '/../assets/config-no-valid-basepath.yml');

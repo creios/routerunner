@@ -40,10 +40,12 @@ class Parser
 
     /**
      * Parser constructor.
+     * @param Cache $cache
      */
-    public function __construct()
+    public function __construct(Cache $cache)
     {
-        $this->cache = new Cache(CacheManager::Files(), 'routerunner_cache');
+        //$this->cache = new Cache(CacheManager::Files(), 'routerunner_cache');
+        $this->cache = $cache;
     }
 
     /**

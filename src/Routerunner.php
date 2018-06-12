@@ -2,7 +2,6 @@
 
 namespace TimTegeler\Routerunner;
 
-use DI\ContainerBuilder;
 use GuzzleHttp\Psr7\Response;
 use Interop\Container\ContainerInterface;
 use Interop\Http\ServerMiddleware\DelegateInterface;
@@ -47,14 +46,11 @@ class Routerunner implements MiddlewareInterface
      * @param ContainerInterface $container
      * @throws Exception\ParseException
      */
-    public function __construct($configFilePath, ContainerInterface $container = null)
+    public function __construct($configFilePath, ContainerInterface $container)
     {
-        if ($container == null) {
-            $container = ContainerBuilder::buildDevContainer();
-        }
         $this->container = $container;
-        $this->parser = new Parser();
-        $this->router = new Router();
+        $this->parser = $this->container->get(Parser::class);
+        $this->router = $this->container->get(Router::class);
         $this->dispatcher = new Dispatcher($container);
         $config = $this->parser->parse($configFilePath);
         $this->router->setFallback($config->getFallBack());

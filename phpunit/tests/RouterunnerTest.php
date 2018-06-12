@@ -2,9 +2,13 @@
 
 namespace TimTegeler\Routerunner;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use Interop\Http\ServerMiddleware\DelegateInterface;
+use phpFastCache\CacheManager;
 use PHPUnit_Framework_MockObject_MockObject;
 use Psr\Http\Message\ServerRequestInterface;
+use TimTegeler\Routerunner\Components\Cache;
 use TimTegeler\Routerunner\Components\Call;
 use TimTegeler\Routerunner\Controller\ControllerInterface;
 use TimTegeler\Routerunner\Controller\RestControllerInterface;
@@ -20,24 +24,42 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     private $serverRequest;
     /** @var PHPUnit_Framework_MockObject_MockObject|DelegateInterface */
     private $delegate;
+    /**
+     * @var Container
+     */
+    private $diContainer;
 
     public function setUp()
     {
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
         $this->delegate = $this->getMockBuilder(DelegateInterface::class)->getMock();
+        $this->diContainer = ContainerBuilder::buildDevContainer();
+        $this->diContainer->set(Cache::class, function(){
+           return new Cache(CacheManager::Files(), 'routerunner_cache');
+        });
     }
 
+    /**
+     * @throws Exception\DispatcherException
+     * @throws Exception\ParseException
+     * @throws \ReflectionException
+     */
     public function testExecuteWithParseFallback()
     {
         $this->serverRequest->method('getMethod')->willReturn('PUST');
         $this->serverRequest->method('getRequestTarget')->willReturn('/123/tim');
-        $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
+        $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml', $this->diContainer);
         $this->assertEquals('index->get', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
     }
 
+    /**
+     * @throws Exception\DispatcherException
+     * @throws Exception\ParseException
+     * @throws \ReflectionException
+     */
     public function testMiddlewareTrue()
     {
-        $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
+        $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml', $this->diContainer);
         $loginMiddleware = new LoginTrue('TimTegeler\Routerunner\Index', 'login');
         $routerunner->registerMiddleware($loginMiddleware);
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
@@ -121,9 +143,14 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $routerunner->process($this->serverRequest, $this->delegate);
     }
 
+    /**
+     * @throws Exception\DispatcherException
+     * @throws Exception\ParseException
+     * @throws \ReflectionException
+     */
     public function testMiddlewareLoginFalse()
     {
-        $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
+        $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml', $this->diContainer);
         $loginMiddleware = new LoginFalse('TimTegeler\Routerunner\Index', 'login');
         $routerunner->registerMiddleware($loginMiddleware);
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
@@ -136,9 +163,14 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('index->login', $routerunner->process($this->serverRequest, $this->delegate)->getBody()->getContents());
     }
 
+    /**
+     * @throws Exception\DispatcherException
+     * @throws Exception\ParseException
+     * @throws \ReflectionException
+     */
     public function testProcessing()
     {
-        $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml');
+        $routerunner = new Routerunner(__DIR__ . '/../assets/config.yml', $this->diContainer);
         $routerunner->setPreProcessor(new PreProcessor());
         $routerunner->setPostProcessor(new PostProcessor());
         $this->serverRequest = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
