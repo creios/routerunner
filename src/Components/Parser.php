@@ -40,7 +40,6 @@ class Parser
 
     /**
      * Parser constructor.
-     * @throws ParseException
      */
     public function __construct()
     {

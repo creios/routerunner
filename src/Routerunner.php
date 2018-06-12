@@ -102,6 +102,8 @@ class Routerunner implements MiddlewareInterface
      * @param DelegateInterface $delegate
      *
      * @return ResponseInterface
+     * @throws Exception\DispatcherException
+     * @throws \ReflectionException
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
@@ -119,6 +121,8 @@ class Routerunner implements MiddlewareInterface
     /**
      * @param Execution $execution
      * @return mixed
+     * @throws Exception\DispatcherException
+     * @throws \ReflectionException
      */
     protected function dispatch(Execution $execution)
     {

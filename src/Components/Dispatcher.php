@@ -46,6 +46,7 @@ class Dispatcher
      * @param Execution $execution
      * @return mixed
      * @throws DispatcherException
+     * @throws \ReflectionException
      */
     public function dispatch(Execution $execution)
     {
