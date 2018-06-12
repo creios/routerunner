@@ -22,13 +22,25 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testMatchesRoute()
     {
         $finder = new Router();
+
         $route = new Route('*', '/', new Call('foo', 'bar'));
         $this->assertEquals(array(), $finder->matchesRoute($route, new Request('GET', '/')));
         $this->assertEquals(array(), $finder->matchesRoute($route, new Request('POST', '/')));
+
         $route = new Route('GET', '/', new Call('foo', 'bar'));
         $this->assertEmpty($finder->matchesRoute($route, new Request('GET', '/')));
+
         $route = new Route('POST', '/subpath/(numeric)/(string)', new Call('foo', 'bar'));
-        $this->assertEquals(array('123', 'tim'), $finder->matchesRoute($route, new Request('POST', '/subpath/123/tim')));
+
+        $matchesRoute = $finder->matchesRoute($route, new Request('POST', '/subpath/123/tim'));
+        $this->assertEquals(array(123, 'tim'), $matchesRoute);
+        $this->assertTrue(is_int($matchesRoute[0]));
+        $this->assertTrue(is_string($matchesRoute[1]));
+
+        $matchesRoute = $finder->matchesRoute($route, new Request('POST', '/subpath/123.4/tim'));
+        $this->assertEquals(array(123.4, 'tim'), $matchesRoute);
+        $this->assertTrue(is_float($matchesRoute[0]));
+        $this->assertTrue(is_string($matchesRoute[1]));
     }
 
     public function testAddSetGetReset()

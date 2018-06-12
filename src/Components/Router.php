@@ -128,7 +128,7 @@ class Router
     /**
      * @param Route $route
      * @param Request $request
-     * @return bool
+     * @return bool|array
      */
     public function matchesRoute(Route $route, Request $request)
     {
@@ -138,7 +138,7 @@ class Router
             $uri = explode('?', $request->getPath())[0];
             if (preg_match($uriPattern, $uri, $uriParams) === 1) {
                 array_shift($uriParams);
-                return $uriParams;
+                return $this->typeParams($uriParams);
             }
         }
         return false;
@@ -202,5 +202,31 @@ class Router
     public function setBasePath($basePath)
     {
         $this->basePath = $basePath;
+    }
+
+    /**
+     * @param array $uriParams
+     * @return array
+     */
+    private function typeParams($uriParams): array
+    {
+        return array_map(
+            function ($item) {
+                if (is_numeric($item)) {
+                    return $this->convertStringToFloatOrInt($item);
+                }
+                return $item;
+            },
+            $uriParams
+        );
+    }
+
+    /**
+     * @param $item
+     * @return float|int
+     */
+    private function convertStringToFloatOrInt($item)
+    {
+        return $item + 0;
     }
 }
