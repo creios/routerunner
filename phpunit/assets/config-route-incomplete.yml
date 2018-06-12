@@ -1,0 +1,9 @@
+routes:
+  - [GET, /]
+
+rest:
+  - [CRUDL, /user, User]
+
+fallback: Index->get
+
+baseNamespace: TimTegeler\Routerunner

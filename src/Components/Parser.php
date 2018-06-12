@@ -160,7 +160,8 @@ class Parser
         $this->controllerBaseNamespace = rtrim($config['baseNamespace'], '\\');
 
         $routes = [];
-        foreach ($config['routes'] as $routeParts) {
+        foreach ($config['routes'] as $number => $routeParts) {
+            $this->checkRouteParts($routeParts, $number);
             $routes[] = $this->createRoute($routeParts[0], $routeParts[1], $routeParts[2]);
         }
 
@@ -283,6 +284,18 @@ class Parser
     public function setCaching($enable)
     {
         $this->caching = $enable;
+    }
+
+    /**
+     * @param $routeParts
+     * @param $number
+     * @throws ParseException
+     */
+    private function checkRouteParts($routeParts, $number): void
+    {
+        if (count($routeParts) != 3) {
+            throw new ParseException(sprintf("Route %s is incomplete", $number + 1));
+        }
     }
 
 }

@@ -51,6 +51,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('TimTegeler\Routerunner\Components\Route', $parser->createRoute('DELETE', '/subpath/(numeric)', 'c_controller->delete'));
     }
 
+    /**
+     * @throws Exception\ParseException
+     */
     public function testParse()
     {
         $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
@@ -64,6 +67,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('get', $route->getCall()->getMethod());
     }
 
+    /**
+     * @throws Exception\ParseException
+     */
     public function testCaching()
     {
         $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
@@ -91,6 +97,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         fclose($fp);
     }
 
+    /**
+     * @throws Exception\ParseException
+     */
     public function testParseExceptionNoConfig()
     {
         $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
@@ -99,6 +108,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $parser->parse('not/existing/path');
     }
 
+    /**
+     * @throws Exception\ParseException
+     */
     public function testParseExceptionNoRoutes()
     {
         $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
@@ -107,6 +119,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $parser->parse(__DIR__ . '/../assets/config-no-routes.yml');
     }
 
+    /**
+     * @throws Exception\ParseException
+     */
     public function testParseExceptionNoFallback()
     {
         $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
@@ -115,6 +130,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $parser->parse(__DIR__ . '/../assets/config-no-fallback.yml');
     }
 
+    /**
+     * @throws Exception\ParseException
+     */
     public function testParseExceptionNoBaseNamespace()
     {
         $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
@@ -123,6 +141,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $parser->parse(__DIR__ . '/../assets/config-no-basenamespace.yml');
     }
 
+    /**
+     * @throws Exception\ParseException
+     */
     public function testParseExceptionNoValidBaseNamespace()
     {
         $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
@@ -131,11 +152,25 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $parser->parse(__DIR__ . '/../assets/config-no-valid-basenamespace.yml');
     }
 
+    /**
+     * @throws Exception\ParseException
+     */
     public function testParseExceptionNoValidBasePath()
     {
         $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
         $parser->setCaching(false);
         $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'BasePath is not a valid path');
         $parser->parse(__DIR__ . '/../assets/config-no-valid-basepath.yml');
+    }
+
+    /**
+     * @throws Exception\ParseException
+     */
+    public function testParseExceptionRouteIsIncomplete()
+    {
+        $parser = new Parser(new Cache(CacheManager::Files(), 'routerunner_cache'));
+        $parser->setCaching(false);
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\ParseException', 'Route 1 is incomplete');
+        $parser->parse(__DIR__ . '/../assets/config-route-incomplete.yml');
     }
 }
