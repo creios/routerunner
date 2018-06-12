@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.1.0",
     "php-di/php-di": "^5.2",
     "symfony/yaml": "^3.0",
     "phpFastCache/phpFastCache": "^4.3",
