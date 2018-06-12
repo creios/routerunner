@@ -2,7 +2,6 @@
 
 namespace TimTegeler\Routerunner\Components;
 
-use phpFastCache\CacheManager;
 use Symfony\Component\Yaml\Yaml;
 use TimTegeler\Routerunner\Exception\ParseException;
 
