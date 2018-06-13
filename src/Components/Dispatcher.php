@@ -73,11 +73,7 @@ class Dispatcher
                 if ($execution->hasParameters()) {
                     $request = $request->withAttribute('parameters', $execution->getParameters());
                 }
-                if (self::executionNeedsId($controller, $methodName)) {
-                    $arguments = array_merge([$request], $execution->getParameters());
-                } else {
-                    $arguments = [$request];
-                }
+                $arguments = array_merge([$request], $execution->getParameters());
 
                 // actual dispatch
                 $refMethod = new ReflectionMethod($controllerName, $methodName);
@@ -97,19 +93,6 @@ class Dispatcher
         } else {
             throw new DispatcherException("Controller can not be found.");
         }
-    }
-
-    /**
-     * @param ControllerInterface $controller
-     * @param string $method
-     * @return bool
-     */
-    private static function executionNeedsId(ControllerInterface $controller, $method)
-    {
-        return !(
-            ($controller instanceof CreateControllerInterface && $method === '_create') ||
-            ($controller instanceof ListControllerInterface && $method === '_list')
-        );
     }
 
     /**
