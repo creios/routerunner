@@ -4,10 +4,10 @@ namespace TimTegeler\Routerunner;
 
 use GuzzleHttp\Psr7\Response;
 use Interop\Container\ContainerInterface;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use TimTegeler\Routerunner\Components\Dispatcher;
 use TimTegeler\Routerunner\Components\Execution;
 use TimTegeler\Routerunner\Components\Parser;
@@ -95,13 +95,13 @@ class Routerunner implements MiddlewareInterface
      * to the next middleware component to create the response.
      *
      * @param ServerRequestInterface $request
-     * @param DelegateInterface $delegate
+     * @param RequestHandlerInterface $requestHandler
      *
      * @return ResponseInterface
      * @throws Exception\DispatcherException
      * @throws \ReflectionException
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $requestHandler): ResponseInterface
     {
         $this->container->set(ServerRequestInterface::class, $request);
         $result = $this->dispatch($this->route($request));
