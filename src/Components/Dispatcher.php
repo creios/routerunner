@@ -2,13 +2,11 @@
 
 namespace TimTegeler\Routerunner\Components;
 
-use Interop\Container\ContainerInterface;
+use DI\Container;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use TimTegeler\Routerunner\Controller\ControllerInterface;
-use TimTegeler\Routerunner\Controller\CreateControllerInterface;
-use TimTegeler\Routerunner\Controller\ListControllerInterface;
 use TimTegeler\Routerunner\Exception\DispatcherException;
 use TimTegeler\Routerunner\Processor\PostProcessorInterface;
 use TimTegeler\Routerunner\Processor\PreProcessorInterface;
@@ -29,15 +27,15 @@ class Dispatcher
      */
     private $postProcessor;
     /**
-     * @var ContainerInterface
+     * @var Container
      */
     private $container;
 
     /**
      * Dispatcher constructor.
-     * @param ContainerInterface $container
+     * @param Container $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
@@ -46,6 +44,8 @@ class Dispatcher
      * @param Execution $execution
      * @return mixed
      * @throws DispatcherException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \ReflectionException
      */
     public function dispatch(Execution $execution)

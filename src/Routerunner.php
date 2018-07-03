@@ -2,8 +2,8 @@
 
 namespace TimTegeler\Routerunner;
 
+use DI\Container;
 use GuzzleHttp\Psr7\Response;
-use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -36,17 +36,19 @@ class Routerunner implements MiddlewareInterface
      */
     private $dispatcher;
     /**
-     * @var ContainerInterface
+     * @var Container
      */
     private $container;
 
     /**
      * Routerunner constructor.
      * @param string $configFilePath
-     * @param ContainerInterface $container
+     * @param Container $container
      * @throws Exception\ParseException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function __construct($configFilePath, ContainerInterface $container)
+    public function __construct($configFilePath, Container $container)
     {
         $this->container = $container;
         $this->parser = $this->container->get(Parser::class);
@@ -99,6 +101,8 @@ class Routerunner implements MiddlewareInterface
      *
      * @return ResponseInterface
      * @throws Exception\DispatcherException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \ReflectionException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $requestHandler): ResponseInterface
@@ -118,6 +122,8 @@ class Routerunner implements MiddlewareInterface
      * @param Execution $execution
      * @return mixed
      * @throws Exception\DispatcherException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \ReflectionException
      */
     protected function dispatch(Execution $execution)
