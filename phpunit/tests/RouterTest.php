@@ -133,7 +133,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $finder = new Router();
         $finder->addRoute(new Route('GET', '/', new Call('index', 'get')));
-        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException');
+        $this->setExpectedException('TimTegeler\Routerunner\Exception\RouterException', 'Non of the routes matches uri');
         $finder->findRoute(new Request('PUT', '/'));
     }
 
