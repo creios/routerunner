@@ -11,7 +11,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "php-di/php-di": "^5.2",
+    "php-di/php-di": "^6.0",
     "symfony/yaml": "^3.0",
     "phpFastCache/phpFastCache": "^4.3",
     "guzzlehttp/psr7": "^1.3",

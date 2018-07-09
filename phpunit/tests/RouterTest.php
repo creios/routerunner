@@ -58,6 +58,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($finder->getRoutes()));
     }
 
+    /**
+     * @throws Exception\RouterException
+     */
     public function testFind()
     {
         $finder = new Router();
@@ -129,6 +132,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('delete', $route->getCall()->getMethod());
     }
 
+    /**
+     * @throws Exception\RouterException
+     */
     public function testFindException()
     {
         $finder = new Router();
@@ -137,6 +143,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $finder->findRoute(new Request('PUT', '/'));
     }
 
+    /**
+     * @throws Exception\RouterException
+     */
     public function testExecuteExceptionNoRouteAvailable()
     {
         $finder = new Router();

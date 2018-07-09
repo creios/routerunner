@@ -42,6 +42,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws Exception\DispatcherException
      * @throws Exception\ParseException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \ReflectionException
      */
     public function testExecuteWithParseFallback()
@@ -55,6 +57,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws Exception\DispatcherException
      * @throws Exception\ParseException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \ReflectionException
      */
     public function testMiddlewareTrue()
@@ -146,6 +150,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws Exception\DispatcherException
      * @throws Exception\ParseException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \ReflectionException
      */
     public function testMiddlewareLoginFalse()
@@ -166,6 +172,8 @@ class RouterunnerTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws Exception\DispatcherException
      * @throws Exception\ParseException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \ReflectionException
      */
     public function testProcessing()
