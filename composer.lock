@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "357ddfafc6b17d038e443a9967e04c7c",
+    "content-hash": "5b4aa873571a6a02e447d6d180e51102",
     "packages": [
         {
             "name": "guzzlehttp/psr7",
@@ -72,7 +72,7 @@
             "time": "2017-03-20T17:10:46+00:00"
         },
         {
-            "name": "jeremeamia/SuperClosure",
+            "name": "jeremeamia/superclosure",
             "version": "2.4.0",
             "source": {
                 "type": "git",
@@ -1727,6 +1727,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2017-06-30T09:13:00+00:00"
         },
         {
