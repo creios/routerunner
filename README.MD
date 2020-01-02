@@ -1,8 +1,8 @@
 # Routerunner - meep meep!
 
-[![Build Status](https://travis-ci.org/timtegeler/routerunner.svg?branch=master)](https://travis-ci.org/timtegeler/routerunner)
-[![Coverage Status](https://coveralls.io/repos/timtegeler/routerunner/badge.svg?branch=master&service=github)](https://coveralls.io/github/timtegeler/routerunner?branch=master)
-[![GitHub license](https://img.shields.io/github/license/timtegeler/routerunner.svg)]()
+[![Build Status](https://travis-ci.org/creios/routerunner.svg?branch=master)](https://travis-ci.org/creios/routerunner)
+[![Coverage Status](https://coveralls.io/repos/creios/routerunner/badge.svg?branch=master&service=github)](https://coveralls.io/github/creios/routerunner?branch=master)
+[![GitHub license](https://img.shields.io/github/license/creios/routerunner.svg)]()
 
 **Routerunner** is a config-driven router for HTTP requests
 
@@ -173,13 +173,13 @@ $routerunner->setPostProcessor(new Encoder());
 
 ## Composer
 
-You can use [composer](https://getcomposer.org/) to download and install Routerunner. Visit routerunner on [packagist](https://packagist.org/packages/timtegeler/routerunner).
+You can use [composer](https://getcomposer.org/) to download and install Routerunner. Visit routerunner on [packagist](https://packagist.org/packages/creios/routerunner).
 
 ### composer.json
 ```json
 {
     "require": {
-        "timtegeler/routerunner": "^1.1.0"
+        "creios/routerunner": "^1.1.0"
     }
 }
 ```
@@ -189,7 +189,7 @@ or
 ### comandline
 
 ```sh
-composer require timtegeler/routerunner
+composer require creios/routerunner
 ```
 
 ## Apache .htaccess
@@ -214,4 +214,4 @@ a2enmod rewrite
 
 In this demonstration you can examine the basic usage with all possible features in use.
 
-[timtegeler/routerunner-example](https://github.com/timtegeler/routerunner-example)
+[creios/routerunner-example](https://github.com/creios/routerunner-example)

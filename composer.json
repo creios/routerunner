@@ -1,12 +1,12 @@
 {
-  "name": "timtegeler/routerunner",
+  "name": "creios/routerunner",
   "description": "Routerunner is a router for HTTP-request written in PHP",
   "type": "library",
   "license": "MIT",
   "authors": [
     {
       "name": "Tim Tegeler",
-      "email": "mail@timtegeler.de"
+      "email": "tegeler@creios.net"
     }
   ],
   "require": {
